@@ -1,0 +1,33 @@
+@startuml
+interface Serializable {
+  +serialize(): String
+}
+interface Comparable {
+  +compareTo(other: Object): int
+}
+abstract class Animal {
+  #name: String
+  #age: int
+  +{abstract} makeSound(): String
+  +getName(): String
+}
+abstract class Mammal {
+  +giveBirth(): void
+}
+class Dog {
+  +breed: String
+  +makeSound(): String
+}
+class Cat {
+  +makeSound(): String
+}
+class Puppy {
+  +play(): void
+}
+Animal <|-- Mammal
+Mammal <|-- Dog
+Mammal <|-- Cat
+Dog <|-- Puppy
+Animal ..|> Serializable
+Dog ..|> Comparable
+@enduml

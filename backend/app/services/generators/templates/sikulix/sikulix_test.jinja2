@@ -1,0 +1,24 @@
+from sikuli import *
+
+# Wygenerowany skrypt SikuliX (image-based) — {{ class_doc }}
+# Patterny obrazow w podkatalogu images/
+
+
+class {{ class_name }}:
+    """{{ class_doc }}"""
+
+    def __init__(self):
+        self.s = Screen()
+
+    def testFlow(self):
+{% if operations %}
+{% for op in operations %}
+        {{ op }}
+{% endfor %}
+{% else %}
+        pass
+{% endif %}
+
+
+if __name__ == "__main__":
+    {{ class_name }}().testFlow()

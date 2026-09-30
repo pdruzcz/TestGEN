@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+.export-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .export-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #616161;
+  }
+
+  button {
+    mat-icon {
+      margin-right: 4px;
+    }
+
+    mat-progress-spinner {
+      display: inline-block;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+  }
+}

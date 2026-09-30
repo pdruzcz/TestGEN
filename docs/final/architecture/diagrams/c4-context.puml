@@ -1,0 +1,32 @@
+@startuml c4-context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+title TestGEN — C4 Level 1: Diagram kontekstowy
+
+Person(analyst, "Analityk QA (Anna)", "Tworzy projekty, uruchamia analizy,\ngeneruje testy, eksportuje raporty")
+Person(admin, "Administrator (Marek)", "Zarządza firmami, użytkownikami,\nkonfiguracją platformy")
+
+System(testgen, "TestGEN", "Platforma SaaS do automatycznego\ngenerowania przypadków testowych\ni kodu testowego z wykorzystaniem AI")
+
+System_Ext(github, "GitHub / GitLab", "Repozytoria kodu źródłowego\n(webhook, klonowanie)")
+System_Ext(tpay, "tpay", "Bramka płatności\n(BLIK, karta, przelew)")
+System_Ext(testrail, "TestRail", "System zarządzania testami\n(eksport przypadków)")
+System_Ext(jira, "Jira / Azure DevOps", "Śledzenie zadań\n(synchronizacja wyników)")
+System_Ext(smtp, "Serwer SMTP", "Wysyłka e-mail\n(weryfikacja, zaproszenia, alerty)")
+System_Ext(llm, "API LLM\n(Anthropic / OpenAI)", "Modele językowe\n(analiza semantyczna, generowanie)")
+System_Ext(nvd, "NVD / GitHub Advisory / OSV", "Bazy podatności CVE\n(aktualizacja reguł skanowania)")
+
+Rel(analyst, testgen, "Korzysta z platformy", "HTTPS")
+Rel(admin, testgen, "Administruje platformą", "HTTPS")
+
+Rel(testgen, github, "Klonuje repozytoria,\nodbiera webhooki", "HTTPS / Git")
+Rel(testgen, tpay, "Obsługuje płatności", "HTTPS / REST API")
+Rel(testgen, testrail, "Eksportuje przypadki testowe", "HTTPS / REST API")
+Rel(testgen, jira, "Synchronizuje wyniki", "HTTPS / REST API")
+Rel(testgen, smtp, "Wysyła powiadomienia", "SMTP / TLS")
+Rel(testgen, llm, "Wywołuje modele AI", "HTTPS / REST API")
+Rel(testgen, nvd, "Pobiera dane CVE", "HTTPS / REST API")
+
+@enduml

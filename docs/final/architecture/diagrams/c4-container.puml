@@ -1,0 +1,48 @@
+@startuml c4-container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title TestGEN — C4 Level 2: Diagram kontenerów
+
+Person(user, "Użytkownik", "Analityk QA / Owner / Admin")
+
+System_Boundary(testgen, "TestGEN") {
+    Container(spa, "Aplikacja webowa", "Angular 21, Material 3\nStandalone Components", "SPA — interfejs użytkownika,\ndashboard, projekty, analizy, raporty")
+    Container(flutter, "Shell mobilny/desktopowy", "Flutter WebView", "Opakowanie SPA w natywną\naplikację mobilną i desktopową")
+    Container(api, "Backend API", "Python 3.12, FastAPI\nSQLAlchemy 2.0 async", "REST API /api/v1 — autoryzacja,\nlogika domenowa, RLS per tenant")
+    Container(workers, "Celery Workers", "Python 3.12, Celery 5", "Zadania asynchroniczne:\nanaliza, generowanie, eksport,\nskany bezpieczeństwa")
+    Container(beat, "Celery Beat", "Python 3.12, Celery 5", "Harmonogram zadań periodycznych:\nodnowienia, snapshoty, czyszczenie")
+
+    ContainerDb(postgres, "PostgreSQL 16", "Relacyjna baza danych", "Dane biznesowe, wyniki analiz,\nRLS (Row-Level Security)")
+    ContainerQueue(rabbitmq, "RabbitMQ 3.12", "Broker wiadomości", "Kolejki: default, analysis,\nexport, security")
+    ContainerDb(redis, "Redis 7", "Cache / Result Backend", "Cache sesji, wyniki zadań\nCelery, rate limiting")
+    ContainerDb(minio, "MinIO", "Obiektowy magazyn S3", "Pliki źródłowe, dokumenty,\nraporty PDF, faktury VAT")
+}
+
+System_Ext(tpay, "tpay", "Bramka płatności")
+System_Ext(llm, "API LLM", "Anthropic / OpenAI")
+System_Ext(smtp, "SMTP", "Powiadomienia e-mail")
+
+Rel(user, spa, "Korzysta", "HTTPS")
+Rel(user, flutter, "Korzysta (mobile/desktop)", "HTTPS")
+Rel(flutter, spa, "Osadza", "WebView")
+Rel(spa, api, "Wywołuje", "REST /api/v1\nJWT cookie")
+
+Rel(api, postgres, "Odczytuje / zapisuje", "asyncpg / SQL")
+Rel(api, rabbitmq, "Kolejkuje zadania", "AMQP")
+Rel(api, redis, "Cache / sesje", "Redis protocol")
+Rel(api, minio, "Przechowuje pliki", "S3 API")
+
+Rel(rabbitmq, workers, "Dostarcza zadania", "AMQP")
+Rel(workers, postgres, "Odczytuje / zapisuje", "asyncpg / SQL")
+Rel(workers, redis, "Zapisuje wyniki", "Redis protocol")
+Rel(workers, minio, "Odczytuje / zapisuje pliki", "S3 API")
+
+Rel(beat, rabbitmq, "Planuje zadania", "AMQP")
+
+Rel(api, tpay, "Płatności", "HTTPS")
+Rel(workers, llm, "Wywołania AI", "HTTPS")
+Rel(api, smtp, "E-mail", "SMTP/TLS")
+
+@enduml

@@ -1,0 +1,73 @@
+{
+  "category": "real",
+  "description": "Angular Material docs (MIT) — komponent Tooltip, przykłady live w stanie spoczynkowym: przyciski z tooltipami (Show, ikonowe, delay). Viewport 1280x800.",
+  "expected_component_count": 6,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidenav (lista komponentów)",
+      "bbox": {
+        "x": 0,
+        "y": 64,
+        "width": 290,
+        "height": 736
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Search (toolbar)",
+      "bbox": {
+        "x": 900,
+        "y": 12,
+        "width": 340,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Show (tooltip po hover, demo)",
+      "bbox": {
+        "x": 370,
+        "y": 200,
+        "width": 130,
+        "height": 50
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Przycisk ikonowy z tooltipem (demo)",
+      "bbox": {
+        "x": 520,
+        "y": 200,
+        "width": 48,
+        "height": 48
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Przycisk z opóźnionym tooltipem (demo)",
+      "bbox": {
+        "x": 590,
+        "y": 200,
+        "width": 180,
+        "height": 50
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Przycisk sekcji pozycjonowania (demo)",
+      "bbox": {
+        "x": 370,
+        "y": 400,
+        "width": 160,
+        "height": 50
+      },
+      "confidence": 0.8
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "category": "modals",
+  "description": "Modal edycji profilu z polami formularza i przyciskiem zapisu.",
+  "expected_component_count": 5,
+  "expected_components": [
+    {"component_type": "modal", "label": "Edytuj profil", "bbox": {"x": 400, "y": 180, "width": 480, "height": 420}, "confidence": 0.92},
+    {"component_type": "input", "label": "Imie", "bbox": {"x": 430, "y": 250, "width": 420, "height": 40}, "confidence": 0.9},
+    {"component_type": "input", "label": "Email", "bbox": {"x": 430, "y": 310, "width": 420, "height": 40}, "confidence": 0.9},
+    {"component_type": "button", "label": "Zapisz", "bbox": {"x": 700, "y": 530, "width": 150, "height": 44}, "confidence": 0.95},
+    {"component_type": "button", "label": "Anuluj", "bbox": {"x": 430, "y": 530, "width": 150, "height": 44}, "confidence": 0.93}
+  ]
+}

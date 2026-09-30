@@ -1,0 +1,18 @@
+@startuml
+actor User as U
+participant "API Gateway" as GW
+participant "Service A" as A
+participant "Service B" as B
+
+U -> GW: request resource
+loop retry up to 3 times
+    GW -> A: fetch data
+    alt service A healthy
+        A --> GW: data
+    else service A down
+        GW -> B: fallback fetch
+        B --> GW: cached data
+    end
+end
+GW --> U: aggregated response
+@enduml

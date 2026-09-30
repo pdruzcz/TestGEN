@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Faktura VAT nr {{ invoice_number }}</title>
+</head>
+<body style="font-family: 'DejaVu Sans', Arial, sans-serif; font-size: 11px; color: #1a1a1a; margin: 40px;">
+  <!-- Nagłówek (AC1) -->
+  <div style="text-align: center; margin-bottom: 28px;">
+    <div style="font-size: 22px; font-weight: bold; letter-spacing: 1px;">FAKTURA VAT</div>
+    <div style="font-size: 15px; margin-top: 4px;">nr {{ invoice_number }}</div>
+  </div>
+
+  <!-- Daty -->
+  <table style="width: 100%; margin-bottom: 24px; border-collapse: collapse;">
+    <tr>
+      <td style="width: 50%; padding: 4px 0;">Data wystawienia: <b>{{ issue_date }}</b></td>
+      <td style="width: 50%; padding: 4px 0;">Data sprzedaży: <b>{{ sale_date }}</b></td>
+    </tr>
+  </table>
+
+  <!-- Sprzedawca / Nabywca (AC1) -->
+  <table style="width: 100%; margin-bottom: 28px; border-collapse: collapse;">
+    <tr>
+      <td style="width: 50%; vertical-align: top; padding-right: 16px;">
+        <div style="border: 1px solid #999; padding: 10px; height: 120px;">
+          <div style="font-weight: bold; text-transform: uppercase; margin-bottom: 8px;">Sprzedawca</div>
+          <div>{{ seller.name }}</div>
+          <div>NIP: {{ seller.nip }}</div>
+          {% if seller.krs %}<div>KRS: {{ seller.krs }}</div>{% endif %}
+          {% if seller.regon %}<div>REGON: {{ seller.regon }}</div>{% endif %}
+          <div>{{ seller.address.street }}</div>
+          <div>{{ seller.address.postal_code }} {{ seller.address.city }}</div>
+          <div>{{ seller.address.country }}</div>
+        </div>
+      </td>
+      <td style="width: 50%; vertical-align: top; padding-left: 16px;">
+        <div style="border: 1px solid #999; padding: 10px; height: 120px;">
+          <div style="font-weight: bold; text-transform: uppercase; margin-bottom: 8px;">Nabywca</div>
+          <div>{{ buyer.name }}</div>
+          {% if buyer.nip %}<div>NIP: {{ buyer.nip }}</div>{% endif %}
+          <div>{{ buyer.address.street }}</div>
+          <div>{{ buyer.address.postal_code }} {{ buyer.address.city }}</div>
+          <div>{{ buyer.address.country }}</div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Pozycje (AC1): lp, nazwa, okres, netto, VAT, brutto -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+    <thead>
+      <tr style="background: #f0f0f0;">
+        <th style="border: 1px solid #999; padding: 6px 8px; text-align: left;">Lp.</th>
+        <th style="border: 1px solid #999; padding: 6px 8px; text-align: left;">Nazwa</th>
+        <th style="border: 1px solid #999; padding: 6px 8px; text-align: left;">Okres</th>
+        <th style="border: 1px solid #999; padding: 6px 8px; text-align: right;">Netto</th>
+        <th style="border: 1px solid #999; padding: 6px 8px; text-align: right;">VAT</th>
+        <th style="border: 1px solid #999; padding: 6px 8px; text-align: right;">Brutto</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td style="border: 1px solid #999; padding: 6px 8px;">{{ loop.index }}</td>
+        <td style="border: 1px solid #999; padding: 6px 8px;">{{ item.name }}</td>
+        <td style="border: 1px solid #999; padding: 6px 8px;">{{ item.period }}</td>
+        <td style="border: 1px solid #999; padding: 6px 8px; text-align: right;">{{ item.net }}</td>
+        <td style="border: 1px solid #999; padding: 6px 8px; text-align: right;">{{ item.vat_rate }}% &middot; {{ item.vat_amount }}</td>
+        <td style="border: 1px solid #999; padding: 6px 8px; text-align: right;">{{ item.gross }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Podsumowanie (AC1) -->
+  <table style="width: 45%; margin-left: 55%; border-collapse: collapse; margin-bottom: 28px;">
+    <tr>
+      <td style="padding: 4px 8px;">Suma netto:</td>
+      <td style="padding: 4px 8px; text-align: right;">{{ subtotal_net }} {{ currency }}</td>
+    </tr>
+    <tr>
+      <td style="padding: 4px 8px;">VAT ({{ vat_rate }}%):</td>
+      <td style="padding: 4px 8px; text-align: right;">{{ vat_amount }} {{ currency }}</td>
+    </tr>
+    <tr style="font-weight: bold; border-top: 2px solid #1a1a1a;">
+      <td style="padding: 6px 8px;">Razem do zapłaty:</td>
+      <td style="padding: 6px 8px; text-align: right;">{{ total_gross }} {{ currency }}</td>
+    </tr>
+  </table>
+
+  <!-- Stopka: informacje o płatności (AC1/Task 3.1) -->
+  <div style="margin-top: 32px; font-size: 10px; color: #444;">
+    <p>Sposób płatności: {{ payment_method_display }}. Płatność została przyjęta.</p>
+    <p>Dokument wygenerowany automatycznie przez platformę TestGEN.</p>
+  </div>
+</body>
+</html>

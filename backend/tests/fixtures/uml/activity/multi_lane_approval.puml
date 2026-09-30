@@ -1,0 +1,24 @@
+@startuml
+|Pracownik|
+start
+:Złóż wniosek urlopowy;
+|Przełożony|
+:Przejrzyj wniosek;
+if (Wniosek zasadny?) then (tak)
+  :Zatwierdź wstępnie;
+  |HR|
+  :Sprawdź saldo urlopu;
+  if (Wystarczające saldo?) then (tak)
+    :Zatwierdź ostatecznie;
+    :Zaktualizuj kalendarz;
+  else (nie)
+    :Odrzuć z powodu salda;
+  endif
+else (nie)
+  |Przełożony|
+  :Odrzuć wniosek;
+endif
+|Pracownik|
+:Otrzymaj decyzję;
+stop
+@enduml

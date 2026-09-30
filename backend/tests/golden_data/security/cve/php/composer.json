@@ -1,0 +1,8 @@
+{
+  "name": "example/cve-golden",
+  "require": {
+    "php": ">=7.4",
+    "laravel/framework": "8.0.0",
+    "guzzlehttp/guzzle": "6.5.0"
+  }
+}

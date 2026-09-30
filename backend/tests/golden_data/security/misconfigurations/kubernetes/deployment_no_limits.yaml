@@ -1,0 +1,15 @@
+# Golden misconfig fixture (Story 4.14) — no resource limits (CWE-770).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: production
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: api
+          image: registry.example.com/api:1.4.2
+          securityContext:
+            runAsNonRoot: true

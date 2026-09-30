@@ -1,0 +1,70 @@
+@startuml c4-code-engine
+title TestGEN — C4 Level 4: Dual-Path Engine (wzorzec strategii)
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+
+package "Silnik analizy (dual-path)" {
+
+    interface "AnalysisStrategy" as strategy {
+        + analyze(source_files, config) : AnalysisResult
+        + supports_language(lang) : bool
+    }
+
+    class "NativeStrategy" as native {
+        - ast_parser: ASTParser
+        - logic_analyzer: LogicStructures
+        - data_flow: DataFlowAnalyzer
+        --
+        + analyze(source_files, config) : AnalysisResult
+        + supports_language(lang) : bool
+    }
+
+    class "LLMStrategy" as llm {
+        - llm_gateway: LLMGateway
+        - prompt_manager: PromptManager
+        --
+        + analyze(source_files, config) : AnalysisResult
+        + supports_language(lang) : bool
+    }
+
+    class "HybridStrategy" as hybrid {
+        - native: NativeStrategy
+        - llm: LLMStrategy
+        - merger: ResultMerger
+        --
+        + analyze(source_files, config) : AnalysisResult
+        + supports_language(lang) : bool
+    }
+
+    class "AnalysisEngine" as engine {
+        - strategy: AnalysisStrategy
+        - engine_mode: EngineMode
+        --
+        + run(project_id, files, mode) : AnalysisResult
+        - select_strategy(mode) : AnalysisStrategy
+    }
+
+    enum "EngineMode" as mode {
+        NATIVE
+        LLM
+        HYBRID
+    }
+
+    class "ResultMerger" as merger {
+        + merge(native_result, llm_result) : AnalysisResult
+        - deduplicate(items) : list
+        - prioritize(items) : list
+    }
+
+    strategy <|.. native
+    strategy <|.. llm
+    strategy <|.. hybrid
+    engine --> strategy : uses
+    engine --> mode : configured by
+    hybrid --> native : delegates
+    hybrid --> llm : delegates
+    hybrid --> merger : merges via
+}
+
+@enduml

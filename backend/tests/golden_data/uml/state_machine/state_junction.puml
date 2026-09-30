@@ -1,0 +1,9 @@
+@startuml
+[*] --> New
+New --> stateChoice
+state stateChoice <<choice>>
+stateChoice --> Approved : validated
+stateChoice --> Rejected : invalid
+Approved --> [*]
+Rejected --> [*]
+@enduml

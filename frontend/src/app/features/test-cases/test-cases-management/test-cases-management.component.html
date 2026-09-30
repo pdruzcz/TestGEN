@@ -1,0 +1,410 @@
+<div class="tc-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="tc-content" id="main-content" tabindex="-1">
+    <div class="tc-header">
+      <a mat-button [routerLink]="['/projects', projectId()]" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Wróć do szczegółów projektu
+      </a>
+
+      <div class="header-row">
+        <div>
+          <h1 class="page-title">Zarządzanie przypadkami testowymi</h1>
+          <p class="page-subtitle">
+            Filtruj, grupuj, edytuj i wykonuj akcje zbiorcze na przypadkach
+            testowych.
+          </p>
+        </div>
+        <button
+          mat-flat-button
+          color="primary"
+          class="tms-export-btn"
+          (click)="openTmsExport()"
+        >
+          <mat-icon>ios_share</mat-icon>
+          Eksportuj do TMS
+        </button>
+        <button
+          mat-stroked-button
+          color="primary"
+          class="tms-export-btn"
+          (click)="openTestRailExport()"
+        >
+          <mat-icon>cloud_upload</mat-icon>
+          Eksportuj do TestRail
+        </button>
+        <button
+          mat-stroked-button
+          color="primary"
+          class="tms-export-btn"
+          (click)="openExternalExport('xray')"
+        >
+          <mat-icon>cloud_upload</mat-icon>
+          Eksportuj do Xray
+        </button>
+        <button
+          mat-stroked-button
+          color="primary"
+          class="tms-export-btn"
+          (click)="openExternalExport('zephyr')"
+        >
+          <mat-icon>cloud_upload</mat-icon>
+          Eksportuj do Zephyr
+        </button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Łącznie</span>
+        <span class="stat-value">{{ total() }}</span>
+      </div>
+      <div class="stat-card stat-ready">
+        <span class="stat-label">Gotowe</span>
+        <span class="stat-value">{{ statusCounts().ready }}</span>
+      </div>
+      <div class="stat-card stat-passed">
+        <span class="stat-label">Zaliczone</span>
+        <span class="stat-value">{{ statusCounts().passed }}</span>
+      </div>
+      <div class="stat-card stat-failed">
+        <span class="stat-label">Niezaliczone</span>
+        <span class="stat-value">{{ statusCounts().failed }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Szkice</span>
+        <span class="stat-value">{{ statusCounts().draft }}</span>
+      </div>
+    </div>
+
+    <app-filter-group-panel
+      [availableModules]="availableModules()"
+      [filters]="filters()"
+      [groupBy]="groupBy()"
+      (filtersChange)="onFiltersChange($event)"
+      (groupByChange)="onGroupByChange($event)"
+    />
+
+    @if (selectedCount() > 0) {
+      <app-bulk-actions-bar
+        [selectedCount]="selectedCount()"
+        (statusChange)="bulkChangeStatus($event)"
+        (priorityChange)="bulkChangePriority($event)"
+        (deleteSelected)="bulkDelete()"
+        (exportSelected)="exportSelected()"
+        (clearSelection)="clearSelection()"
+      />
+    }
+
+    @if (isLoading()) {
+      <div class="loading">
+        <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+        <span>Ładowanie...</span>
+      </div>
+    } @else if (filteredTestCases().length === 0) {
+      <div class="empty">
+        <mat-icon>science</mat-icon>
+        <p>
+          Brak przypadków testowych spełniających kryteria. Zmień filtry lub
+          uruchom analizę projektu.
+        </p>
+      </div>
+    } @else {
+      <div class="table-wrap" #tableEl>
+        <table class="tc-table" aria-label="Lista przypadków testowych">
+          <caption class="visually-hidden">
+            Lista przypadków testowych
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col" class="check-col">
+                <mat-checkbox
+                  [checked]="allVisibleSelected()"
+                  [indeterminate]="someVisibleSelected()"
+                  (change)="toggleSelectAll()"
+                  aria-label="Zaznacz wszystkie widoczne"
+                ></mat-checkbox>
+              </th>
+              <th scope="col">ID</th>
+              <th
+                scope="col"
+                class="sortable"
+                [attr.aria-sort]="ariaSort('title')"
+                (click)="onSort('title')"
+              >
+                Tytuł
+                @if (sortBy() === "title") {
+                  <mat-icon class="sort-icon">{{
+                    sortOrder() === "asc" ? "arrow_upward" : "arrow_downward"
+                  }}</mat-icon>
+                }
+              </th>
+              <th
+                scope="col"
+                class="sortable"
+                [attr.aria-sort]="ariaSort('priority')"
+                (click)="onSort('priority')"
+              >
+                Priorytet
+                @if (sortBy() === "priority") {
+                  <mat-icon class="sort-icon">{{
+                    sortOrder() === "asc" ? "arrow_upward" : "arrow_downward"
+                  }}</mat-icon>
+                }
+              </th>
+              <th
+                scope="col"
+                class="sortable"
+                [attr.aria-sort]="ariaSort('type')"
+                (click)="onSort('type')"
+              >
+                Typ
+                @if (sortBy() === "type") {
+                  <mat-icon class="sort-icon">{{
+                    sortOrder() === "asc" ? "arrow_upward" : "arrow_downward"
+                  }}</mat-icon>
+                }
+              </th>
+              <th
+                scope="col"
+                class="sortable"
+                [attr.aria-sort]="ariaSort('source_class')"
+                (click)="onSort('source_class')"
+              >
+                Moduł
+                @if (sortBy() === "source_class") {
+                  <mat-icon class="sort-icon">{{
+                    sortOrder() === "asc" ? "arrow_upward" : "arrow_downward"
+                  }}</mat-icon>
+                }
+              </th>
+              <th
+                scope="col"
+                class="sortable"
+                [attr.aria-sort]="ariaSort('status')"
+                (click)="onSort('status')"
+              >
+                Status
+                @if (sortBy() === "status") {
+                  <mat-icon class="sort-icon">{{
+                    sortOrder() === "asc" ? "arrow_upward" : "arrow_downward"
+                  }}</mat-icon>
+                }
+              </th>
+              <th scope="col">Przypisany</th>
+              <th
+                scope="col"
+                class="sortable"
+                [attr.aria-sort]="ariaSort('updated_at')"
+                (click)="onSort('updated_at')"
+              >
+                Data modyfikacji
+                @if (sortBy() === "updated_at") {
+                  <mat-icon class="sort-icon">{{
+                    sortOrder() === "asc" ? "arrow_upward" : "arrow_downward"
+                  }}</mat-icon>
+                }
+              </th>
+              <th scope="col">Akcje</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (group of groups(); track group.key) {
+              @if (groupBy() !== "none") {
+                <tr class="group-row" (click)="toggleGroup(group.key)">
+                  <td colspan="10">
+                    <mat-icon class="group-icon">{{
+                      isGroupCollapsed(group.key)
+                        ? "chevron_right"
+                        : "expand_more"
+                    }}</mat-icon>
+                    <span class="group-label">{{ group.label }}</span>
+                    <span class="group-count">({{ group.items.length }})</span>
+                  </td>
+                </tr>
+              }
+              @if (!isGroupCollapsed(group.key)) {
+                @for (tc of group.items; track tc.id) {
+                  <tr
+                    class="tc-row"
+                    tabindex="0"
+                    [class.selected]="isSelected(tc.id)"
+                    (keydown)="onRowKeydown($event, tc)"
+                  >
+                    <td class="check-col">
+                      <mat-checkbox
+                        [checked]="isSelected(tc.id)"
+                        (change)="toggleSelection(tc.id)"
+                        [aria-label]="'Zaznacz ' + tc.title"
+                      ></mat-checkbox>
+                    </td>
+                    <td class="id-cell">{{ shortId(tc.id) }}</td>
+                    <td class="tc-title">
+                      {{ tc.title }}
+                      <app-locator-badge
+                        [testCode]="tc.testCode"
+                        [framework]="tc.framework"
+                      />
+                      @if (tc.tmsExternalId) {
+                        <span class="tms-badge" [title]="tmsSyncTitle(tc)">
+                          <mat-icon aria-hidden="true">sync_alt</mat-icon>
+                          #{{ tc.tmsExternalId }}
+                        </span>
+                      }
+                    </td>
+                    <td>
+                      <span [class]="badgeClass(tc.priority)">{{
+                        priorityLabels[tc.priority]
+                      }}</span>
+                    </td>
+                    <td>
+                      <span [class]="badgeClass(tc.type)">{{
+                        typeLabels[tc.type]
+                      }}</span>
+                      @if ((tc.type ?? "").toLowerCase() === "database") {
+                        @if (tc.dbObject) {
+                          <span class="db-object" title="Obiekt bazy danych">
+                            {{ tc.dbObject }}
+                          </span>
+                        }
+                        <span
+                          class="sqli-warn"
+                          title="Zapytania dynamiczne SQL są delegowane do modułu bezpieczeństwa (4.2/4.3) — zobacz potencjalne SQLi."
+                        >
+                          <mat-icon aria-hidden="true">warning</mat-icon>
+                          SQLi
+                        </span>
+                      }
+                    </td>
+                    <td class="module-cell">{{ moduleOf(tc) }}</td>
+                    <td>
+                      <span [class]="badgeClass(tc.status)">{{
+                        statusLabels[tc.status]
+                      }}</span>
+                    </td>
+                    <td>{{ tc.reviewedBy ? shortId(tc.reviewedBy) : "—" }}</td>
+                    <td class="date-cell">
+                      {{
+                        tc.updatedAt
+                          ? (tc.updatedAt | date: "dd.MM.yyyy HH:mm")
+                          : "—"
+                      }}
+                    </td>
+                    <td class="actions">
+                      <button
+                        class="icon-btn"
+                        [attr.aria-label]="'Edytuj ' + tc.title"
+                        (click)="openEditor(tc.id)"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        class="icon-btn"
+                        [attr.aria-label]="'Historia zmian ' + tc.title"
+                        (click)="openHistory(tc)"
+                      >
+                        <mat-icon>history</mat-icon>
+                      </button>
+                      <a
+                        [routerLink]="[
+                          '/projects',
+                          projectId(),
+                          'test-cases',
+                          tc.id,
+                        ]"
+                        class="icon-btn"
+                        [attr.aria-label]="'Szczegóły ' + tc.title"
+                      >
+                        <mat-icon>visibility</mat-icon>
+                      </a>
+                      <button
+                        class="icon-btn"
+                        [attr.aria-label]="'Usuń ' + tc.title"
+                        (click)="deleteTestCase(tc)"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                  @if (editingId() === tc.id) {
+                    <tr class="editor-row">
+                      <td colspan="10">
+                        <app-test-case-editor
+                          [testCase]="tc"
+                          (save)="saveTestCase(tc.id, $event)"
+                          (cancelEdit)="closeEditor()"
+                        />
+                      </td>
+                    </tr>
+                  }
+                }
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <mat-paginator
+        [length]="total()"
+        [pageSize]="pageSize()"
+        [pageIndex]="page() - 1"
+        [pageSizeOptions]="[20, 50, 100, 200]"
+        (page)="onPageChange($event)"
+        aria-label="Paginacja listy przypadków testowych"
+      ></mat-paginator>
+    }
+  </main>
+
+  @if (isTestRailDialogOpen()) {
+    <div class="dialog-backdrop">
+      <div
+        class="dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="testrail-export-title"
+      >
+        <h2 id="testrail-export-title" class="dialog-title">
+          Eksport do {{ exportTargetLabel() }}
+        </h2>
+
+        @if (testRailError()) {
+          <p class="form-error" role="alert">{{ testRailError() }}</p>
+        }
+
+        <p class="dialog-text">{{ testRailSummary() }}</p>
+        <p class="dialog-text">
+          Przypadki wyeksportowane wcześniej zostaną zaktualizowane, a nie
+          zduplikowane. Eksport idzie w tle — TestRail ogranicza tempo żądań,
+          więc większe paczki trwają kilka minut.
+        </p>
+
+        @if (testRailTaskId(); as taskId) {
+          <p class="dialog-text">
+            Eksport przyjęty. Postęp śledzisz pod identyfikatorem zadania
+            <code>{{ taskId }}</code>.
+          </p>
+        }
+
+        <div class="dialog-actions">
+          <button mat-button type="button" (click)="closeTestRailExport()">
+            {{ testRailTaskId() ? "Zamknij" : "Anuluj" }}
+          </button>
+          @if (!testRailTaskId()) {
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              [disabled]="isExportingToTestRail()"
+              (click)="confirmTestRailExport()"
+            >
+              {{ isExportingToTestRail() ? "Wysyłam..." : "Eksportuj" }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <app-footer />
+</div>

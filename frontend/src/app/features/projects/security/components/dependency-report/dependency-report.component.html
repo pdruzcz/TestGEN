@@ -1,0 +1,61 @@
+<div class="dep-report">
+  <div class="dep-report__head">
+    <h3>Podatne zależności (CVE)</h3>
+    <div class="dep-report__actions">
+      <button
+        mat-stroked-button
+        (click)="downloadSbom('cyclonedx')"
+        [disabled]="isDownloading()"
+      >
+        <mat-icon>download</mat-icon>
+        SBOM (CycloneDX)
+      </button>
+      <button
+        mat-stroked-button
+        (click)="downloadSbom('spdx')"
+        [disabled]="isDownloading()"
+      >
+        <mat-icon>download</mat-icon>
+        SBOM (SPDX)
+      </button>
+    </div>
+  </div>
+
+  @if (downloadError()) {
+    <div class="dep-report__error">{{ downloadError() }}</div>
+  }
+
+  @if (rows().length === 0) {
+    <p class="dep-report__empty">Brak podatnych zależności w tym skanie.</p>
+  } @else {
+    <table class="dep-report__table">
+      <caption class="visually-hidden">Podatne zależności projektu</caption>
+      <thead>
+        <tr>
+          <th scope="col">Waga</th>
+          <th scope="col">Pakiet</th>
+          <th scope="col">Wersja</th>
+          <th scope="col">CVE</th>
+          <th scope="col">CVSS</th>
+          <th scope="col">Poprawka</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.cveId + row.package) {
+          <tr>
+            <td>
+              <span class="badge badge--sev-{{ row.severity }}">{{
+                row.severity
+              }}</span>
+            </td>
+            <td>{{ row.package }}</td>
+            <td>{{ row.version }}</td>
+            <td>{{ row.cveId }}</td>
+            <td>{{ row.cvss ?? "—" }}</td>
+            <td>{{ row.fixedVersion ?? "brak" }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

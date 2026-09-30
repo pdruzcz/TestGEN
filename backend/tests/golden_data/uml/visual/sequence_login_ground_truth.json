@@ -1,0 +1,12 @@
+{
+  "diagram_type": "sequence",
+  "format": "svg",
+  "description": "Diagram sekwencji (SVG): uczestnicy User i Browser, 4 komunikaty (linie życia + strzałki). Ścieżka wizualna parse_svg.",
+  "expected_participants_count": 2,
+  "expected_elements_count": 2,
+  "expected_relationships_count": 4,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 0,
+  "expected_source": "ocr",
+  "expected_element_names": ["User", "Browser"]
+}

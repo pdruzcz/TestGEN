@@ -1,0 +1,11 @@
+@startuml
+[*] --> Oczekujaca
+Oczekujaca --> Autoryzowana : autoryzuj [limit_ok] / zarezerwuj_srodki
+Oczekujaca --> Odrzucona : autoryzuj [brak_srodkow]
+Autoryzowana --> Rozliczona : rozlicz / pobierz_srodki
+Autoryzowana --> Zwrocona : zwroc [w_terminie] / cofnij_rezerwacje
+Rozliczona --> Zwrocona : zwroc / wykonaj_zwrot
+Rozliczona --> [*]
+Zwrocona --> [*]
+Odrzucona --> [*]
+@enduml

@@ -1,0 +1,12 @@
+{
+  "category": "navigation",
+  "description": "Boczne menu nawigacyjne z pozycjami i aktywnym elementem.",
+  "expected_component_count": 5,
+  "expected_components": [
+    {"component_type": "menu", "label": "Menu boczne", "bbox": {"x": 0, "y": 0, "width": 240, "height": 900}, "confidence": 0.91},
+    {"component_type": "link", "label": "Pulpit", "bbox": {"x": 20, "y": 80, "width": 200, "height": 40}, "confidence": 0.86},
+    {"component_type": "link", "label": "Diagramy UML", "bbox": {"x": 20, "y": 130, "width": 200, "height": 40}, "confidence": 0.86},
+    {"component_type": "link", "label": "Screenshoty GUI", "bbox": {"x": 20, "y": 180, "width": 200, "height": 40}, "confidence": 0.86},
+    {"component_type": "link", "label": "Ustawienia", "bbox": {"x": 20, "y": 230, "width": 200, "height": 40}, "confidence": 0.86}
+  ]
+}

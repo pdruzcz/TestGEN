@@ -1,0 +1,26 @@
+{
+  "language": "python",
+  "name": "python_order_processor",
+  "requirements": [
+    {"req_id": "REQ-ORD-001", "text": "System must create an order from the shopping cart", "category": "business", "priority": "critical"},
+    {"req_id": "REQ-ORD-002", "text": "System must calculate VAT tax", "category": "business", "priority": "high"},
+    {"req_id": "REQ-ORD-003", "text": "System must apply discount codes", "category": "business", "priority": "medium"},
+    {"req_id": "REQ-ORD-004", "text": "System must calculate shipping cost", "category": "business", "priority": "medium"},
+    {"req_id": "REQ-ORD-005", "text": "System must cancel an order before payment", "category": "business", "priority": "high"},
+    {"req_id": "REQ-ORD-006", "text": "System must send an order confirmation email", "category": "notification", "priority": "medium"}
+  ],
+  "code_entities": [
+    {"entity_id": "ord-1", "name": "create_order_from_cart", "type": "function", "file_path": "src/orders/service.py", "line_number": 16, "language": "python", "docstring": "Create a new order based on the cart contents"},
+    {"entity_id": "ord-2", "name": "calculate_vat", "type": "function", "file_path": "src/orders/pricing.py", "line_number": 22, "language": "python", "docstring": "Calculate VAT tax for an order"},
+    {"entity_id": "ord-3", "name": "apply_discount_code", "type": "function", "file_path": "src/orders/pricing.py", "line_number": 48, "language": "python", "docstring": "Apply a discount code to the order total"},
+    {"entity_id": "ord-4", "name": "calculate_shipping_cost", "type": "function", "file_path": "src/orders/pricing.py", "line_number": 76, "language": "python", "docstring": "Compute shipping cost for the order"},
+    {"entity_id": "ord-5", "name": "cancel_order", "type": "function", "file_path": "src/orders/service.py", "line_number": 88, "language": "python", "docstring": "Cancel an order if payment has not been processed"},
+    {"entity_id": "ord-6", "name": "send_order_confirmation_email", "type": "function", "file_path": "src/orders/notifications.py", "line_number": 12, "language": "python", "docstring": "Send an order confirmation email to the customer"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-ORD-001", "REQ-ORD-002", "REQ-ORD-003", "REQ-ORD-004", "REQ-ORD-005", "REQ-ORD-006"],
+    "missing_req_ids": [],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 90.0
+  }
+}

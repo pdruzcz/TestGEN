@@ -1,0 +1,19 @@
+{
+  "title": "Dodawanie dwóch liczb dodatnich",
+  "scenario_name": "Dodawanie liczb dodatnich",
+  "description": "Sprawdza czy Calculator::add poprawnie dodaje liczby.",
+  "test_type": "unit",
+  "source_class": "Calculator",
+  "source_function": "add",
+  "test_data": {
+    "sets": [
+      {
+        "a": 1,
+        "b": 2,
+        "expected": 3
+      }
+    ]
+  },
+  "expected_result": "3",
+  "comparison_type": "equals"
+}

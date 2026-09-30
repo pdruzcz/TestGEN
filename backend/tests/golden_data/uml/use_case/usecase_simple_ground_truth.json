@@ -1,0 +1,9 @@
+{
+  "diagram_type": "use_case",
+  "description": "Prosty diagram use case: 2 aktorów, 3 przypadki użycia, system boundary.",
+  "expected_participants_count": 2,
+  "expected_elements_count": 3,
+  "expected_relationships_count": 3,
+  "expected_fragments_count": 1,
+  "expected_flows_count": 3
+}

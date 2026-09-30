@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1"
+         xmlns:uml="http://schema.omg.org/spec/UML/2.1">
+  <uml:Model xmi:type="uml:Model" xmi:id="model_1" name="LoginFlow">
+    <packagedElement xmi:type="uml:Activity" xmi:id="act_1" name="Login">
+      <node xmi:type="uml:InitialNode" xmi:id="n_start" name="start"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="n_enter" name="Wprowadź dane logowania"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="n_submit" name="Wyślij formularz"/>
+      <node xmi:type="uml:DecisionNode" xmi:id="n_dec" name="Dane poprawne?"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="n_session" name="Utwórz sesję"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="n_error" name="Pokaż komunikat błędu"/>
+      <node xmi:type="uml:MergeNode" xmi:id="n_merge" name=""/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="n_log" name="Zapisz log zdarzenia"/>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="n_stop" name="stop"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="f1" source="n_start" target="n_enter"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="f2" source="n_enter" target="n_submit"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="f3" source="n_submit" target="n_dec"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="f4" source="n_dec" target="n_session" guard="tak"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="f5" source="n_dec" target="n_error" guard="nie"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="f6" source="n_session" target="n_merge"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="f7" source="n_error" target="n_merge"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="f8" source="n_merge" target="n_log"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="f9" source="n_log" target="n_stop"/>
+      <group xmi:type="uml:ActivityPartition" xmi:id="p_user" name="Użytkownik" node="n_enter n_submit"/>
+      <group xmi:type="uml:ActivityPartition" xmi:id="p_system" name="System" node="n_session n_error n_log"/>
+    </packagedElement>
+  </uml:Model>
+</xmi:XMI>

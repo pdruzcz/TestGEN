@@ -1,0 +1,119 @@
+[project]
+name = "testgen-backend"
+version = "0.1.0"
+description = "TestGEN — AI-powered test case generation platform"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.135.0",
+    "sqlalchemy[asyncio]>=2.0",
+    "alembic>=1.14",
+    "psycopg[binary]>=3.2",
+    "PyPDF2>=3.0",
+    "asyncpg>=0.30",
+    "celery[rabbitmq]>=5.4",
+    "pydantic-settings>=2.7",
+    "argon2-cffi>=23.1",
+    "beautifulsoup4>=4.12",
+    "redis>=5.2",
+    "minio>=7.2",
+    "python-json-logger>=3.2",
+    "cryptography>=44.0",
+    "PyJWT[crypto]>=2.9",
+    "pyotp>=2.9",
+    "httpx>=0.28",
+    "jinja2>=3.1",
+    "python-docx>=1.1",
+    "pyyaml>=6.0",
+    "tenacity>=9.0",
+    # Story 1.53 (FR70): SQL DDL/migration parser for the database-layer schema
+    # extractor (DatabaseSchemaExtractor). Defensive import — degraduje do
+    # regexowego parsera DDL gdy pakiet niedostępny.
+    "sqlglot>=25.0",
+    "tree-sitter>=0.24",
+    # Language grammars for AST parsing adapters (Stories 1.15-1.19)
+    "tree-sitter-python>=0.23",
+    "tree-sitter-java>=0.23",
+    "tree-sitter-javascript>=0.23",
+    "tree-sitter-typescript>=0.23",
+    "tree-sitter-c-sharp>=0.23",
+    "tree-sitter-c>=0.23",
+    "tree-sitter-cpp>=0.23",
+    # Story 1.52 (FR12): PHP AST adapter — closes the PHP gap vs. the funding
+    # application's supported-languages list. Grammar exposes language_php().
+    "tree-sitter-php>=0.23",
+    # Epic 3: secure XML parsing for XMI diagrams (Story 3.1)
+    "defusedxml>=0.7",
+    # Epic 3, Story 3-15 closure (AC5): traceability matrix export (XLSX/PDF).
+    # Pure-Python wheels, appropriate for the runtime export endpoint.
+    "openpyxl>=3.1",
+    "reportlab>=4.2",
+    # Epic 7, Story 7.3 (AC6): metryki Prometheus webhooków płatności
+    # (webhook_processed_total / webhook_processing_seconds) + endpoint /metrics.
+    "prometheus-client>=0.21",
+    # Epic 7, Story 7.6 (AC2): render PDF faktur VAT z HTML (WeasyPrint).
+    # Wymaga natywnych bibliotek Pango/Cairo (Dockerfile: libpango itd.).
+    "weasyprint>=62.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.25",
+    "httpx>=0.28",
+    "ruff>=0.9",
+    "coverage>=7.6",
+    "pytest-cov>=6.0",
+    "fakeredis[lua]>=2.21",
+    # Note: reportlab (golden-data PDF sample generation, Story 2.11) moved to
+    # the main dependencies above (also used by the traceability PDF export).
+]
+imaging = [
+    # Optional imaging stack for GUI screenshot analysis (Stories 3.8/3.9/3.10)
+    # and the UML raster/PDF path (Story 3.1b). Image-gated golden tests skip
+    # without these rather than failing the suite (Story 3.14 closure, AC3).
+    "pillow>=10.0",
+    "opencv-python-headless>=4.8",
+    "numpy>=1.26",
+    "pytesseract>=0.3",
+    "PyMuPDF>=1.23",
+]
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH", "RUF"]
+ignore = ["E501", "B008", "A005"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+markers = [
+    "golden: golden-data regression tests for UML/GUI parsers (Story 3.14)",
+    "golden_data: security golden-data regression tests with detection/FP/recall thresholds (Story 4.14)",
+    "billing: tpay sandbox integration tests (Story 7.4) — require TPAY_* env; skipped by default",
+    "tpay_sandbox: integracyjne z prawdziwym sandboxem tpay (Story 7.12) — opt-in TPAY_SANDBOX_E2E=1 + sekrety TPAY_* z CI",
+]
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+omit = [
+    "app/models/base.py",
+]
+
+[tool.coverage.report]
+fail_under = 80

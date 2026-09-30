@@ -1,0 +1,13 @@
+{
+  "diagram_type": "class",
+  "semantic_type": "state_machine",
+  "format": "svg",
+  "description": "Semantycznie diagram stanu zamówienia (Idle/Processing/Done z zaokrąglonymi rect i przejściami). Klasyfikator wizualny rozpoznaje jako 'class' (rectangles) — STATE_MACHINE jest nieosiągalny przez classify_visual_diagram_type (diamonds->ACTIVITY×3 > STATE×1). Kandydat na osobne domknięcie classifiera; GT diagram_type = empirycznie detekowany (class), source=ocr.",
+  "expected_participants_count": 0,
+  "expected_elements_count": 3,
+  "expected_relationships_count": 3,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 0,
+  "expected_source": "ocr",
+  "expected_element_names": ["Idle", "Processing", "Done"]
+}

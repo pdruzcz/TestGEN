@@ -1,0 +1,73 @@
+{
+  "category": "real",
+  "description": "Angular Material docs (MIT) — komponent Menu, przykłady live: przyciski wyzwalające menu (Menu, ikona, positioned) w stanie spoczynkowym. Viewport 1280x800.",
+  "expected_component_count": 6,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidenav (lista komponentów)",
+      "bbox": {
+        "x": 0,
+        "y": 64,
+        "width": 290,
+        "height": 736
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Search (toolbar)",
+      "bbox": {
+        "x": 900,
+        "y": 12,
+        "width": 340,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Menu (trigger, demo)",
+      "bbox": {
+        "x": 370,
+        "y": 195,
+        "width": 140,
+        "height": 50
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Menu ikonowe (trigger, demo)",
+      "bbox": {
+        "x": 530,
+        "y": 195,
+        "width": 60,
+        "height": 50
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Przycisk trigger sekcji 2 (demo)",
+      "bbox": {
+        "x": 370,
+        "y": 380,
+        "width": 150,
+        "height": 50
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Przycisk trigger sekcji 3 (demo)",
+      "bbox": {
+        "x": 540,
+        "y": 380,
+        "width": 150,
+        "height": 50
+      },
+      "confidence": 0.8
+    }
+  ]
+}

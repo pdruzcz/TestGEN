@@ -1,0 +1,275 @@
+<div class="integrations-page">
+  <app-navbar activeLink="profile" />
+  <div class="integrations-content">
+    <aside class="sidebar">
+      <h3 class="sidebar-title">Ustawienia</h3>
+      <a mat-button routerLink="/settings/profile" class="sidebar-link"> <mat-icon>person</mat-icon> Profil </a>
+      <a mat-button routerLink="/settings/users" class="sidebar-link"> <mat-icon>group</mat-icon> Użytkownicy </a>
+      <a mat-button routerLink="/settings/api-keys" class="sidebar-link"> <mat-icon>vpn_key</mat-icon> Klucze API </a>
+      <a mat-button routerLink="/settings/integrations/github" class="sidebar-link">
+        <mat-icon>hub</mat-icon> Integracja GitHub
+      </a>
+      <a mat-button routerLink="/settings/integrations/gitlab" class="sidebar-link sidebar-active" aria-current="page">
+        <mat-icon>merge</mat-icon> Integracja GitLab
+      </a>
+      <a mat-button routerLink="/settings/integrations/webhooks" class="sidebar-link">
+        <mat-icon>webhook</mat-icon> Webhooki
+      </a>
+    </aside>
+
+    <main class="main-content" id="main-content" tabindex="-1">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Integracja z GitLab</h1>
+          <p class="page-subtitle">
+            Podłącz projekt, a TestGEN przeanalizuje kod przy każdym pushu na gałąź główną i przy każdym merge
+            requeście. Działa z gitlab.com i z instancjami self-hosted.
+          </p>
+        </div>
+      </div>
+
+      @if (!providerConfigured()) {
+        <p class="banner banner-warning" role="status">
+          Integracja z GitLab nie jest skonfigurowana na tym serwerze. Skontaktuj się z administratorem platformy.
+        </p>
+      }
+
+      @if (errorMessage()) {
+        <p class="banner banner-error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      @if (infoMessage()) {
+        <p class="banner banner-info" role="status">
+          {{ infoMessage() }}
+          <button mat-button type="button" (click)="dismissInfo()">Zamknij</button>
+        </p>
+      }
+
+      @if (providerConfigured()) {
+        <section class="panel">
+          <h2 class="panel-title">Adres instancji</h2>
+          <div class="instance-row">
+            <label class="field">
+              <span class="field-label">Adres GitLaba</span>
+              <input
+                type="url"
+                name="gitlabUrl"
+                placeholder="https://gitlab.com"
+                [ngModel]="gitlabUrl()"
+                (ngModelChange)="gitlabUrl.set($event)"
+              />
+              <span class="field-hint">
+                Dla instancji firmowej podaj jej pełny adres, np. https://git.twojafirma.pl
+              </span>
+            </label>
+            <button mat-raised-button color="primary" (click)="connectGitLab()">
+              <mat-icon>link</mat-icon>
+              Połącz z GitLab
+            </button>
+          </div>
+        </section>
+      }
+
+      <section class="panel">
+        <h2 class="panel-title">Podłączone projekty</h2>
+
+        @if (isLoading()) {
+          <div class="loading">
+            <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+            Ładowanie...
+          </div>
+        } @else if (integrations().length === 0) {
+          <p class="empty-state">
+            Nie masz jeszcze podłączonych projektów. Podaj adres instancji i kliknij „Połącz z GitLab”, aby autoryzować
+            dostęp.
+          </p>
+        } @else {
+          <table class="data-table">
+            <caption class="visually-hidden">
+              Lista podłączonych projektów GitLab
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Projekt</th>
+                <th scope="col">Instancja</th>
+                <th scope="col">Gałąź główna</th>
+                <th scope="col">Webhook</th>
+                <th scope="col">Podłączono</th>
+                <th scope="col">Akcje</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (integration of integrations(); track integration.id) {
+                <tr>
+                  <td class="repo-name">
+                    <a [href]="integration.repoUrl" target="_blank" rel="noopener noreferrer">{{
+                      integration.repoFullName
+                    }}</a>
+                  </td>
+                  <td class="instance-cell">{{ integration.gitlabUrl ?? '—' }}</td>
+                  <td>
+                    <code>{{ integration.defaultBranch }}</code>
+                  </td>
+                  <td>
+                    <span
+                      class="badge"
+                      [class.badge-ok]="integration.webhookActive"
+                      [class.badge-off]="!integration.webhookActive"
+                    >
+                      {{ webhookLabel(integration) }}
+                    </span>
+                  </td>
+                  <td>{{ integration.createdAt | date: 'dd.MM.yyyy' }}</td>
+                  <td class="actions">
+                    <a
+                      class="icon-btn"
+                      [routerLink]="['/settings/integrations', integration.id, 'history']"
+                      [queryParams]="{ provider: 'gitlab' }"
+                      [attr.aria-label]="'Historia status checków dla ' + integration.repoFullName"
+                    >
+                      <mat-icon aria-hidden="true">history</mat-icon>
+                    </a>
+                    <button
+                      class="icon-btn"
+                      type="button"
+                      (click)="openStatusConfig(integration.id, integration.repoFullName)"
+                      [attr.aria-label]="'Ustawienia status checka dla ' + integration.repoFullName"
+                    >
+                      <mat-icon aria-hidden="true">tune</mat-icon>
+                    </button>
+                    <button
+                      class="icon-btn"
+                      type="button"
+                      (click)="askRemove(integration.id)"
+                      [attr.aria-label]="'Odłącz projekt ' + integration.repoFullName"
+                    >
+                      <mat-icon aria-hidden="true">link_off</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Ostatnie zdarzenia</h2>
+
+        @if (events().length === 0) {
+          <p class="empty-state">
+            Brak zdarzeń. Pojawią się tu po pierwszym pushu lub merge requeście w podłączonym projekcie.
+          </p>
+        } @else {
+          <table class="data-table">
+            <caption class="visually-hidden">
+              Ostatnie zdarzenia z webhooków GitLab
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Zdarzenie</th>
+                <th scope="col">Projekt</th>
+                <th scope="col">Commit</th>
+                <th scope="col">Status</th>
+                <th scope="col">Kiedy</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (event of events(); track event.id) {
+                <tr>
+                  <td>{{ eventLabel(event) }}</td>
+                  <td>{{ event.repoFullName }}</td>
+                  <td>
+                    <code>{{ shortSha(event.commitSha) }}</code>
+                  </td>
+                  <td>
+                    <span class="badge" [class]="'status-' + event.status">
+                      {{ statusLabel(event.status) }}
+                    </span>
+                    @if (event.errorMessage) {
+                      <span class="event-detail">{{ event.errorMessage }}</span>
+                    }
+                  </td>
+                  <td>{{ event.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </section>
+    </main>
+  </div>
+
+  @if (isProjectPickerOpen()) {
+    <div class="dialog-backdrop">
+      <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="project-picker-title">
+        <h2 id="project-picker-title" class="dialog-title">Wybierz projekt</h2>
+
+        @if (isLoadingProjects()) {
+          <div class="loading">
+            <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+            Pobieram projekty z GitLaba...
+          </div>
+        } @else if (availableProjects().length === 0) {
+          <p class="empty-state">
+            Autoryzacja nie obejmuje żadnego projektu. Sprawdź uprawnienia aplikacji TestGEN na swojej instancji GitLab.
+          </p>
+        } @else {
+          <ul class="repo-list">
+            @for (project of availableProjects(); track project.projectId) {
+              <li class="repo-item">
+                <div class="repo-info">
+                  <span class="repo-item-name">{{ project.pathWithNamespace }}</span>
+                  <span class="repo-item-meta"> {{ project.visibility }} · {{ project.defaultBranch }} </span>
+                </div>
+                @if (project.connected) {
+                  <span class="badge badge-ok">Podłączony</span>
+                } @else {
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    [disabled]="connectingProjectId() !== null"
+                    (click)="connectProject(project)"
+                  >
+                    {{ connectingProjectId() === project.projectId ? 'Podłączam...' : 'Podłącz' }}
+                  </button>
+                }
+              </li>
+            }
+          </ul>
+        }
+
+        <div class="dialog-actions">
+          <button mat-button type="button" (click)="closeProjectPicker()">Zamknij</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (pendingRemovalId()) {
+    <div class="dialog-backdrop">
+      <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="remove-project-title">
+        <h2 id="remove-project-title" class="dialog-title">Odłączyć projekt?</h2>
+        <p class="dialog-text">
+          TestGEN usunie webhook z projektu i przestanie analizować nowe pushe oraz merge requesty. Dotychczasowe wyniki
+          analiz zostaną zachowane.
+        </p>
+        <div class="dialog-actions">
+          <button mat-button type="button" (click)="cancelRemove()">Anuluj</button>
+          <button mat-raised-button color="warn" type="button" (click)="confirmRemove()">Odłącz</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (configuringId()) {
+    <app-status-check-config
+      [integrationId]="configuringId()!"
+      [repoName]="configuringName()"
+      (closed)="closeStatusConfig()"
+      (saved)="onStatusConfigSaved()"
+    />
+  }
+
+  <app-footer />
+</div>

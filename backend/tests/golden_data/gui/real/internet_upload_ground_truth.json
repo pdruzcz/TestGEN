@@ -1,0 +1,62 @@
+{
+  "category": "real",
+  "description": "the-internet (Sauce Labs, MIT) — /upload. Formularz uploadu pliku (drag&drop + file input + przycisk Upload).",
+  "expected_component_count": 5,
+  "expected_components": [
+    {
+      "component_type": "link",
+      "label": "The Internet",
+      "bbox": {
+        "x": 30,
+        "y": 26,
+        "width": 120,
+        "height": 24
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Elemental Selenium",
+      "bbox": {
+        "x": 1010,
+        "y": 26,
+        "width": 240,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "form",
+      "label": "File Uploader (drag & drop)",
+      "bbox": {
+        "x": 500,
+        "y": 200,
+        "width": 280,
+        "height": 220
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Choose File",
+      "bbox": {
+        "x": 555,
+        "y": 298,
+        "width": 120,
+        "height": 30
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Upload",
+      "bbox": {
+        "x": 588,
+        "y": 352,
+        "width": 104,
+        "height": 42
+      },
+      "confidence": 0.9
+    }
+  ]
+}

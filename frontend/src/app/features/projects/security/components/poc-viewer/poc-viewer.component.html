@@ -1,0 +1,76 @@
+<div class="poc-viewer">
+  <div class="poc-viewer__head">
+    <h3>Proof of Concept</h3>
+    <div class="poc-viewer__engine">
+      <span class="poc-viewer__mode poc-viewer__mode--active">
+        Silnik analizy: {{ engineModeLabel() }}
+      </span>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="generate()"
+        [disabled]="isLoading()"
+      >
+        <mat-icon>science</mat-icon>
+        Generuj PoC
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="poc-viewer__error">{{ errorMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <mat-spinner diameter="28" aria-label="Ładowanie"></mat-spinner>
+  } @else if (poc(); as p) {
+    <div class="poc-viewer__section">
+      <div class="poc-viewer__code-head">
+        <h4>Payload</h4>
+        <button mat-stroked-button (click)="copyPayload()">
+          <mat-icon>{{ copied() ? "check" : "content_copy" }}</mat-icon>
+          {{ copied() ? "Skopiowano" : "Kopiuj payload" }}
+        </button>
+      </div>
+      <pre class="poc-viewer__payload"><code>{{ p.payload }}</code></pre>
+    </div>
+
+    <div class="poc-viewer__section">
+      <h4>Kroki reprodukcji</h4>
+      <ol class="poc-viewer__steps">
+        @for (step of p.reproductionSteps; track $index) {
+          <li>{{ step }}</li>
+        }
+      </ol>
+    </div>
+
+    <div class="poc-viewer__section">
+      <h4>Oczekiwany efekt</h4>
+      <p>{{ p.expectedEffect }}</p>
+    </div>
+
+    <div class="poc-viewer__meta">
+      <span class="poc-viewer__badge poc-viewer__badge--sev-{{ p.severity }}">{{
+        p.severity
+      }}</span>
+      @if (p.isSafe) {
+        <span class="poc-viewer__badge poc-viewer__badge--safe">
+          <mat-icon>verified_user</mat-icon> Bezpieczny
+        </span>
+      }
+      <span class="poc-viewer__source">{{
+        p.engineSource === "llm" ? "LLM" : "Szablon natywny"
+      }}</span>
+    </div>
+
+    <div class="poc-viewer__disclaimer">
+      <mat-icon>warning</mat-icon>
+      {{ p.disclaimer }}
+    </div>
+  } @else {
+    <p class="poc-viewer__hint">
+      Wybierz tryb i kliknij „Generuj PoC”, aby zobaczyć bezpieczny payload,
+      kroki reprodukcji i oczekiwany efekt.
+    </p>
+  }
+</div>

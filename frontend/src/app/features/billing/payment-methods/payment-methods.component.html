@@ -1,0 +1,91 @@
+<section class="payment-methods">
+  <header class="page-title">
+    <h1>Metody płatności</h1>
+    <p>Karty i aliasy BLIK używane do automatycznych odnowień subskrypcji.</p>
+  </header>
+
+  @if (pastDue()) {
+    <div class="banner banner-warning" role="alert">
+      <mat-icon aria-hidden="true">warning</mat-icon>
+      <p>
+        Płatność za subskrypcję nie powiodła się. Sprawdź metodę płatności — po
+        3 nieudanych próbach plan zostanie obniżony do Freemium.
+      </p>
+    </div>
+  }
+
+  @if (error()) {
+    <mat-card class="card">
+      <p class="error">{{ error() }}</p>
+      <a mat-flat-button color="primary" routerLink="/billing/plans">
+        Wróć do planów
+      </a>
+    </mat-card>
+  } @else {
+    <mat-card class="card methods-card">
+      @if (loading()) {
+        <p class="status">Pobieranie metod płatności…</p>
+      } @else if (methods().length === 0) {
+        <p class="status">
+          Brak zapisanych metod płatności. Dodaj kartę, aby odnowienia
+          następowały automatycznie.
+        </p>
+      } @else {
+        <ul class="methods">
+          @for (method of methods(); track method.id) {
+            <li class="method-row">
+              <div class="method-info">
+                <mat-icon aria-hidden="true">{{
+                  methodIcon(method.kind)
+                }}</mat-icon>
+                <div>
+                  <p class="method-title">{{ methodTitle(method) }}</p>
+                  <p class="method-subtitle">{{ methodSubtitle(method) }}</p>
+                </div>
+              </div>
+              <div class="method-meta">
+                <mat-chip-set aria-label="Status metody płatności">
+                  @if (method.isDefault) {
+                    <mat-chip class="chip-default">Domyślna</mat-chip>
+                  }
+                  <mat-chip
+                    [class.chip-active]="method.tpayStatus === 'active'"
+                    [class.chip-pending]="method.tpayStatus === 'pending'"
+                  >
+                    {{ statusLabel(method) }}
+                  </mat-chip>
+                </mat-chip-set>
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="delete"
+                  [attr.aria-label]="
+                    'Usuń metodę płatności ' + methodTitle(method)
+                  "
+                  (click)="remove(method)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </mat-card>
+
+    @if (actionError()) {
+      <p class="action-error" role="alert">{{ actionError() }}</p>
+    }
+
+    <div class="actions">
+      <button mat-flat-button color="primary" type="button" (click)="addCard()">
+        <mat-icon aria-hidden="true">credit_card</mat-icon>
+        Dodaj kartę
+      </button>
+      <p class="note">
+        Zostaniesz przekierowany do bezpiecznej strony tpay, aby zapisać kartę
+        (bez obciążania). Po powrocie karta pojawi się na liście.
+      </p>
+    </div>
+  }
+</section>

@@ -1,0 +1,70 @@
+// Story 6.10 (AC3) — reflow przy zoom 200% (WCAG 2.1 SC 1.4.10).
+// Zoom 200% na viewport 960px daje efektywnie 480px szerokości —
+// layout musi być czytelny bez poziomego scrollbara na treści
+// (wyjątek: tabele danych, które dostają własny scroll poziomy).
+
+$zoom-breakpoint: 480px;
+
+/// Mixin do włączenia raz w styles.scss.
+@mixin global-responsive-styles {
+  // Tekst i media nigdy nie wychodzą poza kontener.
+  img,
+  svg,
+  video,
+  pre,
+  code {
+    max-width: 100%;
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  li,
+  td,
+  th,
+  label {
+    overflow-wrap: break-word;
+  }
+
+  // Tabele danych: scroll poziomy wewnątrz wrappera zamiast rozpychania
+  // strony (SC 1.4.10 dopuszcza 2-wymiarowy scroll dla tabel danych).
+  .table-wrap,
+  .mat-mdc-table-container {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  table {
+    max-width: 100%;
+  }
+
+  @media (max-width: $zoom-breakpoint) {
+    // Brak poziomego scrollbara na treści przy 200% zoom.
+    html,
+    body {
+      overflow-x: hidden;
+    }
+
+    // Tabele przewijalne w miejscu — owinięcie awaryjne dla tabel
+    // bez dedykowanego wrappera.
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    // Formularze i karty w jednej kolumnie.
+    .mat-mdc-form-field {
+      width: 100%;
+    }
+
+    // Dialogi nie przekraczają viewportu.
+    .mat-mdc-dialog-surface {
+      max-width: 100vw !important;
+    }
+  }
+}

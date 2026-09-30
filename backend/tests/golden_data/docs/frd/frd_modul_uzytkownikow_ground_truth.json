@@ -1,0 +1,36 @@
+{
+  "name": "frd_modul_uzytkownikow",
+  "doc_category": "frd",
+  "format": "pdf",
+  "language": "pl",
+  "has_intentional_discrepancies": true,
+  "expected_classification": {
+    "doc_type": "specyfikacja_wymagań",
+    "min_confidence": 50.0
+  },
+  "expected_requirements": {
+    "min_count": 6,
+    "expected_texts": [
+      "WYM-001: System musi tworzyć konta użytkowników z przypisaną rolą.",
+      "WYM-002: System musi dezaktywować konto użytkownika na żądanie administratora.",
+      "WYM-003: System musi przypisywać nową rolę użytkownikowi podczas tworzenia konta w panelu\nadministracyjnym systemu.",
+      "WYM-004: System musi przypisywać nową rolę użytkownikowi podczas tworzenia konta w panelu\nadministracyjnym systemu.",
+      "WYM-005: System musi zapraszać nowych użytkowników wiadomością email zgodnie z procedurą\nUC-777.",
+      "WYM-010: System musi zapewniać bezpieczeństwo danych osobowych użytkowników."
+    ]
+  },
+  "expected_inconsistencies": {
+    "detectable_types": [
+      "duplicate",
+      "missing_reference"
+    ],
+    "min_detectable_count": 2
+  },
+  "expected_glossary": {
+    "min_terms": 2,
+    "expected_terms": [
+      "Rola",
+      "Uprawnienie"
+    ]
+  }
+}

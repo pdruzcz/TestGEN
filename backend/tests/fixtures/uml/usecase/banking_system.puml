@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+actor "Klient" as Client
+actor "Kasjer" as Teller
+rectangle "System bankowy" {
+  usecase "Sprawdź saldo" as UC1
+  usecase "Wypłać gotówkę" as UC2
+  usecase "Przelew" as UC3
+  usecase "Autoryzacja" as UC4
+}
+Client -- UC1
+Client -- UC2
+Teller -- UC3
+UC2 ..> UC4 : <<include>>
+UC3 ..> UC4 : <<include>>
+@enduml

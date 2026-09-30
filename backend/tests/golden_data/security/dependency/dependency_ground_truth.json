@@ -1,0 +1,35 @@
+{
+  "description": "Frozen dependency manifests across five ecosystems with expected parse results (Story 4.4).",
+  "samples": [
+    {
+      "file": "requirements.txt",
+      "ecosystem": "pypi",
+      "expected_packages": ["Django", "requests", "flask", "pytest"],
+      "expected_versions": {"Django": "3.2.0", "flask": "1.1.2", "pytest": "7.4.0"}
+    },
+    {
+      "file": "package.json",
+      "ecosystem": "npm",
+      "expected_packages": ["lodash", "axios", "jest"],
+      "expected_versions": {"lodash": "4.17.20", "axios": "0.21.1", "jest": "29.0.0"}
+    },
+    {
+      "file": "pom.xml",
+      "ecosystem": "maven",
+      "expected_packages": ["org.springframework:spring-core", "com.fasterxml.jackson.core:jackson-databind"],
+      "expected_versions": {"org.springframework:spring-core": "5.3.0", "com.fasterxml.jackson.core:jackson-databind": "2.9.10"}
+    },
+    {
+      "file": "app.csproj",
+      "ecosystem": "nuget",
+      "expected_packages": ["Newtonsoft.Json", "Serilog"],
+      "expected_versions": {"Newtonsoft.Json": "12.0.1", "Serilog": "2.10.0"}
+    },
+    {
+      "file": "composer.json",
+      "ecosystem": "composer",
+      "expected_packages": ["monolog/monolog", "guzzlehttp/guzzle"],
+      "expected_versions": {"monolog/monolog": "2.0.0", "guzzlehttp/guzzle": "6.5.0"}
+    }
+  ]
+}

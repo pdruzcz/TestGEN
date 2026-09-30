@@ -1,0 +1,91 @@
+// Story 6.14, Task 2 — wiadomość czatu. Kolory z palety zweryfikowanej
+// pod kątem kontrastu WCAG 2.1 AA (Story 6.9).
+@use "../../../styles/colors" as colors;
+
+.chat-message {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 0;
+
+  &--user {
+    flex-direction: row-reverse;
+
+    .chat-message__body {
+      background: colors.$wcag-surface;
+      text-align: left;
+    }
+  }
+
+  &--error .chat-message__body {
+    border-color: colors.$wcag-error;
+    color: colors.$wcag-error;
+  }
+}
+
+.chat-message__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid colors.$wcag-action-primary;
+  color: colors.$wcag-action-primary;
+  background: colors.$wcag-background;
+}
+
+.chat-message__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 8px 12px;
+  border: 1px solid colors.$wcag-text-muted;
+  border-radius: 8px;
+  background: colors.$wcag-background;
+  color: colors.$wcag-text-primary;
+}
+
+.chat-message__text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.chat-ref {
+  color: colors.$wcag-action-primary;
+  text-decoration: underline;
+}
+
+.chat-message__time {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: colors.$wcag-text-secondary;
+}
+
+// Kursor strumieniowania (AC7). Animacja wyłączana w trybie ograniczonych
+// animacji (Story 6.10) — wtedy kursor pozostaje widoczny bez migotania.
+.chat-message__cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: colors.$wcag-text-primary;
+  animation: chat-cursor-blink 1s step-end infinite;
+}
+
+@keyframes chat-cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-message__cursor {
+    animation: none;
+  }
+}

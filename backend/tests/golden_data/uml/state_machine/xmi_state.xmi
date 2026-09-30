@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+  <packagedElement xmi:type="uml:StateMachine" xmi:id="sm1" name="OrderState">
+    <region xmi:id="r1" name="main">
+      <subvertex xmi:type="uml:Pseudostate" xmi:id="ps1" name="Initial"/>
+      <subvertex xmi:type="uml:State" xmi:id="s1" name="New"/>
+      <subvertex xmi:type="uml:State" xmi:id="s2" name="Processing"/>
+      <subvertex xmi:type="uml:FinalState" xmi:id="fs1" name="Final"/>
+      <transition xmi:id="t1" source="ps1" target="s1"/>
+      <transition xmi:id="t2" source="s1" target="s2"/>
+      <transition xmi:id="t3" source="s2" target="fs1"/>
+    </region>
+  </packagedElement>
+</xmi:XMI>

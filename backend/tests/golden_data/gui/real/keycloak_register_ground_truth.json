@@ -1,0 +1,117 @@
+{
+  "category": "real",
+  "description": "Keycloak 26.7.1 — rejestracja (viewport 1280x1024; formularz dluzszy niz 800px). Apache-2.0.",
+  "expected_component_count": 10,
+  "expected_components": [
+    {
+      "component_type": "form",
+      "label": "Register",
+      "bbox": {
+        "x": 365,
+        "y": 200,
+        "width": 550,
+        "height": 823
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "menu",
+      "label": "Register",
+      "bbox": {
+        "x": 488,
+        "y": 97,
+        "width": 304,
+        "height": 46
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Username",
+      "bbox": {
+        "x": 414,
+        "y": 349,
+        "width": 452,
+        "height": 40
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Password",
+      "bbox": {
+        "x": 414,
+        "y": 404,
+        "width": 452,
+        "height": 40
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Confirm password",
+      "bbox": {
+        "x": 414,
+        "y": 459,
+        "width": 452,
+        "height": 40
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Email",
+      "bbox": {
+        "x": 414,
+        "y": 514,
+        "width": 452,
+        "height": 40
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "First name",
+      "bbox": {
+        "x": 414,
+        "y": 569,
+        "width": 452,
+        "height": 40
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Last name",
+      "bbox": {
+        "x": 414,
+        "y": 624,
+        "width": 452,
+        "height": 40
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Register",
+      "bbox": {
+        "x": 413,
+        "y": 905,
+        "width": 453,
+        "height": 45
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Back to Login",
+      "bbox": {
+        "x": 583,
+        "y": 967,
+        "width": 115,
+        "height": 20
+      },
+      "confidence": 0.8
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "category": "dashboards",
+  "description": "Panel administratora: menu, tabela uzytkownikow, przyciski akcji, wyszukiwarka.",
+  "expected_component_count": 6,
+  "expected_components": [
+    {"component_type": "menu", "label": "Menu admina", "bbox": {"x": 0, "y": 0, "width": 240, "height": 900}, "confidence": 0.9},
+    {"component_type": "input", "label": "Szukaj uzytkownika", "bbox": {"x": 280, "y": 40, "width": 400, "height": 40}, "confidence": 0.9},
+    {"component_type": "table", "label": "Uzytkownicy", "bbox": {"x": 280, "y": 110, "width": 1000, "height": 600}, "confidence": 0.9},
+    {"component_type": "button", "label": "Dodaj uzytkownika", "bbox": {"x": 1120, "y": 40, "width": 160, "height": 40}, "confidence": 0.95},
+    {"component_type": "button", "label": "Usun zaznaczone", "bbox": {"x": 940, "y": 40, "width": 160, "height": 40}, "confidence": 0.93},
+    {"component_type": "dropdown", "label": "Filtr roli", "bbox": {"x": 700, "y": 40, "width": 160, "height": 40}, "confidence": 0.87}
+  ]
+}

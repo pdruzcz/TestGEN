@@ -1,0 +1,23 @@
+@if (alerts.alert(); as alert) {
+  <div class="feature-banner" role="alert" data-testid="feature-locked-banner">
+    <mat-icon aria-hidden="true">lock</mat-icon>
+    <span class="feature-banner__message">{{ message() }}</span>
+    <a
+      mat-flat-button
+      color="primary"
+      routerLink="/billing/plans"
+      data-testid="feature-locked-cta"
+      (click)="dismiss()"
+    >
+      Zobacz plany
+    </a>
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Zamknij komunikat o zablokowanej funkcji"
+      (click)="dismiss()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+}

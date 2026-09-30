@@ -1,0 +1,12 @@
+{
+  "category": "forms",
+  "description": "Formularz logowania: pola email/hasło, przycisk submit, link odzyskiwania hasła.",
+  "expected_component_count": 5,
+  "expected_components": [
+    {"component_type": "form", "label": "Logowanie", "bbox": {"x": 120, "y": 80, "width": 360, "height": 320}, "confidence": 0.92},
+    {"component_type": "input", "label": "Email", "bbox": {"x": 150, "y": 140, "width": 300, "height": 40}, "confidence": 0.9},
+    {"component_type": "input", "label": "Haslo", "bbox": {"x": 150, "y": 200, "width": 300, "height": 40}, "confidence": 0.9},
+    {"component_type": "button", "label": "Zaloguj", "bbox": {"x": 150, "y": 270, "width": 300, "height": 44}, "confidence": 0.95},
+    {"component_type": "link", "label": "Nie pamietam hasla", "bbox": {"x": 150, "y": 330, "width": 180, "height": 24}, "confidence": 0.85}
+  ]
+}

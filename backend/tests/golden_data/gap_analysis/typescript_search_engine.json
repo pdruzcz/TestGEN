@@ -1,0 +1,27 @@
+{
+  "language": "typescript",
+  "name": "typescript_search_engine",
+  "requirements": [
+    {"req_id": "REQ-SRCH-001", "text": "System must index documents", "category": "indexing", "priority": "high"},
+    {"req_id": "REQ-SRCH-002", "text": "System must perform full-text search", "category": "search", "priority": "critical"},
+    {"req_id": "REQ-SRCH-003", "text": "System must filter search results by date", "category": "filter", "priority": "medium"},
+    {"req_id": "REQ-SRCH-004", "text": "System must sort search results by relevance", "category": "search", "priority": "high"},
+    {"req_id": "REQ-SRCH-005", "text": "System must paginate search results", "category": "ui", "priority": "medium"},
+    {"req_id": "REQ-SRCH-006", "text": "System must suggest similar documents", "category": "feature", "priority": "low"},
+    {"req_id": "REQ-SRCH-007", "text": "System must cache search results", "category": "performance", "priority": "medium"}
+  ],
+  "code_entities": [
+    {"entity_id": "srch-1", "name": "indexDocument", "type": "function", "file_path": "src/search/indexer.ts", "line_number": 10, "language": "typescript", "docstring": "Index a document for searching"},
+    {"entity_id": "srch-2", "name": "fullTextSearch", "type": "function", "file_path": "src/search/engine.ts", "line_number": 32, "language": "typescript", "docstring": "Perform full-text search across the index"},
+    {"entity_id": "srch-3", "name": "filterByDate", "type": "function", "file_path": "src/search/filters.ts", "line_number": 8, "language": "typescript", "docstring": "Filter search results by date range"},
+    {"entity_id": "srch-4", "name": "sortByRelevance", "type": "function", "file_path": "src/search/engine.ts", "line_number": 76, "language": "typescript", "docstring": "Sort search results by relevance score"},
+    {"entity_id": "srch-5", "name": "paginate", "type": "function", "file_path": "src/search/pagination.ts", "line_number": 14, "language": "typescript", "docstring": "Paginate search results"},
+    {"entity_id": "srch-6", "name": "cacheResults", "type": "function", "file_path": "src/search/cache.ts", "line_number": 18, "language": "typescript", "docstring": "Cache search results for subsequent queries"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-SRCH-001", "REQ-SRCH-002", "REQ-SRCH-003", "REQ-SRCH-004", "REQ-SRCH-005", "REQ-SRCH-007"],
+    "missing_req_ids": ["REQ-SRCH-006"],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 80.0
+  }
+}

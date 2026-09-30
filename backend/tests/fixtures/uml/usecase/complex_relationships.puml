@@ -1,0 +1,19 @@
+@startuml
+left to right direction
+actor "Gość" as Guest
+actor "Zarejestrowany" as Member
+actor "Premium" as Premium
+Member --|> Guest
+Premium --|> Member
+usecase "Przeglądaj katalog" as UC1
+usecase "Zarejestruj się" as UC2
+usecase "Złóż zamówienie" as UC3
+usecase "Walidacja płatności" as UC4
+usecase "Rabat lojalnościowy" as UC5
+usecase "Szybka dostawa" as UC6
+Guest -- UC1
+Member -- UC3
+UC3 ..> UC4 : <<include>>
+UC5 ..> UC3 : <<extend>>
+UC6 ..> UC3 : <<extend>>
+@enduml

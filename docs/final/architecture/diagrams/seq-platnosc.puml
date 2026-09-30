@@ -1,0 +1,66 @@
+@startuml seq-platnosc
+title Diagram sekwencji — Płatność (checkout + webhook tpay)
+
+actor "Owner" as user
+participant "Frontend\n(Angular)" as fe
+participant "Backend API\n(FastAPI)" as api
+database "PostgreSQL" as db
+participant "tpay\n(bramka płatności)" as tpay
+database "MinIO" as minio
+
+== Checkout ==
+
+user -> fe : Wybiera plan (Basic/Premium)\ni klika "Zmień plan"
+fe -> api : POST /api/v1/billing/checkout\n{plan: "basic"}
+
+api -> db : Sprawdzenie aktualnego planu\ni subskrypcji
+api -> tpay : POST /transactions\n(kwota, opis, return_url, notify_url)
+tpay -> api : 200 OK {transaction_id, payment_url}
+api -> db : INSERT INTO payments\n(transaction_id, status='pending')
+api -> fe : 200 OK {payment_url}
+
+fe -> user : Przekierowanie do tpay
+
+user -> tpay : Płatność (BLIK / karta / przelew)
+tpay -> user : Potwierdzenie płatności\n(przekierowanie na return_url)
+
+== Webhook ==
+
+tpay -> api : POST /api/v1/billing/webhooks/tpay\n(JWS-signed payload)
+
+api -> api : Weryfikacja podpisu JWS\n(klucz publiczny tpay)
+api -> db : Zapis surowego webhooka\nINSERT INTO webhook_events
+api -> api : WebhookProcessor.classify()
+
+alt Transakcja formularzowa (paid)
+    api -> db : UPDATE payments\nSET status='completed'
+    api -> db : UPDATE subscriptions\nSET plan='basic', status='active'
+    api -> db : INSERT INTO plan_changes\n(from='freemium', to='basic')
+    api -> api : Generowanie faktury VAT (PDF)
+    api -> minio : Zapis faktury\n(bucket: testgen-invoices)
+    api -> db : INSERT INTO invoices\n(pdf_path, amount, vat)
+    api -> db : INSERT INTO audit_logs\n(action='billing.payment_success')
+else Tokenizacja (BLIK alias / karta)
+    api -> db : INSERT INTO payment_tokens\n(token_hash, type, last4)
+end
+
+api -> tpay : 200 OK (potwierdzenie)
+
+== Automatyczne odnowienie (Celery Beat — codziennie 03:30) ==
+
+note over api : Celery Beat: subscription_renewal_task
+
+api -> db : SELECT subscriptions\nWHERE next_billing_date <= today
+loop Dla każdej subskrypcji do odnowienia
+    api -> db : SELECT FROM payment_tokens\nWHERE tenant_id=? AND active
+    api -> tpay : POST /transactions\n(token charge, kwota)
+    alt Płatność udana
+        api -> db : UPDATE subscriptions\nSET next_billing_date += 30 days
+        api -> api : Generowanie faktury
+    else Płatność nieudana
+        api -> db : UPDATE subscriptions\nSET status='grace',\ngrace_ends_at=now()+7d
+        note right : Po 7 dniach → downgrade\ndo Freemium
+    end
+end
+
+@enduml

@@ -1,0 +1,66 @@
+<section class="usage-dashboard" aria-labelledby="usage-title">
+  <header class="page-header">
+    <div>
+      <h1 id="usage-title">Zużycie zasobów</h1>
+      <p class="subtitle">
+        Śledź wykorzystanie planu i wiedz, kiedy uaktualnić subskrypcję.
+      </p>
+    </div>
+    <!-- AC2 — okres rozliczeniowy, plan, dni do końca -->
+    <dl class="period-info">
+      <div class="period-item">
+        <dt>Plan</dt>
+        <dd>{{ planLabel() }}</dd>
+      </div>
+      <div class="period-item">
+        <dt>Okres rozliczeniowy</dt>
+        <dd>{{ periodLabel() }}</dd>
+      </div>
+      <div class="period-item">
+        <dt>Do końca okresu</dt>
+        <dd>{{ daysLabel() }}</dd>
+      </div>
+    </dl>
+  </header>
+
+  @if (loading()) {
+    <div class="state" role="status" aria-live="polite">
+      <mat-spinner [diameter]="40" />
+      <p>Ładowanie danych zużycia…</p>
+    </div>
+  } @else if (error()) {
+    <div class="state error" role="alert">
+      <p>{{ error() }}</p>
+      <button mat-stroked-button type="button" (click)="load()">
+        Spróbuj ponownie
+      </button>
+    </div>
+  } @else if (dashboard(); as d) {
+    <!-- AC4 — prognoza limitu analiz; ostrzeżenie + CTA przy przekroczeniu
+         przed końcem okresu -->
+    @if (d.forecast; as forecast) {
+      <div
+        class="forecast-banner"
+        [class.warning]="forecastWarning()"
+        role="status"
+      >
+        <mat-icon aria-hidden="true">trending_up</mat-icon>
+        <p>{{ forecastLabel() }}</p>
+        @if (forecastWarning()) {
+          <a mat-flat-button color="primary" routerLink="/billing/plans">
+            Uaktualnij plan
+          </a>
+        }
+      </div>
+    }
+
+    <!-- AC1 — karty zasobów (bez karty Użytkownicy — CR#2) -->
+    <ul class="cards-grid" aria-label="Zużycie zasobów w planie">
+      @for (counter of d.counters; track counter.type) {
+        <li>
+          <app-usage-card [counter]="counter" />
+        </li>
+      }
+    </ul>
+  }
+</section>

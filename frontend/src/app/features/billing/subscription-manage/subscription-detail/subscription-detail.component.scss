@@ -1,0 +1,130 @@
+.subscription-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.page-title {
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+    color: var(--mat-sys-on-surface-variant, #5f6368);
+  }
+}
+
+.status {
+  margin: 0;
+  padding: 1rem;
+  color: var(--mat-sys-on-surface-variant, #5f6368);
+}
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+
+  p {
+    margin: 0;
+  }
+
+  mat-icon {
+    flex-shrink: 0;
+  }
+}
+
+.banner-info {
+  background: var(--mat-sys-surface-container-high, #eef2f7);
+  color: var(--mat-sys-on-surface, #1f2430);
+}
+
+.banner-warning {
+  background: var(--mat-sys-error-container, #fdecea);
+  color: var(--mat-sys-on-error-container, #410e0b);
+}
+
+.detail-card {
+  padding: 0.25rem 1.25rem;
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 0;
+
+  & + .row {
+    border-top: 1px solid var(--mat-sys-outline-variant, #dde1e7);
+  }
+}
+
+.row-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+
+  mat-icon {
+    color: var(--mat-sys-primary, #3f51b5);
+  }
+}
+
+.row-title {
+  margin: 0;
+  font-weight: 500;
+}
+
+.row-subtitle {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-surface-variant, #5f6368);
+}
+
+.row-value {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+.value-warning {
+  color: var(--mat-sys-error, #b3261e);
+}
+
+.action-error {
+  margin: 0;
+  color: var(--mat-sys-error, #b3261e);
+  font-size: 0.875rem;
+}
+
+.action-info {
+  margin: 0;
+  color: var(--mat-sys-primary, #3f51b5);
+  font-size: 0.875rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+
+  .note {
+    flex-basis: 100%;
+    margin: 0.25rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--mat-sys-on-surface-variant, #5f6368);
+  }
+}

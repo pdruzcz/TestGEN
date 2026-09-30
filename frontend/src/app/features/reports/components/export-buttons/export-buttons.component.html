@@ -1,0 +1,18 @@
+<div class="export-buttons" role="group" aria-label="Eksport raportu">
+  <span class="export-label">Eksportuj jako:</span>
+  @for (btn of buttons; track btn.format) {
+    <button
+      mat-stroked-button
+      [disabled]="activeFormat() !== null"
+      (click)="onExport(btn.format)"
+      [attr.aria-label]="'Eksportuj jako ' + btn.label"
+    >
+      @if (activeFormat() === btn.format) {
+        <mat-progress-spinner mode="indeterminate" diameter="16" />
+      } @else {
+        <mat-icon>{{ btn.icon }}</mat-icon>
+      }
+      {{ btn.label }}
+    </button>
+  }
+</div>

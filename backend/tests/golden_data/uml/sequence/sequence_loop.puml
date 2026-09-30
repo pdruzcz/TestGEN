@@ -1,0 +1,11 @@
+@startuml
+actor Customer
+participant Store
+participant Warehouse
+Customer -> Store: placeOrder
+loop for each item
+  Store -> Warehouse: checkStock
+  Warehouse --> Store: ok
+end
+Store --> Customer: confirmed
+@enduml

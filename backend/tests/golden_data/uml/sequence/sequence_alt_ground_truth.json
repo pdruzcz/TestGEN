@@ -1,0 +1,12 @@
+{
+  "diagram_type": "sequence",
+  "description": "Przepływ płatności z fragmentem ALT (happy path + odrzucenie).",
+  "expected_participants_count": 4,
+  "expected_elements_count": 0,
+  "expected_relationships_count": 7,
+  "expected_fragments_count": 1,
+  "expected_flows_count": 2,
+  "expected_fragments": [
+    {"type": "ALT"}
+  ]
+}

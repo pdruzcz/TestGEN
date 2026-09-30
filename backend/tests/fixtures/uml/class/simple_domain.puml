@@ -1,0 +1,24 @@
+@startuml
+class User {
+  +id: int
+  +username: String
+  -passwordHash: String
+  +login(password: String): bool
+  +logout(): void
+}
+class Order {
+  +orderId: int
+  +createdAt: Date
+  +total: double
+  +addProduct(product: Product, qty: int): void
+  +calculateTotal(): double
+}
+class Product {
+  +sku: String
+  +name: String
+  +price: double
+  +isAvailable(): bool
+}
+User "1" --> "0..*" Order
+Order "1" o-- "1..*" Product
+@enduml

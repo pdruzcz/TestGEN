@@ -1,0 +1,135 @@
+.finding-detail {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  background: #fafafa;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+  }
+
+  &__engine {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__mode {
+    border: 1px solid #b0bec5;
+    background: #fff;
+    border-radius: 16px;
+    padding: 0.2rem 0.85rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: #455a64;
+
+    &--active {
+      background: #1976d2;
+      border-color: #1976d2;
+      color: #fff;
+    }
+  }
+
+  &__error {
+    margin: 0.75rem 0;
+    color: #c62828;
+  }
+
+  &__section {
+    margin-top: 1rem;
+
+    h4 {
+      margin: 0 0 0.35rem;
+      font-size: 0.9rem;
+      color: #37474f;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  &__code-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  &__snippet {
+    margin: 0.4rem 0 0;
+    padding: 0.75rem;
+    background: #1e1e1e;
+    color: #e0e0e0;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+  }
+
+  &__diff {
+    margin: 0.4rem 0 0;
+    padding: 0;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    font-family: "SFMono-Regular", Consolas, monospace;
+  }
+
+  &__diff-line {
+    display: block;
+    padding: 0 0.5rem;
+    white-space: pre;
+
+    &--add {
+      background: #e6ffed;
+      color: #22863a;
+    }
+
+    &--del {
+      background: #ffeef0;
+      color: #b31d28;
+    }
+
+    &--meta {
+      background: #f1f8ff;
+      color: #6a737d;
+    }
+
+    &--context {
+      color: #24292e;
+    }
+  }
+
+  &__source {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #546e7a;
+  }
+
+  &__badge {
+    display: inline-block;
+    margin-left: 0.35rem;
+    padding: 0.1rem 0.5rem;
+    background: #eceff1;
+    border-radius: 12px;
+    font-size: 0.78rem;
+  }
+
+  &__hint {
+    margin-top: 1rem;
+    color: #78909c;
+    font-style: italic;
+  }
+}

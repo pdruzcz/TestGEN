@@ -1,0 +1,53 @@
+.dialog-loading,
+.dialog-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.dialog-empty {
+  flex-direction: column;
+  text-align: center;
+}
+
+.dialog-empty mat-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: #9ca3af;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+}
+
+.history-table th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.history-table td {
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #4b5563;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: top;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.value-cell {
+  max-width: 220px;
+  word-break: break-word;
+}

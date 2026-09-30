@@ -1,0 +1,58 @@
+{# ── Makro: render_shared_fixture ── Generuje wspolna fixture conftest ── #}
+{% macro render_shared_fixture(fixture) -%}
+@pytest.fixture(scope="{{ fixture.scope | default('function', true) }}")
+def {{ fixture.name }}():
+    """{{ fixture.description | default(fixture.name, true) }}"""
+{% if fixture.is_mock %}
+    with unittest.mock.patch("{{ fixture.mock_target }}") as mock_obj:
+{% if fixture.setup_code %}
+{{ fixture.setup_code | indent(8, first=True) }}
+{% endif -%}
+{% if fixture.yield_value %}
+        yield {{ fixture.yield_value }}
+{% else %}
+        yield mock_obj
+{% endif -%}
+{% else %}
+{% if fixture.setup_code %}
+{{ fixture.setup_code | indent(4, first=True) }}
+{% endif -%}
+{% if fixture.yield_value %}
+    yield {{ fixture.yield_value }}
+{% if fixture.teardown_code %}
+{{ fixture.teardown_code | indent(4, first=True) }}
+{% endif -%}
+{% else %}
+    pass
+{% endif -%}
+{% endif %}
+
+
+{% endmacro %}
+# -*- coding: utf-8 -*-
+"""Wspolne fixtures dla testow projektu {{ project_name | default('testgen', true) }}.
+
+Wygenerowano automatycznie przez TestGEN - silnik natywny (pytest).
+Modyfikuj z ostroznoscia; wspoldzielone przez wiele modulow testowych.
+"""
+
+import pytest
+{% if shared_fixtures | selectattr("is_mock", "defined") | selectattr("is_mock", "true") | list | length > 0 %}
+import unittest.mock
+{% endif -%}
+{% if imports %}
+{% for imp in imports %}
+{{ imp }}
+{% endfor %}
+{% endif -%}
+
+
+{% if shared_fixtures %}
+# ── Wspolne fixtures ──
+
+{% for fixture in shared_fixtures %}
+{{ render_shared_fixture(fixture) }}
+{% endfor %}
+{% else %}
+# Brak wspolnych fixtures — dodaj fixture w PytestCodeGenerator.generate_setup()
+{% endif -%}

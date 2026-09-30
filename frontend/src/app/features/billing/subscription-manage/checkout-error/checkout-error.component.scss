@@ -1,0 +1,50 @@
+.checkout-error {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .page-title {
+    h1 {
+      margin: 0 0 4px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: var(--mat-sys-on-surface-variant, #5f6368);
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    max-width: 560px;
+    padding: 32px;
+    text-align: center;
+  }
+
+  .warn-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--mat-sys-error-container, #fdecea);
+    color: var(--mat-sys-on-error-container, #611a15);
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .hint {
+    font-size: 13px;
+    color: var(--mat-sys-outline, #9aa0a6);
+  }
+}

@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+actor "Użytkownik" as User
+actor "Administrator" as Admin
+Admin --|> User
+usecase "Zaloguj się" as UC1
+usecase "Edytuj profil" as UC2
+usecase "Zarządzaj użytkownikami" as UC3
+User -- UC1
+User -- UC2
+Admin -- UC3
+@enduml

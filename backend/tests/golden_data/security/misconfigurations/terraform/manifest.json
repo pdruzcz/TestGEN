@@ -1,0 +1,10 @@
+{
+  "category": "terraform",
+  "config_type": "terraform",
+  "description": "Terraform misconfiguration golden samples (Story 4.14).",
+  "samples": [
+    { "file": "public_s3.tf", "expected_rules": ["PUBLIC_S3_BUCKET"] },
+    { "file": "open_security_group.tf", "expected_rules": ["OPEN_SECURITY_GROUP"] },
+    { "file": "unencrypted_db.tf", "expected_rules": ["NO_ENCRYPTION"] }
+  ]
+}

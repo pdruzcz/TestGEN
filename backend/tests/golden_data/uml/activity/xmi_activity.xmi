@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+  <packagedElement xmi:type="uml:Activity" xmi:id="act1" name="ProcessOrder">
+    <node xmi:type="uml:InitialNode" xmi:id="n1" name="Start"/>
+    <node xmi:type="uml:OpaqueAction" xmi:id="n2" name="Validate"/>
+    <node xmi:type="uml:OpaqueAction" xmi:id="n3" name="Charge"/>
+    <node xmi:type="uml:OpaqueAction" xmi:id="n4" name="Ship"/>
+    <node xmi:type="uml:ActivityFinalNode" xmi:id="n5" name="Stop"/>
+  </packagedElement>
+</xmi:XMI>

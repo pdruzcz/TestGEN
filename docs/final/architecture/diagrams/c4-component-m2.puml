@@ -1,0 +1,39 @@
+@startuml c4-component-m2
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title TestGEN — C4 Level 3: Moduł M2 — Analiza dokumentacji
+
+Container_Boundary(m2, "Moduł analizy dokumentacji (M2)") {
+    Component(upload, "Document Upload", "FastAPI route", "Odbiera pliki dokumentów\n(PDF, DOCX, HTML, MD, TXT)")
+    Component(classifier, "Document Classifier", "Python", "Klasyfikacja typu dokumentu:\nspecyfikacja, wymagania, podręcznik")
+    Component(pdf_parser, "PDF Parser", "pdfplumber", "Ekstrakcja tekstu i tabel z PDF")
+    Component(docx_parser, "DOCX Parser", "python-docx", "Ekstrakcja tekstu i struktury\nz plików Word")
+    Component(html_parser, "HTML/MD Parser", "BeautifulSoup/markdown", "Ekstrakcja tekstu\nz HTML i Markdown")
+    Component(req_extractor, "Requirement Extractor", "Python NLP", "Ekstrakcja wymagań:\nfunkcjonalne, niefunkcjonalne")
+    Component(glossary, "Glossary Extractor", "Python NLP", "Ekstrakcja terminów\ni definicji (glosariusz)")
+    Component(inconsistency, "Inconsistency Detector", "Python", "Wykrywanie niespójności\nmiędzy dokumentami")
+    Component(llm_doc, "LLM Document Analyzer", "Python + LLM API", "Semantyczna analiza\ndokumentów via AI")
+}
+
+ContainerDb(postgres, "PostgreSQL", "")
+ContainerDb(minio, "MinIO", "")
+System_Ext(llm_ext, "API LLM", "")
+
+Rel(upload, minio, "Zapisuje pliki", "S3 API")
+Rel(upload, classifier, "Przekazuje", "")
+Rel(classifier, pdf_parser, "PDF", "")
+Rel(classifier, docx_parser, "DOCX", "")
+Rel(classifier, html_parser, "HTML/MD/TXT", "")
+Rel(pdf_parser, req_extractor, "Tekst", "")
+Rel(docx_parser, req_extractor, "Tekst", "")
+Rel(html_parser, req_extractor, "Tekst", "")
+Rel(req_extractor, glossary, "Tekst", "")
+Rel(req_extractor, inconsistency, "Wymagania", "")
+Rel(req_extractor, llm_doc, "Kontekst", "")
+Rel(llm_doc, llm_ext, "API call", "HTTPS")
+Rel(req_extractor, postgres, "Zapis wymagań", "SQL")
+Rel(llm_doc, postgres, "Zapis wyników LLM", "SQL")
+
+@enduml

@@ -1,0 +1,20 @@
+<div class="diff-viewer" role="table" aria-label="Porównanie kodu: oryginał i poprawka">
+  <div class="diff-header" role="row">
+    <span class="diff-pane-title" role="columnheader">Oryginał</span>
+    <span class="diff-pane-title" role="columnheader">Poprawka</span>
+  </div>
+  <div class="diff-body">
+    @for (row of rows(); track $index) {
+      <div class="diff-row" role="row">
+        <span class="diff-cell left" [ngClass]="row.leftType" role="cell">
+          <span class="line-no" aria-hidden="true">{{ row.leftNo ?? "" }}</span>
+          <span class="line-content" [innerHTML]="row.leftHtml"></span>
+        </span>
+        <span class="diff-cell right" [ngClass]="row.rightType" role="cell">
+          <span class="line-no" aria-hidden="true">{{ row.rightNo ?? "" }}</span>
+          <span class="line-content" [innerHTML]="row.rightHtml"></span>
+        </span>
+      </div>
+    }
+  </div>
+</div>

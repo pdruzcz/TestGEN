@@ -1,0 +1,205 @@
+{
+  "category": "real",
+  "description": "Keycloak 26.7.1 admin console (Apache-2.0) — Identity providers: siatka ~16 kart providerów (User-defined: Keycloak OIDC, Kubernetes, OAuth2, OIDC; + Featured), klikalne karty. Viewport 1280x800.",
+  "expected_component_count": 18,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar (Clients/Users/Sessions/...)",
+      "bbox": {
+        "x": 0,
+        "y": 80,
+        "width": 256,
+        "height": 720
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Masthead: user toggle (golden-admin)",
+      "bbox": {
+        "x": 1150,
+        "y": 22,
+        "width": 122,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r1c1)",
+      "bbox": {
+        "x": 276,
+        "y": 262,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r1c2)",
+      "bbox": {
+        "x": 513,
+        "y": 262,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r1c3)",
+      "bbox": {
+        "x": 750,
+        "y": 262,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r1c4)",
+      "bbox": {
+        "x": 987,
+        "y": 262,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r2c1)",
+      "bbox": {
+        "x": 276,
+        "y": 372,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r2c2)",
+      "bbox": {
+        "x": 513,
+        "y": 372,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r2c3)",
+      "bbox": {
+        "x": 750,
+        "y": 372,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r2c4)",
+      "bbox": {
+        "x": 987,
+        "y": 372,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r3c1)",
+      "bbox": {
+        "x": 276,
+        "y": 462,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r3c2)",
+      "bbox": {
+        "x": 513,
+        "y": 462,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r3c3)",
+      "bbox": {
+        "x": 750,
+        "y": 462,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r3c4)",
+      "bbox": {
+        "x": 987,
+        "y": 462,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r4c1)",
+      "bbox": {
+        "x": 276,
+        "y": 552,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r4c2)",
+      "bbox": {
+        "x": 513,
+        "y": 552,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r4c3)",
+      "bbox": {
+        "x": 750,
+        "y": 552,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Karta providera (r4c4)",
+      "bbox": {
+        "x": 987,
+        "y": 552,
+        "width": 225,
+        "height": 68
+      },
+      "confidence": 0.75
+    }
+  ]
+}

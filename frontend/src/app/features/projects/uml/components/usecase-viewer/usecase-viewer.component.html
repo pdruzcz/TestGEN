@@ -1,0 +1,114 @@
+<div class="uc-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="uc-content" id="main-content" tabindex="-1">
+    <a
+      mat-button
+      [routerLink]="['/projects', projectId(), 'uml']"
+      class="back-link"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Wróć do diagramów
+    </a>
+
+    <h1 class="page-title">Diagram przypadków użycia</h1>
+
+    @if (isLoading()) {
+      <div class="loading" role="status" aria-live="polite">
+        <mat-spinner diameter="20" aria-label="Ładowanie" />
+        <span>Ładowanie…</span>
+      </div>
+    } @else if (!detail()?.parsedModel) {
+      <p class="empty">
+        Diagram nie został jeszcze sparsowany lub parsowanie nie powiodło się.
+      </p>
+    } @else {
+      <section class="card">
+        <h2 class="section-title">Aktorzy ({{ actors().length }})</h2>
+        <div class="actors">
+          @for (a of actors(); track a.alias) {
+            <div class="actor" [class]="'at-' + a.actorType">
+              <mat-icon aria-hidden="true">person</mat-icon>
+              <span class="a-name">{{ a.name }}</span>
+              <span class="a-type">{{ a.actorType }}</span>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">Przypadki użycia ({{ useCases().length }})</h2>
+        <div class="usecases">
+          @for (uc of useCases(); track uc.alias) {
+            <div class="usecase">
+              <mat-icon aria-hidden="true">crop_oval</mat-icon>
+              <span class="uc-name">{{ uc.name }}</span>
+            </div>
+          }
+        </div>
+      </section>
+
+      @if (systemBoundary()) {
+        <section class="card">
+          <h2 class="section-title">Granica systemu</h2>
+          <div class="boundary">
+            <span class="boundary-name">{{ systemBoundary()!.name }}</span>
+            <ul class="boundary-list">
+              @for (n of systemBoundary()!.useCaseNames; track $index) {
+                <li>{{ n }}</li>
+              }
+            </ul>
+          </div>
+        </section>
+      }
+
+      <section class="card">
+        <h2 class="section-title">Relacje ({{ relationships().length }})</h2>
+        <ul class="relationships">
+          @for (r of relationships(); track $index) {
+            <li class="relationship" [class]="'rt-' + r.relationshipType">
+              <span class="r-source">{{ r.source }}</span>
+              <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+              <span class="r-target">{{ r.target }}</span>
+              <span class="r-type">{{ relationshipLabel(r.relationshipType) }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+
+      @if (scenarios().length > 0) {
+        <section class="card">
+          <h2 class="section-title">Scenariusze ({{ scenarios().length }})</h2>
+          <div class="scenarios">
+            @for (s of scenarios(); track $index) {
+              <div class="scenario" [class]="'sc-' + s.scenarioType">
+                <div class="scenario-header">
+                  <span class="scenario-badge">{{ scenarioLabel(s.scenarioType) }}</span>
+                  <span class="scenario-name">{{ s.useCaseName }}</span>
+                  @if (s.primaryActor) {
+                    <span class="scenario-actor">Aktor: {{ s.primaryActor }}</span>
+                  }
+                </div>
+                @if (s.preconditions.length > 0) {
+                  <p class="scenario-pre">
+                    Warunki: {{ s.preconditions.join(", ") }}
+                  </p>
+                }
+                <ol class="scenario-steps">
+                  @for (step of s.steps; track step.sequence) {
+                    <li>{{ step.action }}</li>
+                  }
+                </ol>
+                <p class="scenario-result">
+                  Oczekiwany rezultat: {{ s.expectedResult }}
+                </p>
+              </div>
+            }
+          </div>
+        </section>
+      }
+    }
+
+    <app-footer />
+  </main>
+</div>

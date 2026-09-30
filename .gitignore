@@ -1,0 +1,115 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+.venv/
+venv/
+*.whl
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# =========================
+# Node / Angular
+# =========================
+node_modules/
+dist/
+.angular/
+.nx/
+*.tsbuildinfo
+.eslintcache
+
+# =========================
+# Flutter / Dart
+# =========================
+mobile/.dart_tool/
+mobile/.packages
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/build/
+*.g.dart
+*.freezed.dart
+
+# =========================
+# Docker
+# =========================
+docker-compose.override.yml
+
+# =========================
+# IDE
+# =========================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# =========================
+# Environment & Secrets
+# =========================
+.env
+.env.local
+.env.*.local
+!.env.example
+backend/keys/
+# deploy.sh jest śledzony od 2026-09-30 — wersja środowiskowo-neutralna
+# (sekrety w .env/placeholderach, nigdy w skrypcie).
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Test reports
+# =========================
+TEST*.xml
+junit.xml
+backend/coverage/
+backend/test-results/
+frontend/coverage/
+frontend/test-results/
+
+# =========================
+# Project-specific
+# =========================
+_bmad/
+# _bmad-output/ — removed from gitignore: planning artifacts shared via repo
+
+# backend/scripts/ — reguła katalogowa (od 98ccbb8) połykała skrypty
+# referencjonowane przez CI (scripts/golden_accuracy.py w
+# bitbucket-pipelines.yml) i story (generate_gui_png.py, reset_demo.py).
+# Ignorujemy tylko śmieci lokalne, nie cały katalog.
+backend/scripts/__pycache__/
+# Lokalny debug z dev-connstringiem, drukuje prefixy password_hash —
+# nie na produkcję ani do repo.
+backend/scripts/check_user.py
+
+# Harmonogram celery-beat — plik stanu zapisywany do katalogu backendu,
+# który docker-compose.dev.yml montuje jako wolumen.
+backend/celerybeat-schedule*
+
+# Notatka robocza demo (lokalna) — wykluczona z repo na życzenie (d923d8e).
+backend/tests/golden_data/DEMO-CHEATSHEET.md

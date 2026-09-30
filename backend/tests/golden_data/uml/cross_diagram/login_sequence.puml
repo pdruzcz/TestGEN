@@ -1,0 +1,9 @@
+@startuml
+actor Użytkownik
+participant User
+participant System
+Użytkownik -> User: wprowadź dane
+User -> System: weryfikuj poświadczenia
+System --> User: wynik
+User --> Użytkownik: potwierdzenie
+@enduml

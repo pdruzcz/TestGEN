@@ -1,0 +1,194 @@
+<div class="cmp-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="cmp-content" id="main-content" tabindex="-1">
+    <div class="cmp-header">
+      <a
+        mat-button
+        [routerLink]="['/projects', projectId(), 'gui']"
+        class="back-link"
+      >
+        <mat-icon>arrow_back</mat-icon>
+        Wróć do zrzutów ekranu
+      </a>
+      <h1 class="page-title">Regresja wizualna (GUI)</h1>
+      <p class="page-subtitle">
+        Porównaj dwa zrzuty ekranu i wykryj zmiany wizualne między wersjami.
+      </p>
+    </div>
+
+    <section class="card controls">
+      <div class="control-grid">
+        <label class="field">
+          <span class="field-label">Baseline</span>
+          <mat-select
+            [ngModel]="baselineId()"
+            (ngModelChange)="baselineId.set($event)"
+            aria-label="Screenshot baseline"
+          >
+            @for (s of screenshots(); track s.id) {
+              <mat-option [value]="s.id">{{ s.filename }}</mat-option>
+            }
+          </mat-select>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Porównawczy</span>
+          <mat-select
+            [ngModel]="comparisonId()"
+            (ngModelChange)="comparisonId.set($event)"
+            aria-label="Screenshot porównawczy"
+          >
+            @for (s of screenshots(); track s.id) {
+              <mat-option [value]="s.id">{{ s.filename }}</mat-option>
+            }
+          </mat-select>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Próg tolerancji</span>
+          <input
+            type="number"
+            min="0"
+            max="1"
+            step="0.01"
+            [ngModel]="pixelThreshold()"
+            (ngModelChange)="pixelThreshold.set($event)"
+            aria-label="Próg tolerancji pikseli"
+          />
+        </label>
+
+        <label class="field">
+          <span class="field-label">Framework testów</span>
+          <mat-select
+            [ngModel]="testFramework()"
+            (ngModelChange)="testFramework.set($event)"
+            aria-label="Framework testów"
+          >
+            <mat-option value="playwright">Playwright</mat-option>
+            <mat-option value="cypress">Cypress</mat-option>
+          </mat-select>
+        </label>
+      </div>
+
+      <div class="control-row">
+        <mat-checkbox
+          [ngModel]="generateTestCode()"
+          (ngModelChange)="generateTestCode.set($event)"
+        >
+          Generuj kod testów regresji
+        </mat-checkbox>
+
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="isComparing()"
+          (click)="compare()"
+        >
+          @if (isComparing()) {
+            <mat-spinner diameter="18" aria-label="Porównywanie" />
+          } @else {
+            <mat-icon>compare</mat-icon>
+          }
+          Porównaj
+        </button>
+      </div>
+    </section>
+
+    @if (loadError()) {
+      <div class="error-banner" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        {{ loadError() }}
+      </div>
+    }
+
+    @if (result(); as res) {
+      <section class="card result-summary">
+        <div class="summary-row">
+          <span class="chip" [class]="'status-' + res.status">
+            {{ statusLabel(res.status) }}
+          </span>
+          <span class="chip">
+            Różnica pikseli: {{ res.pixelDiffPercentage | number: "1.2-2" }}%
+          </span>
+          <span class="chip">Zmiany: {{ res.semanticDiff.length }}</span>
+        </div>
+
+        @if (res.warnings.length > 0) {
+          <div class="warnings" role="status" aria-live="polite">
+            <ul>
+              @for (w of res.warnings; track w) {
+                <li>{{ w }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </section>
+
+      @if (diffImageSrc()) {
+        <section class="card">
+          <h2 class="section-title">Obraz różnicy</h2>
+          <img
+            class="diff-image"
+            [src]="diffImageSrc()"
+            alt="Obraz różnicy z zaznaczonymi zmianami"
+          />
+        </section>
+      }
+
+      <section class="card">
+        <h2 class="section-title">Wykryte zmiany</h2>
+        <div class="filters">
+          <mat-select
+            [ngModel]="severityFilter()"
+            (ngModelChange)="severityFilter.set($event)"
+            aria-label="Filtr ważności"
+          >
+            <mat-option value="all">Wszystkie ważności</mat-option>
+            <mat-option value="breaking">Krytyczne</mat-option>
+            <mat-option value="visual">Wizualne</mat-option>
+            <mat-option value="minor">Drobne</mat-option>
+          </mat-select>
+
+          <mat-select
+            [ngModel]="changeTypeFilter()"
+            (ngModelChange)="changeTypeFilter.set($event)"
+            aria-label="Filtr typu zmiany"
+          >
+            <mat-option value="all">Wszystkie typy</mat-option>
+            <mat-option value="layout_change">Zmiana układu</mat-option>
+            <mat-option value="text_change">Zmiana tekstu</mat-option>
+            <mat-option value="color_change">Zmiana koloru</mat-option>
+            <mat-option value="element_added">Dodano element</mat-option>
+            <mat-option value="element_removed">Usunięto element</mat-option>
+            <mat-option value="element_moved">Przesunięto element</mat-option>
+          </mat-select>
+        </div>
+
+        @if (filteredDeltas().length === 0) {
+          <p class="empty">Brak zmian spełniających filtry.</p>
+        } @else {
+          <ul class="delta-list">
+            @for (d of filteredDeltas(); track $index) {
+              <li class="delta" [class]="'sev-' + d.severity">
+                <span class="chip chip-type">{{ changeTypeLabel(d.changeType) }}</span>
+                <span class="chip chip-sev">{{ severityLabel(d.severity) }}</span>
+                <span class="delta-component">{{ d.componentType }}</span>
+                <span class="delta-desc">{{ d.description }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      @if (res.testCode) {
+        <section class="card">
+          <h2 class="section-title">Wygenerowany kod testów</h2>
+          <pre class="test-code"><code>{{ res.testCode }}</code></pre>
+        </section>
+      }
+    }
+
+    <app-footer />
+  </main>
+</div>

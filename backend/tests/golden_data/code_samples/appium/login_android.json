@@ -1,0 +1,53 @@
+{
+  "description": "Login flow na aplikacji mobilnej Android",
+  "platform": "android",
+  "test_cases": [
+    {
+      "scenario_name": "User login on Android app",
+      "test_type": "e2e",
+      "ui_elements": [
+        {
+          "name": "email_input",
+          "locator_type": "accessibility_id",
+          "locator_value": "email-input",
+          "element_type": "input",
+          "page_name": "LoginScreen"
+        },
+        {
+          "name": "password_input",
+          "locator_type": "accessibility_id",
+          "locator_value": "password-input",
+          "element_type": "input",
+          "page_name": "LoginScreen"
+        },
+        {
+          "name": "login_button",
+          "locator_type": "accessibility_id",
+          "locator_value": "login-button",
+          "element_type": "button",
+          "page_name": "LoginScreen"
+        },
+        {
+          "name": "welcome_text",
+          "locator_type": "id",
+          "locator_value": "com.app:id/welcome",
+          "element_type": "text",
+          "page_name": "HomeScreen"
+        }
+      ],
+      "user_flow": {
+        "name": "Login flow",
+        "steps": [
+          {"action": "fill", "element": {"name": "email_input"}, "value": "user@example.com"},
+          {"action": "fill", "element": {"name": "password_input"}, "value": "password123"},
+          {"action": "click", "element": {"name": "login_button"}}
+        ]
+      },
+      "expected_result": "Welcome",
+      "comparison_type": "text_contains",
+      "assertions": [
+        {"type": "text_contains", "element": "welcome_text", "expected": "Welcome"}
+      ]
+    }
+  ]
+}

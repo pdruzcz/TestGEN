@@ -1,0 +1,10 @@
+{
+  "diagram_type": "class",
+  "format": "xmi",
+  "description": "Model klas XMI (Eclipse UML2): Account dziedziczy po Order, Customer.",
+  "expected_participants_count": 0,
+  "expected_elements_count": 3,
+  "expected_relationships_count": 1,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 0
+}

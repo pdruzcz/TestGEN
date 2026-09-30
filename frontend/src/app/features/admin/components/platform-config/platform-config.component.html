@@ -1,0 +1,100 @@
+<h2 class="platform-config__title">Konfiguracja platformy</h2>
+
+@if (errorMessage()) {
+  <p class="platform-config__error" role="alert">{{ errorMessage() }}</p>
+}
+
+@if (infoMessage()) {
+  <p class="platform-config__info" role="status">{{ infoMessage() }}</p>
+}
+
+@if (isLoading()) {
+  <mat-spinner diameter="32" aria-label="Ładowanie konfiguracji" />
+}
+
+<form [formGroup]="form" (ngSubmit)="save()" class="platform-config__form">
+  <fieldset formGroupName="limits" class="platform-config__section">
+    <legend>Limity domyślne</legend>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Maksymalny rozmiar pliku (MB)</mat-label>
+      <input matInput type="number" formControlName="maxFileSizeMb" min="1" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Maksymalna liczba projektów na tenanta</mat-label>
+      <input matInput type="number" formControlName="maxProjectsPerTenant" min="1" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Maksymalna liczba użytkowników na tenanta</mat-label>
+      <input matInput type="number" formControlName="maxUsersPerTenant" min="1" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Limit kosztów LLM (USD)</mat-label>
+      <input matInput type="number" formControlName="llmCostLimitUsd" min="0" />
+    </mat-form-field>
+  </fieldset>
+
+  <fieldset formGroupName="llm" class="platform-config__section">
+    <legend>Ustawienia LLM</legend>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Dostawca</mat-label>
+      <mat-select formControlName="provider">
+        @for (provider of providers; track provider) {
+          <mat-option [value]="provider">{{ provider }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Model</mat-label>
+      <input matInput type="text" formControlName="model" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Temperatura</mat-label>
+      <input matInput type="number" formControlName="temperature" min="0" max="2" step="0.1" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Maksymalna liczba tokenów</mat-label>
+      <input matInput type="number" formControlName="maxTokens" min="256" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Limit czasu (s)</mat-label>
+      <input matInput type="number" formControlName="timeoutSeconds" min="5" />
+    </mat-form-field>
+  </fieldset>
+
+  <fieldset formGroupName="maintenance" class="platform-config__section">
+    <legend>Tryb serwisowy</legend>
+
+    <mat-slide-toggle formControlName="enabled">
+      Tryb serwisowy włączony
+    </mat-slide-toggle>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Komunikat dla użytkowników</mat-label>
+      <textarea matInput rows="3" formControlName="message"></textarea>
+    </mat-form-field>
+  </fieldset>
+
+  <fieldset class="platform-config__section" [formGroup]="featureFlags">
+    <legend>Flagi funkcji</legend>
+
+    @for (key of featureFlagKeys(); track key) {
+      <mat-checkbox [formControlName]="key">{{ flagLabel(key) }}</mat-checkbox>
+    }
+  </fieldset>
+
+  <div class="platform-config__actions">
+    <button type="submit" mat-raised-button color="primary">
+      <mat-icon aria-hidden="true">save</mat-icon>
+      Zapisz konfigurację
+    </button>
+  </div>
+</form>

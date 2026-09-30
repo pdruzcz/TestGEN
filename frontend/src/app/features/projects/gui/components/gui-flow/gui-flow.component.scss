@@ -1,0 +1,175 @@
+.flow-page {
+  min-height: 100vh;
+  background: #f7f8fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.flow-content {
+  flex: 1;
+  padding: 32px 48px;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.flow-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.back-link {
+  align-self: flex-start;
+  margin-bottom: 8px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: #6b7280;
+  margin: 4px 0 0;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.controls .control-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.engine-select {
+  min-width: 220px;
+}
+
+.info-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 12px;
+  font-size: 14px;
+  background: #e8f4fd;
+  color: #0d47a1;
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 14px;
+  background: #fdecea;
+  color: #611a15;
+}
+
+.flow-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.flow-name {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1a1a1a;
+}
+
+.chip {
+  background: #e3f2fd;
+  color: #1565c0;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.warnings {
+  background: #fff8e1;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  color: #7c5400;
+
+  ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+}
+
+.empty {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: none;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 8px;
+
+  .step-seq {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #1565c0;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .step-action {
+    flex: 1;
+    color: #1a1a1a;
+  }
+
+  .step-target {
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .flow-content {
+    padding: 16px;
+  }
+}

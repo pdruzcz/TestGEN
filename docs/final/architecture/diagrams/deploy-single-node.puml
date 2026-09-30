@@ -1,0 +1,59 @@
+@startuml deploy-single-node
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+
+LAYOUT_WITH_LEGEND()
+
+title TestGEN — Deployment: Single-node (Docker Compose)
+
+Deployment_Node(server, "Serwer produkcyjny", "Linux (Ubuntu 22.04+)\n4 vCPU, 16 GB RAM, 100 GB SSD") {
+
+    Deployment_Node(docker, "Docker Engine", "Docker 24+ / Compose v2") {
+
+        Deployment_Node(net, "Sieć: testgen-net (bridge)") {
+
+            Container(nginx, "nginx", "Reverse proxy", "SSL termination,\nstatic files,\nproxy_pass → backend")
+
+            Container(frontend, "frontend", "Angular 21\nnginx:alpine", "SPA, port 80\n(proxy przez nginx)")
+
+            Container(backend, "backend", "Python 3.12\nFastAPI + Uvicorn", "REST API, port 8000\n4 workers")
+
+            Container(celery_w, "celery-worker", "Python 3.12\nCelery 5", "Kolejki: default,\nanalysis, export, security\nconcurrency=4")
+
+            Container(celery_b, "celery-beat", "Python 3.12\nCelery 5", "Harmonogram:\nodnowienia (03:30),\nsnapshoty (00:00)")
+
+            Container(flower, "flower", "Celery Flower", "Monitoring workerów\nport 5555")
+
+            ContainerDb(postgres, "postgres", "PostgreSQL 16\nAlpine", "Port 5432\nRLS, max_conn=200\nshared_buffers=2GB")
+
+            ContainerDb(redis, "redis", "Redis 7 Alpine", "Port 6379\nRDB + AOF\nmaxmemory=512MB")
+
+            ContainerQueue(rabbitmq, "rabbitmq", "RabbitMQ 3.12\nManagement", "Port 5672 (AMQP)\nPort 15672 (UI)")
+
+            ContainerDb(minio, "minio", "MinIO", "Port 9000 (S3 API)\nPort 9001 (Console)")
+        }
+    }
+
+    Deployment_Node(volumes, "Docker Volumes") {
+        ContainerDb(pg_data, "pg-data", "volume", "Dane PostgreSQL")
+        ContainerDb(redis_data, "redis-data", "volume", "Dane Redis")
+        ContainerDb(minio_data, "minio-data", "volume", "Dane MinIO")
+        ContainerDb(rabbitmq_data, "rabbitmq-data", "volume", "Dane RabbitMQ")
+    }
+}
+
+Rel(nginx, frontend, "Serwuje SPA", "HTTP")
+Rel(nginx, backend, "Proxy /api", "HTTP")
+Rel(backend, postgres, "SQL", "asyncpg")
+Rel(backend, rabbitmq, "AMQP", "")
+Rel(backend, redis, "Cache", "")
+Rel(backend, minio, "S3 API", "")
+Rel(celery_w, rabbitmq, "Consume", "AMQP")
+Rel(celery_w, postgres, "SQL", "")
+Rel(celery_w, redis, "Result", "")
+Rel(celery_b, rabbitmq, "Schedule", "")
+Rel(postgres, pg_data, "Persist", "")
+Rel(redis, redis_data, "Persist", "")
+Rel(minio, minio_data, "Persist", "")
+Rel(rabbitmq, rabbitmq_data, "Persist", "")
+
+@enduml

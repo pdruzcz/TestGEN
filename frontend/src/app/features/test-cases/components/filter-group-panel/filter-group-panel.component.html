@@ -1,0 +1,72 @@
+<div class="filter-panel">
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Priorytet</mat-label>
+    <mat-select
+      multiple
+      [value]="filters().priorities"
+      (selectionChange)="onPrioritiesChange($event.value)"
+    >
+      @for (opt of priorityOptions; track opt[0]) {
+        <mat-option [value]="opt[0]">{{ opt[1] }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Typ</mat-label>
+    <mat-select
+      multiple
+      [value]="filters().types"
+      (selectionChange)="onTypesChange($event.value)"
+    >
+      @for (opt of typeOptions; track opt[0]) {
+        <mat-option [value]="opt[0]">{{ opt[1] }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Moduł</mat-label>
+    <mat-select
+      multiple
+      [value]="filters().modules"
+      (selectionChange)="onModulesChange($event.value)"
+    >
+      @for (mod of availableModules(); track mod) {
+        <mat-option [value]="mod">{{ mod }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Status</mat-label>
+    <mat-select
+      multiple
+      [value]="filters().statuses"
+      (selectionChange)="onStatusesChange($event.value)"
+    >
+      @for (opt of statusOptions; track opt[0]) {
+        <mat-option [value]="opt[0]">{{ opt[1] }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="filter-field group-field">
+    <mat-label>Grupuj według</mat-label>
+    <mat-select
+      [value]="groupBy()"
+      (selectionChange)="groupByChange.emit($event.value)"
+    >
+      @for (opt of groupByOptions; track opt[0]) {
+        <mat-option [value]="opt[0]">{{ opt[1] }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  @if (hasActiveFilters()) {
+    <button mat-button class="clear-btn" (click)="clearFilters()">
+      <mat-icon>filter_alt_off</mat-icon>
+      Wyczyść filtry
+    </button>
+  }
+</div>

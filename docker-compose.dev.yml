@@ -1,0 +1,189 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      # Etap „base” ma tylko system i apt — zależności Pythona instalowane są w
+      # „builder” i kopiowane do „production”, więc na „base” w kontenerze nie
+      # ma ani celery, ani uvicorna. Kod na żywo podaje wolumen poniżej.
+      target: production
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+    environment:
+      - DEBUG=true
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+      target: development
+    # Compose scala listy `ports`, a wersja 2.23 nie zna tagów !override/!reset,
+    # więc własne mapowanie dokładałoby drugi bind na 4200 obok „4200:80” z
+    # pliku bazowego i port konfliktowałby sam ze sobą. Dlatego dev serwuje na
+    # porcie 80 w kontenerze i korzysta z mapowania bazowego — na hoście nadal
+    # jest to localhost:4200.
+    command: npx ng serve --host 0.0.0.0 --port 80 --poll 2000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    healthcheck:
+      # wget, nie curl — obraz node:22-alpine nie zawiera curla, więc sonda
+      # zawsze kończyła się błędem i kontener nigdy nie stawał się „healthy”.
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:80"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  celery-worker-default:
+    build:
+      context: ./backend
+      target: production
+    command: celery -A app.workers.celery_app worker -Q default --loglevel=info
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
+  celery-worker-analysis:
+    build:
+      context: ./backend
+      target: production
+    command: celery -A app.workers.celery_app worker -Q analysis --loglevel=info --concurrency=2
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
+  celery-worker-export:
+    build:
+      context: ./backend
+      target: production
+    command: celery -A app.workers.celery_app worker -Q export --loglevel=info
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
+  celery-worker-security:
+    build:
+      context: ./backend
+      target: production
+    command: celery -A app.workers.celery_app worker -Q security --loglevel=info
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
+  celery-worker-email:
+    build:
+      context: ./backend
+      target: production
+    command: celery -A app.workers.celery_app worker -Q email --loglevel=info
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
+  celery-worker-webhooks:
+    build:
+      context: ./backend
+      target: production
+    command: celery -A app.workers.celery_app worker -Q webhooks --loglevel=info
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
+  celery-worker-sync:
+    build:
+      context: ./backend
+      target: production
+    command: celery -A app.workers.celery_app worker -Q sync --loglevel=info
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
+  celery-beat:
+    build:
+      context: ./backend
+      target: production
+    command: celery -A app.workers.celery_app beat --loglevel=info
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
+  flower:
+    image: mher/flower:2.0
+    command: celery --broker=amqp://${RABBITMQ_USER:-testgen}:${RABBITMQ_PASSWORD:-testgen_dev_password}@rabbitmq:5672// flower --port=5555
+    ports:
+      - "5555:5555"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy

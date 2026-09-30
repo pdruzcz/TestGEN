@@ -1,0 +1,12 @@
+{
+  "category": "forms",
+  "description": "Formularz kontaktowy: imie, email, temat (dropdown), wiadomosc (textarea jako input), submit.",
+  "expected_component_count": 5,
+  "expected_components": [
+    {"component_type": "input", "label": "Imie i nazwisko", "bbox": {"x": 140, "y": 100, "width": 320, "height": 40}, "confidence": 0.9},
+    {"component_type": "input", "label": "Email", "bbox": {"x": 140, "y": 160, "width": 320, "height": 40}, "confidence": 0.9},
+    {"component_type": "dropdown", "label": "Temat", "bbox": {"x": 140, "y": 220, "width": 320, "height": 40}, "confidence": 0.88},
+    {"component_type": "input", "label": "Wiadomosc", "bbox": {"x": 140, "y": 280, "width": 320, "height": 120}, "confidence": 0.85},
+    {"component_type": "button", "label": "Wyslij", "bbox": {"x": 140, "y": 420, "width": 320, "height": 44}, "confidence": 0.95}
+  ]
+}

@@ -1,0 +1,6 @@
+@startuml
+[*] --> Niezalogowany
+Niezalogowany --> Zalogowany : zaloguj
+Zalogowany --> Niezalogowany : wyloguj
+Zalogowany --> [*]
+@enduml

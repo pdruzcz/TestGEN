@@ -1,0 +1,47 @@
+<div class="bulk-bar" role="toolbar" aria-label="Akcje zbiorcze">
+  <span class="bulk-count">Zaznaczono: {{ selectedCount() }}</span>
+
+  <button mat-stroked-button [matMenuTriggerFor]="statusMenu">
+    <mat-icon>flag</mat-icon>
+    Zmień status
+  </button>
+  <mat-menu #statusMenu="matMenu">
+    @for (opt of statusOptions; track opt[0]) {
+      <button mat-menu-item (click)="statusChange.emit(opt[0])">
+        {{ opt[1] }}
+      </button>
+    }
+  </mat-menu>
+
+  <button mat-stroked-button [matMenuTriggerFor]="priorityMenu">
+    <mat-icon>low_priority</mat-icon>
+    Zmień priorytet
+  </button>
+  <mat-menu #priorityMenu="matMenu">
+    @for (opt of priorityOptions; track opt[0]) {
+      <button mat-menu-item (click)="priorityChange.emit(opt[0])">
+        {{ opt[1] }}
+      </button>
+    }
+  </mat-menu>
+
+  <button mat-stroked-button (click)="exportSelected.emit()">
+    <mat-icon>download</mat-icon>
+    Eksportuj
+  </button>
+
+  <button mat-stroked-button class="delete-btn" (click)="deleteSelected.emit()">
+    <mat-icon>delete</mat-icon>
+    Usuń
+  </button>
+
+  <span class="spacer"></span>
+
+  <button
+    mat-icon-button
+    aria-label="Wyczyść zaznaczenie"
+    (click)="clearSelection.emit()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

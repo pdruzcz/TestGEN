@@ -1,0 +1,34 @@
+@startuml c4-component-m4
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title TestGEN — C4 Level 3: Moduł M4 — Analiza GUI
+
+Container_Boundary(m4, "Moduł analizy GUI (M4)") {
+    Component(upload, "GUI Upload", "FastAPI route", "Odbiera zrzuty ekranu\ni nagrania GUI (PNG, MP4)")
+    Component(ocr, "OCR Engine", "Python + Tesseract", "Rozpoznawanie tekstu\nz elementów GUI")
+    Component(dom_extractor, "DOM Extractor", "Python + Selenium", "Ekstrakcja struktury\nDOM ze stron webowych")
+    Component(component_det, "Component Detector", "Python + CV", "Identyfikacja elementów UI:\nprzyciski, formularze, tabele")
+    Component(flow_recon, "Flow Reconstructor", "Python", "Rekonstrukcja przepływów\nużytkownika z sekwencji ekranów")
+    Component(visual_reg, "Visual Regression", "Python + pixelmatch", "Porównanie wizualne:\nwykrywanie zmian UI")
+    Component(llm_gui, "LLM GUI Analyzer", "Python + LLM API", "Semantyczna identyfikacja\nelementów i interakcji")
+}
+
+ContainerDb(postgres, "PostgreSQL", "")
+ContainerDb(minio, "MinIO", "")
+System_Ext(llm_ext, "API LLM", "")
+
+Rel(upload, minio, "Zapisuje pliki", "S3 API")
+Rel(upload, ocr, "Obrazy GUI", "")
+Rel(upload, dom_extractor, "URL strony", "")
+Rel(ocr, component_det, "Rozpoznany tekst", "")
+Rel(dom_extractor, component_det, "Struktura DOM", "")
+Rel(component_det, flow_recon, "Wykryte elementy", "")
+Rel(component_det, visual_reg, "Elementy", "")
+Rel(flow_recon, llm_gui, "Przepływy", "")
+Rel(llm_gui, llm_ext, "API call", "HTTPS")
+Rel(flow_recon, postgres, "Zapis wyników", "SQL")
+Rel(llm_gui, postgres, "Zapis wyników LLM", "SQL")
+
+@enduml

@@ -1,0 +1,51 @@
+.code-block {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 0;
+  margin: 0;
+  overflow-x: auto;
+  font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.code-line {
+  display: flex;
+  padding: 0 12px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+.line-no {
+  min-width: 36px;
+  text-align: right;
+  margin-right: 16px;
+  color: #64748b;
+  user-select: none;
+}
+
+.line-content {
+  white-space: pre;
+  flex: 1;
+
+  ::ng-deep .tok-keyword {
+    color: #93c5fd;
+    font-weight: 600;
+  }
+
+  ::ng-deep .tok-string {
+    color: #86efac;
+  }
+
+  ::ng-deep .tok-number {
+    color: #fcd34d;
+  }
+
+  ::ng-deep .tok-comment {
+    color: #94a3b8;
+    font-style: italic;
+  }
+}

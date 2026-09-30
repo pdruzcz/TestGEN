@@ -1,0 +1,9 @@
+@startuml
+left to right direction
+actor Customer
+actor Admin
+usecase "ManageProfile" as Manage
+usecase "DeleteAccount" as Delete
+Customer -- Manage
+Admin -- Delete
+@enduml

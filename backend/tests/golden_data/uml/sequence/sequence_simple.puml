@@ -1,0 +1,9 @@
+@startuml
+actor Uzytkownik
+participant LoginForm
+participant AuthService
+Uzytkownik -> LoginForm: wprowadz dane
+LoginForm -> AuthService: verifyCredentials(login, haslo)
+AuthService --> LoginForm: token
+LoginForm --> Uzytkownik: zalogowano
+@enduml

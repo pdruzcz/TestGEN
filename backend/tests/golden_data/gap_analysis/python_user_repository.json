@@ -1,0 +1,24 @@
+{
+  "language": "python",
+  "name": "python_user_repository",
+  "requirements": [
+    {"req_id": "REQ-USER-001", "text": "System must create new users in the database", "category": "crud", "priority": "high"},
+    {"req_id": "REQ-USER-002", "text": "System must fetch user by identifier", "category": "crud", "priority": "high"},
+    {"req_id": "REQ-USER-003", "text": "System must update the user email address", "category": "crud", "priority": "medium"},
+    {"req_id": "REQ-USER-004", "text": "System must delete user by identifier", "category": "crud", "priority": "medium"},
+    {"req_id": "REQ-USER-005", "text": "System must search users by last name", "category": "search", "priority": "low"}
+  ],
+  "code_entities": [
+    {"entity_id": "repo-1", "name": "create_user", "type": "function", "file_path": "src/repositories/user_repo.py", "line_number": 8, "language": "python", "docstring": "Create a new user record in the database"},
+    {"entity_id": "repo-2", "name": "get_user_by_id", "type": "function", "file_path": "src/repositories/user_repo.py", "line_number": 26, "language": "python", "docstring": "Fetch a user by their unique identifier"},
+    {"entity_id": "repo-3", "name": "update_email", "type": "function", "file_path": "src/repositories/user_repo.py", "line_number": 48, "language": "python", "docstring": "Update the email address of an existing user"},
+    {"entity_id": "repo-4", "name": "delete_user", "type": "function", "file_path": "src/repositories/user_repo.py", "line_number": 70, "language": "python", "docstring": "Delete user record by identifier"},
+    {"entity_id": "repo-5", "name": "search_users_by_last_name", "type": "function", "file_path": "src/repositories/user_repo.py", "line_number": 92, "language": "python", "docstring": "Search for users matching the given last name"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-USER-001", "REQ-USER-002", "REQ-USER-003", "REQ-USER-004", "REQ-USER-005"],
+    "missing_req_ids": [],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 90.0
+  }
+}

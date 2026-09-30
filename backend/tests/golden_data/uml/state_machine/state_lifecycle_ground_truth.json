@@ -1,0 +1,9 @@
+{
+  "diagram_type": "state_machine",
+  "description": "Cykl zycia zamowienia: Created->Processing->Done/Failed.",
+  "expected_participants_count": 0,
+  "expected_elements_count": 7,
+  "expected_relationships_count": 6,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 21
+}

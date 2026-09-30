@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+  <uml:Model xmi:id="m1" name="UseCases">
+    <packagedElement xmi:type="uml:Actor" xmi:id="a1" name="Customer"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="u1" name="Checkout"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="u2" name="Pay"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="u3" name="Browse"/>
+  </uml:Model>
+</xmi:XMI>

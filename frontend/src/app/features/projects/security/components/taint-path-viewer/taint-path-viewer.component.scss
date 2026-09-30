@@ -1,0 +1,104 @@
+.taint {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+
+  &__summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__flow {
+    font-weight: 600;
+  }
+
+  &__warn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #b26a00;
+    font-size: 0.85rem;
+
+    mat-icon {
+      font-size: 1.1rem;
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+
+    &--none {
+      color: #c62828;
+    }
+  }
+
+  &__path {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__node {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-left: 4px solid #bdbdbd;
+    background: #fafafa;
+    border-radius: 4px;
+
+    &--source {
+      border-left-color: #c62828;
+    }
+    &--transform {
+      border-left-color: #f9a825;
+    }
+    &--sanitizer {
+      border-left-color: #2e7d32;
+    }
+    &--sink {
+      border-left-color: #6a1b9a;
+    }
+  }
+
+  &__node-icon {
+    color: #616161;
+    flex-shrink: 0;
+  }
+
+  &__node-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  &__node-type {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #757575;
+  }
+
+  &__node-op {
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  &__node-loc {
+    font-size: 0.8rem;
+    color: #616161;
+  }
+
+  &__node-var {
+    font-weight: 600;
+    margin-right: 0.35rem;
+    color: #37474f;
+  }
+}

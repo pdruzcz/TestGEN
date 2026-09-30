@@ -1,0 +1,138 @@
+<div class="pg-page">
+  <app-navbar activeLink="projects" />
+
+  <div class="pg-content">
+    <div class="pg-header">
+      <a
+        mat-button
+        [routerLink]="['/projects', projectId(), 'test-cases']"
+        class="back-link"
+      >
+        <mat-icon>arrow_back</mat-icon>
+        Wróć do przypadków testowych
+      </a>
+      <h1 class="page-title">Generator kodu testów PHP (PHPUnit/Pest)</h1>
+      <p class="page-subtitle">
+        Wygeneruj kod testowy PHP (.php) z wybranych przypadków testowych
+        projektu PHP. PHPUnit tworzy klasę testową (<code>extends TestCase</code
+        >, <code>assertSame</code>, <code>expectException</code>), Pest — testy
+        w DSL (<code>it()</code>, <code>expect()-&gt;toBe()</code>).
+      </p>
+    </div>
+
+    <section class="card controls">
+      <h3 class="section-title">Wybierz framework docelowy</h3>
+      <mat-button-toggle-group
+        [value]="phpFramework()"
+        (change)="phpFramework.set($event.value)"
+        aria-label="Framework testowy PHP"
+        class="framework-toggle"
+      >
+        <mat-button-toggle value="phpunit">PHPUnit</mat-button-toggle>
+        <mat-button-toggle value="pest">Pest</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <h3 class="section-title">Wybierz przypadki testowe PHP</h3>
+
+      @if (isLoading()) {
+        <div class="loading">
+          <mat-spinner diameter="28" aria-label="Ładowanie" />
+        </div>
+      } @else if (phpTestCases().length === 0) {
+        <p class="empty">
+          Brak przypadków testowych PHP. Wygeneruj najpierw przypadki dla
+          projektu PHP (wymagany <code>composer.json</code> z phpunit/pest).
+        </p>
+      } @else {
+        <ul class="tc-list">
+          @for (tc of phpTestCases(); track tc.id) {
+            <li class="tc-item">
+              <mat-checkbox
+                [checked]="isSelected(tc.id)"
+                (change)="toggle(tc.id)"
+              >
+                <span class="php-badge" title="Test PHP">PHP</span>
+                {{ tc.title }}
+              </mat-checkbox>
+            </li>
+          }
+        </ul>
+      }
+
+      <div class="control-row">
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="isGenerating()"
+          (click)="generate()"
+        >
+          @if (isGenerating()) {
+            <mat-spinner diameter="18" aria-label="Generowanie" />
+          } @else {
+            <mat-icon>code</mat-icon>
+          }
+          Generuj kod ({{ frameworkLabel() }})
+        </button>
+      </div>
+    </section>
+
+    @if (loadError()) {
+      <div class="error-banner" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        {{ loadError() }}
+      </div>
+    }
+
+    @if (infoMessage()) {
+      <div class="info-banner" role="status" aria-live="polite">
+        <mat-icon aria-hidden="true">info</mat-icon>
+        {{ infoMessage() }}
+      </div>
+    }
+
+    <section class="card">
+      <h3 class="section-title">Pobierz wygenerowany kod</h3>
+      <div class="control-grid">
+        <label class="field">
+          <span class="field-label">Identyfikator kodu</span>
+          <input
+            type="text"
+            [ngModel]="codeIdInput()"
+            (ngModelChange)="codeIdInput.set($event)"
+            aria-label="Identyfikator kodu"
+            placeholder="UUID wygenerowanego kodu"
+          />
+        </label>
+      </div>
+      <div class="control-row">
+        <button mat-stroked-button (click)="fetchCode()">
+          <mat-icon>search</mat-icon>
+          Pobierz kod
+        </button>
+      </div>
+    </section>
+
+    @if (generatedCode(); as code) {
+      <section class="card code-detail">
+        <div class="detail-header">
+          <h3 class="section-title">{{ code.filePath ?? code.id }}</h3>
+          <button mat-stroked-button (click)="download(code)">
+            <mat-icon>download</mat-icon>
+            Pobierz .php
+          </button>
+        </div>
+        <div class="meta-row">
+          <span class="chip">{{ code.framework }}</span>
+          <span class="chip">{{ code.language }}</span>
+          <span class="chip" title="Uruchomienie w projekcie PHP">
+            <mat-icon aria-hidden="true">terminal</mat-icon>
+            ./vendor/bin/phpunit lub ./vendor/bin/pest
+          </span>
+        </div>
+        <pre class="code-block"><code>{{ code.code }}</code></pre>
+      </section>
+    }
+
+    <app-footer />
+  </div>
+</div>

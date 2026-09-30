@@ -1,0 +1,118 @@
+.usage-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+
+  h1 {
+    margin: 0 0 4px;
+    font-size: 28px;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: #4b5563;
+  }
+}
+
+// AC2 — informacje o okresie rozliczeniowym (mobile-first: kolumna).
+.period-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    gap: 24px;
+  }
+}
+
+.period-item {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+
+  dt {
+    font-size: 12px;
+    color: #5a6270;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 16px;
+  color: #5a6270;
+
+  &.error p {
+    color: #d32f2f;
+    margin: 0;
+  }
+}
+
+// AC4 — prognoza: neutralna informacja lub ostrzeżenie z CTA.
+.forecast-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #e3f2fd;
+  color: #0d47a1;
+
+  mat-icon {
+    color: inherit;
+  }
+
+  p {
+    margin: 0;
+    flex: 1 1 240px;
+    font-size: 14px;
+  }
+
+  &.warning {
+    background: #fff8e1;
+    color: #b26a00;
+  }
+}
+
+// AC1/AC6 — siatka kart (mobile-first: 1 kolumna → auto-fit).
+.cards-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// Tryb wysokiego kontrastu (6-10) — baner prognozy czarno-biały.
+:host-context(.high-contrast) {
+  .forecast-banner {
+    background: #fff;
+    color: #000;
+    border: 2px solid #000;
+  }
+}

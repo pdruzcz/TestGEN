@@ -1,0 +1,73 @@
+{
+  "category": "real",
+  "description": "Angular Material docs (MIT) — komponent Dialog, przykłady live w stanie spoczynkowym (przyciski otwierające dialog: Open dialog without animation / slowly / Open dialog). Viewport 1280x800.",
+  "expected_component_count": 6,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidenav (lista komponentów)",
+      "bbox": {
+        "x": 0,
+        "y": 64,
+        "width": 290,
+        "height": 736
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Search (toolbar)",
+      "bbox": {
+        "x": 900,
+        "y": 12,
+        "width": 340,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Open dialog without animation (demo)",
+      "bbox": {
+        "x": 370,
+        "y": 200,
+        "width": 320,
+        "height": 50
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Open dialog slowly (demo)",
+      "bbox": {
+        "x": 710,
+        "y": 200,
+        "width": 260,
+        "height": 50
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Open dialog (przykład 2, demo)",
+      "bbox": {
+        "x": 370,
+        "y": 400,
+        "width": 220,
+        "height": 50
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Show dialog form (przykład 2, demo)",
+      "bbox": {
+        "x": 610,
+        "y": 400,
+        "width": 250,
+        "height": 50
+      },
+      "confidence": 0.8
+    }
+  ]
+}

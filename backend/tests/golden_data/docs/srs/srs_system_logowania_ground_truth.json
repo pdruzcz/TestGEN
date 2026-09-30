@@ -1,0 +1,35 @@
+{
+  "name": "srs_system_logowania",
+  "doc_category": "srs",
+  "format": "pdf",
+  "language": "pl",
+  "has_intentional_discrepancies": false,
+  "expected_classification": {
+    "doc_type": "specyfikacja_wymagań",
+    "min_confidence": 50.0
+  },
+  "expected_requirements": {
+    "min_count": 7,
+    "expected_texts": [
+      "WYM-001: System musi umożliwiać logowanie za pomocą adresu email i hasła.",
+      "WYM-002: Hasło musi zawierać minimum dwanaście znaków, w tym wielką literę, cyfrę i znak\nspecjalny.",
+      "WYM-003: System musi blokować konto po pięciu nieudanych próbach logowania na trzydzieści\nminut.",
+      "WYM-004: Sesja użytkownika musi wygasać po sześćdziesięciu minutach nieaktywności.",
+      "WYM-005: System musi obsługiwać uwierzytelnianie wieloskładnikowe za pomocą algorytmu\nTOTP.",
+      "WYM-010: System musi zapewniać dostępność na poziomie co najmniej dziewięćdziesięciu\ndziewięciu procent.",
+      "WYM-011: Czas odpowiedzi operacji logowania nie może przekraczać dwóch sekund."
+    ]
+  },
+  "expected_inconsistencies": {
+    "detectable_types": [],
+    "min_detectable_count": 0
+  },
+  "expected_glossary": {
+    "min_terms": 3,
+    "expected_terms": [
+      "MFA",
+      "TOTP",
+      "Sesja"
+    ]
+  }
+}

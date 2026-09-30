@@ -1,0 +1,42 @@
+@startuml c4-component-m3
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title TestGEN — C4 Level 3: Moduł M3 — Analiza UML
+
+Container_Boundary(m3, "Moduł analizy UML (M3)") {
+    Component(upload, "UML Upload", "FastAPI route", "Odbiera pliki diagramów\n(XMI, PlantUML, SVG, PNG)")
+    Component(xmi_parser, "XMI Parser", "Python lxml", "Parsowanie diagramów\nw formacie XMI")
+    Component(puml_parser, "PlantUML Parser", "Python regex", "Parsowanie diagramów\nw formacie PlantUML")
+    Component(visual_parser, "Visual Parser", "Python + OCR/CV", "Rozpoznawanie diagramów\nz obrazów (SVG, PNG)")
+    Component(class_diag, "Class Diagram Analyzer", "Python", "Analiza diagramów klas:\nrelacje, dziedziczenie")
+    Component(seq_diag, "Sequence Diagram Analyzer", "Python", "Analiza diagramów sekwencji:\nprzepływy, aktorzy")
+    Component(usecase_diag, "Use-Case Analyzer", "Python", "Analiza przypadków użycia:\naktorzy, scenariusze")
+    Component(state_diag, "State Machine Analyzer", "Python", "Analiza maszyn stanów:\nprzejścia, warunki")
+    Component(cross_diag, "Cross-Diagram Analyzer", "Python", "Korelacja między diagramami:\nspójność, pokrycie")
+    Component(llm_uml, "LLM UML Analyzer", "Python + LLM API", "Semantyczna rekonstrukcja\nprzepływów z diagramów")
+}
+
+ContainerDb(postgres, "PostgreSQL", "")
+System_Ext(llm_ext, "API LLM", "")
+
+Rel(upload, xmi_parser, "XMI", "")
+Rel(upload, puml_parser, "PlantUML", "")
+Rel(upload, visual_parser, "SVG/PNG", "")
+Rel(xmi_parser, class_diag, "Klasy", "")
+Rel(xmi_parser, seq_diag, "Sekwencje", "")
+Rel(xmi_parser, usecase_diag, "Use-case", "")
+Rel(xmi_parser, state_diag, "Stany", "")
+Rel(puml_parser, class_diag, "Klasy", "")
+Rel(puml_parser, seq_diag, "Sekwencje", "")
+Rel(visual_parser, class_diag, "Rozpoznane elementy", "")
+Rel(class_diag, cross_diag, "Wyniki", "")
+Rel(seq_diag, cross_diag, "Wyniki", "")
+Rel(usecase_diag, cross_diag, "Wyniki", "")
+Rel(state_diag, cross_diag, "Wyniki", "")
+Rel(cross_diag, llm_uml, "Kontekst", "")
+Rel(llm_uml, llm_ext, "API call", "HTTPS")
+Rel(cross_diag, postgres, "Zapis wyników", "SQL")
+
+@enduml

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+  <uml:Class xmi:id="c1" name="Account">
+    <ownedAttribute xmi:id="p1" name="balance"/>
+    <generalization xmi:id="g1" general="c2"/>
+  </uml:Class>
+  <uml:Class xmi:id="c2" name="Order"/>
+  <uml:Class xmi:id="c3" name="Customer"/>
+</xmi:XMI>

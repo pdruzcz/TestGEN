@@ -1,0 +1,146 @@
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .page-title {
+    h1 {
+      margin: 0 0 4px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: var(--mat-sys-on-surface-variant, #5f6368);
+    }
+  }
+
+  .banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 12px;
+
+    p {
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  .banner-warning {
+    background: var(--mat-sys-tertiary-container, #fff3e0);
+    color: var(--mat-sys-on-tertiary-container, #7a4f01);
+
+    mat-icon {
+      color: inherit;
+    }
+  }
+
+  .methods-card {
+    padding: 0;
+  }
+
+  .status {
+    margin: 0;
+    padding: 24px;
+    color: var(--mat-sys-on-surface-variant, #5f6368);
+    text-align: center;
+  }
+
+  .methods {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .method-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 24px;
+
+    & + .method-row {
+      border-top: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+    }
+  }
+
+  .method-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    mat-icon {
+      color: var(--mat-sys-on-surface-variant, #5f6368);
+    }
+  }
+
+  .method-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .method-subtitle {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--mat-sys-outline, #9aa0a6);
+  }
+
+  .method-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .chip-default {
+    --mdc-chip-background-color: var(--mat-sys-primary, #1976d2);
+    --mdc-chip-label-text-color: #fff;
+  }
+
+  .chip-active {
+    --mdc-chip-background-color: var(--mat-sys-secondary-container, #e8f5e9);
+    --mdc-chip-label-text-color: var(--mat-sys-on-secondary-container, #1b5e20);
+  }
+
+  .chip-pending {
+    --mdc-chip-background-color: var(--mat-sys-tertiary-container, #fff3e0);
+    --mdc-chip-label-text-color: var(--mat-sys-on-tertiary-container, #7a4f01);
+  }
+
+  .delete {
+    color: var(--mat-sys-outline, #9aa0a6);
+
+    &:hover {
+      color: var(--mat-sys-error, #b3261e);
+    }
+  }
+
+  .action-error {
+    margin: 0;
+    font-size: 14px;
+    color: var(--mat-sys-error, #b3261e);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .note {
+      flex: 1;
+      margin: 0;
+      font-size: 13px;
+      color: var(--mat-sys-outline, #9aa0a6);
+    }
+  }
+
+  .error {
+    margin: 0;
+    color: var(--mat-sys-error, #b3261e);
+  }
+}

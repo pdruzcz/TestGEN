@@ -1,0 +1,116 @@
+<div class="act-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="act-content" id="main-content" tabindex="-1">
+    <a
+      mat-button
+      [routerLink]="['/projects', projectId(), 'uml']"
+      class="back-link"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Wróć do diagramów
+    </a>
+
+    <h1 class="page-title">Diagram aktywności</h1>
+
+    @if (isLoading()) {
+      <div class="loading" role="status" aria-live="polite">
+        <mat-spinner diameter="20" aria-label="Ładowanie" />
+        <span>Ładowanie…</span>
+      </div>
+    } @else if (!detail()?.parsedModel) {
+      <p class="empty">
+        Diagram nie został jeszcze sparsowany lub parsowanie nie powiodło się.
+      </p>
+    } @else {
+      @if (warnings().length > 0) {
+        <section class="card warnings-card">
+          <h2 class="section-title">Ostrzeżenia ({{ warnings().length }})</h2>
+          <ul class="warnings">
+            @for (w of warnings(); track $index) {
+              <li>{{ w }}</li>
+            }
+          </ul>
+        </section>
+      }
+
+      <section class="card">
+        <h2 class="section-title">Węzły ({{ nodes().length }})</h2>
+        <div class="nodes">
+          @for (n of nodes(); track n.id) {
+            <div class="node" [class]="'nt-' + n.nodeType">
+              <span class="n-kind">{{ nodeLabel(n.nodeType) }}</span>
+              @if (n.name) {
+                <span class="n-name">{{ n.name }}</span>
+              }
+              @if (n.swimlane) {
+                <span class="n-lane">{{ n.swimlane }}</span>
+              }
+            </div>
+          }
+        </div>
+      </section>
+
+      @if (swimlanes().length > 0) {
+        <section class="card">
+          <h2 class="section-title">Tory odpowiedzialności ({{ swimlanes().length }})</h2>
+          <div class="lanes">
+            @for (l of swimlanes(); track l.name) {
+              <div class="lane">
+                <span class="lane-name">{{ l.name }}</span>
+                <span class="lane-count">{{ l.nodeIds.length }} węzłów</span>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <section class="card">
+        <h2 class="section-title">Przepływy ({{ edges().length }})</h2>
+        <ul class="edges">
+          @for (e of edges(); track e.id) {
+            <li class="edge">
+              <span class="e-source">{{ nodeName(e.sourceId) }}</span>
+              <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+              <span class="e-target">{{ nodeName(e.targetId) }}</span>
+              @if (e.guard) {
+                <span class="e-guard">[{{ e.guard }}]</span>
+              }
+            </li>
+          }
+        </ul>
+      </section>
+
+      @if (scenarios().length > 0) {
+        <section class="card">
+          <h2 class="section-title">Ścieżki testowe ({{ scenarios().length }})</h2>
+          <div class="scenarios">
+            @for (s of scenarios(); track s.pathId) {
+              <div class="scenario" [class]="'sc-' + s.scenarioType">
+                <div class="scenario-header">
+                  <span class="scenario-badge">{{ scenarioLabel(s.scenarioType) }}</span>
+                  <span class="scenario-id">{{ s.pathId }}</span>
+                </div>
+                @if (s.preconditions.length > 0) {
+                  <p class="scenario-pre">
+                    Warunki: {{ s.preconditions.join(", ") }}
+                  </p>
+                }
+                <ol class="scenario-steps">
+                  @for (step of s.steps; track $index) {
+                    <li>{{ step.name }}</li>
+                  }
+                </ol>
+                <p class="scenario-result">
+                  Oczekiwany rezultat: {{ s.expectedResult }}
+                </p>
+              </div>
+            }
+          </div>
+        </section>
+      }
+    }
+
+    <app-footer />
+  </main>
+</div>

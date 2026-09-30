@@ -1,0 +1,86 @@
+<div class="fl-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="fl-content" id="main-content" tabindex="-1">
+    <a
+      mat-button
+      [routerLink]="['/projects', projectId(), 'uml']"
+      class="back-link"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Wróć do diagramów
+    </a>
+
+    <h1 class="page-title">User flows</h1>
+    <p class="page-subtitle">
+      Przepływy użytkownika zrekonstruowane z diagramów UML (analiza
+      cross-diagram).
+    </p>
+
+    <a
+      mat-stroked-button
+      color="primary"
+      [routerLink]="['/projects', projectId(), 'gherkin']"
+      class="gherkin-link"
+    >
+      <mat-icon>auto_awesome</mat-icon>
+      Generuj scenariusze Gherkin/BDD
+    </a>
+
+    @if (isLoading()) {
+      <div class="loading" role="status" aria-live="polite">
+        <mat-spinner diameter="20" aria-label="Ładowanie" />
+        <span>Ładowanie…</span>
+      </div>
+    } @else if (loadError()) {
+      <div class="error-banner" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        {{ loadError() }}
+      </div>
+    } @else if (flows().length === 0) {
+      <p class="empty">
+        Brak user flows. Uruchom „Analizuj user flows” na ekranie diagramów,
+        gdy diagramy zostaną sparsowane.
+      </p>
+    } @else {
+      <p class="count">Znaleziono {{ total() }} przepływów.</p>
+
+      @for (flow of flows(); track flow.id) {
+        <section class="card flow-card">
+          <header class="flow-head">
+            <h2 class="flow-name">{{ flow.name }}</h2>
+            <span class="badge">{{ sourceLabel(flow.sourceType) }}</span>
+            <span class="badge status">{{ statusLabel(flow.status) }}</span>
+          </header>
+
+          @if (flow.warnings && flow.warnings.length > 0) {
+            <ul class="warnings">
+              @for (w of flow.warnings; track $index) {
+                <li>{{ w }}</li>
+              }
+            </ul>
+          }
+
+          <ol class="steps">
+            @for (step of flow.steps; track step.id ?? $index) {
+              <li class="step">
+                <span class="step-action">{{ step.action }}</span>
+                @if (step.actor) {
+                  <span class="step-actor">({{ step.actor }})</span>
+                }
+                @if (step.targetElement) {
+                  <span class="step-target">→ {{ step.targetElement }}</span>
+                }
+                @if (step.expectedResult) {
+                  <span class="step-result">{{ step.expectedResult }}</span>
+                }
+              </li>
+            }
+          </ol>
+        </section>
+      }
+    }
+  </main>
+
+  <app-footer />
+</div>

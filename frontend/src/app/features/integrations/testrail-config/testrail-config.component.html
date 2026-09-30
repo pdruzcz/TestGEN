@@ -1,0 +1,212 @@
+<div class="testrail-page">
+  <app-navbar activeLink="projects" />
+  <main class="testrail-content" id="main-content" tabindex="-1">
+    <div class="page-header">
+      <div>
+        <a mat-button [routerLink]="['/projects', projectId()]" class="back-link">
+          <mat-icon aria-hidden="true">arrow_back</mat-icon>
+          Wróć do projektu
+        </a>
+        <h1 class="page-title">Integracja z TestRail</h1>
+        <p class="page-subtitle">
+          Po skonfigurowaniu połączenia wyeksportujesz przypadki testowe wprost z listy testów. Ponowny eksport
+          aktualizuje istniejące przypadki, zamiast tworzyć duplikaty.
+        </p>
+      </div>
+    </div>
+
+    @if (integrationId(); as syncIntegrationId) {
+      <p class="sync-link">
+        <a mat-button [routerLink]="['/settings/integrations', syncIntegrationId, 'sync']">
+          <mat-icon aria-hidden="true">sync_alt</mat-icon>
+          Synchronizacja dwukierunkowa
+        </a>
+        <span class="sync-hint">
+          Zmiany wykonane po stronie TestRaila mogą wracać do TestGEN — ustaw kierunek i odstęp.
+        </span>
+      </p>
+    }
+
+    @if (errorMessage()) {
+      <p class="banner banner-error" role="alert">{{ errorMessage() }}</p>
+    }
+
+    @if (infoMessage()) {
+      <p class="banner banner-info" role="status">
+        {{ infoMessage() }}
+        <button mat-button type="button" (click)="dismissInfo()">Zamknij</button>
+      </p>
+    }
+
+    @if (testResult(); as result) {
+      <p class="banner" [class.banner-info]="result.connected" [class.banner-error]="!result.connected" role="status">
+        {{ result.message }}
+      </p>
+    }
+
+    @if (isLoading()) {
+      <div class="loading">
+        <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+        Ładowanie...
+      </div>
+    } @else {
+      <section class="panel">
+        <h2 class="panel-title">Połączenie</h2>
+
+        <label class="field">
+          <span class="field-label">Adres instancji TestRail</span>
+          <input
+            type="url"
+            name="baseUrl"
+            placeholder="https://twojafirma.testrail.io"
+            [ngModel]="baseUrl()"
+            (ngModelChange)="baseUrl.set($event)"
+          />
+          <span class="field-hint">Wymagany HTTPS — tym kanałem leci klucz API.</span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">E-mail konta TestRail</span>
+          <input
+            type="email"
+            name="email"
+            placeholder="qa@twojafirma.pl"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+          />
+        </label>
+
+        <label class="field">
+          <span class="field-label"> Klucz API {{ isConfigured() ? '(zostaw puste, aby nie zmieniać)' : '' }} </span>
+          <input
+            type="password"
+            name="apiKey"
+            autocomplete="new-password"
+            [ngModel]="apiKey()"
+            (ngModelChange)="apiKey.set($event)"
+          />
+          <span class="field-hint"> Wygenerujesz go w TestRail: My Settings → API Keys. </span>
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">Identyfikator projektu TestRail</span>
+            <input
+              type="number"
+              name="testrailProjectId"
+              min="1"
+              [ngModel]="testrailProjectId()"
+              (ngModelChange)="setNumber('project', $event)"
+            />
+            <span class="field-hint">Liczba z adresu projektu w TestRailu.</span>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Suite (opcjonalnie)</span>
+            <input
+              type="number"
+              name="suiteId"
+              min="1"
+              [ngModel]="suiteId()"
+              (ngModelChange)="setNumber('suite', $event)"
+            />
+            <span class="field-hint">Tylko dla projektów w trybie multi-suite.</span>
+          </label>
+        </div>
+
+        <div class="panel-actions">
+          <button
+            mat-stroked-button
+            type="button"
+            [disabled]="!isConfigured() || isTesting()"
+            (click)="testConnection()"
+          >
+            <mat-icon aria-hidden="true">network_ping</mat-icon>
+            {{ isTesting() ? 'Sprawdzam...' : 'Testuj połączenie' }}
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            [disabled]="!isFormValid() || isSaving()"
+            (click)="save()"
+          >
+            {{ isSaving() ? 'Zapisuję...' : 'Zapisz konfigurację' }}
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Mapowanie pól</h2>
+        <p class="panel-hint">
+          Identyfikatory priorytetów i typów zależą od instancji TestRail. Domyślne wartości odpowiadają standardowej
+          konfiguracji — sprawdź je u siebie w Administration → Customizations.
+        </p>
+
+        <table class="mapping-table">
+          <caption class="visually-hidden">
+            Mapowanie priorytetów TestGEN na identyfikatory TestRail
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Priorytet TestGEN</th>
+              <th scope="col">priority_id w TestRail</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (priority of priorities; track priority) {
+              <tr>
+                <td>{{ priorityLabel(priority) }}</td>
+                <td>
+                  <input
+                    type="number"
+                    min="1"
+                    [attr.aria-label]="'priority_id dla ' + priorityLabel(priority)"
+                    [ngModel]="priorityValue(priority)"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="setPriorityValue(priority, $event)"
+                  />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <table class="mapping-table">
+          <caption class="visually-hidden">
+            Mapowanie typów testów TestGEN na identyfikatory TestRail
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Typ testu TestGEN</th>
+              <th scope="col">type_id w TestRail</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (type of types; track type) {
+              <tr>
+                <td>{{ typeLabel(type) }}</td>
+                <td>
+                  <input
+                    type="number"
+                    min="1"
+                    [attr.aria-label]="'type_id dla ' + typeLabel(type)"
+                    [ngModel]="typeValue(type)"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="setTypeValue(type, $event)"
+                  />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <p class="panel-hint">
+          Deduplikacja opiera się na polu własnym <code>testgen_id</code>. Załóż je w TestRailu (Administration →
+          Customizations, typ tekstowy), inaczej każdy eksport utworzy nowe przypadki zamiast aktualizować istniejące.
+        </p>
+      </section>
+    }
+  </main>
+  <app-footer />
+</div>

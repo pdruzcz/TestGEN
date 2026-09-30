@@ -1,0 +1,10 @@
+{
+  "diagram_type": "sequence",
+  "format": "xmi",
+  "description": "Sekwencja XMI: Interaction LoginFlow z 3 liniami zycia i 3 komunikatami.",
+  "expected_participants_count": 3,
+  "expected_elements_count": 0,
+  "expected_relationships_count": 3,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 1
+}

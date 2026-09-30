@@ -1,0 +1,11 @@
+@startuml
+start
+:Wprowadz poswiadczenia;
+if (poswiadczenia poprawne?) then (tak)
+    :Utworz sesje;
+    :Wyswietl pulpit;
+else (nie)
+    :Pokaz blad;
+endif
+stop
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+class User {
+    +id: UUID
+    +email: String
+    +login(): bool
+}
+class Project {
+    +id: UUID
+    +name: String
+}
+class TestCase {
+    +id: UUID
+    +title: String
+    +status: String
+}
+User "1" --> "*" Project : owns
+Project "1" --> "*" TestCase : contains
+@enduml

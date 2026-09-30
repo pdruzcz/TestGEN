@@ -1,0 +1,164 @@
+.security {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__back {
+    align-self: flex-start;
+  }
+
+  &__header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+  }
+
+  &__error {
+    background: #fdecea;
+    color: #b71c1c;
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
+
+  &__launcher {
+    padding: 20px;
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+  }
+
+  &__form {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &__scans-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__scan-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__scan-item {
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease;
+
+    &:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    &--active {
+      border: 2px solid #3f51b5;
+    }
+  }
+
+  &__scan-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  &__scan-type {
+    font-weight: 600;
+  }
+
+  &__scan-counts {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 13px;
+  }
+
+  &__total {
+    font-weight: 600;
+  }
+
+  &__empty {
+    color: #6b7280;
+  }
+
+  &__table {
+    width: 100%;
+  }
+
+  &__cwe {
+    color: #6b7280;
+    font-size: 12px;
+  }
+}
+
+.sev {
+  &--critical {
+    color: #b71c1c;
+  }
+  &--high {
+    color: #e65100;
+  }
+  &--medium {
+    color: #b26a00;
+  }
+  &--low {
+    color: #2e7d32;
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  &--pending {
+    background: #e3f2fd;
+    color: #0d47a1;
+  }
+  &--running {
+    background: #fff8e1;
+    color: #b26a00;
+  }
+  &--completed {
+    background: #e8f5e9;
+    color: #1b5e20;
+  }
+  &--failed {
+    background: #fdecea;
+    color: #b71c1c;
+  }
+  &--sev-critical {
+    background: #fdecea;
+    color: #b71c1c;
+  }
+  &--sev-high {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  &--sev-medium {
+    background: #fff8e1;
+    color: #b26a00;
+  }
+  &--sev-low {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  &--sev-info {
+    background: #eceff1;
+    color: #455a64;
+  }
+}

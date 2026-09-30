@@ -1,0 +1,32 @@
+{% if feature.tags %}{{ feature.tags | join(' ') }}
+{% endif %}Feature: {{ feature.feature_name }}
+{% if feature.feature_description %}  {{ feature.feature_description }}
+{% endif %}
+{% if feature.background_steps %}
+  Background:
+{% for step in feature.background_steps %}
+    {{ step.keyword }} {{ step.text }}
+{% endfor %}
+{% endif %}
+{% for scenario in feature.scenarios %}
+{% if scenario.tags %}
+  {{ scenario.tags | join(' ') }}
+{% endif %}
+{% if scenario.is_outline %}
+  Scenario Outline: {{ scenario.name }}
+{% else %}
+  Scenario: {{ scenario.name }}
+{% endif %}
+{% for step in scenario.steps %}
+    {{ step.keyword }} {{ step.text }}
+{% endfor %}
+{% if scenario.is_outline %}
+
+    Examples:
+      | {{ scenario.examples_headers | join(' | ') }} |
+{% for row in scenario.examples_rows %}
+      | {{ row | join(' | ') }} |
+{% endfor %}
+{% endif %}
+
+{% endfor %}

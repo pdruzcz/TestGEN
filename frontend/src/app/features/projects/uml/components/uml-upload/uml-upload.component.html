@@ -1,0 +1,151 @@
+<div class="upload-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="upload-content" id="main-content" tabindex="-1">
+    <div class="upload-header">
+      <a mat-button [routerLink]="['/projects', projectId()]" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Wróć do projektu
+      </a>
+      <h1 class="page-title">Diagramy UML</h1>
+      <p class="page-subtitle">
+        Prześlij diagram UML (XMI, PlantUML, SVG, PDF lub obraz PNG/JPEG), aby
+        system mógł analizować architekturę i przepływy aplikacji.
+      </p>
+    </div>
+
+    <!-- Upload Zone -->
+    <section
+      class="drop-zone"
+      [class.drag-active]="isDragActive()"
+      role="button"
+      tabindex="0"
+      aria-label="Strefa drag-and-drop dla diagramów UML"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      (click)="fileInput.click()"
+      (keydown.enter)="fileInput.click()"
+      (keydown.space)="fileInput.click(); $event.preventDefault()"
+    >
+      <mat-icon aria-hidden="true">account_tree</mat-icon>
+      <p class="drop-main">Przeciągnij pliki tutaj lub kliknij aby wybrać</p>
+      <p class="drop-hint">Akceptowane formaty: {{ allowedExtensionsLabel }}</p>
+      <p class="drop-hint">Maksymalny rozmiar: {{ maxFileSizeLabel }}</p>
+      <input
+        #fileInput
+        hidden
+        type="file"
+        multiple
+        accept=".xmi,.xml,.puml,.plantuml,.svg,.pdf,.png,.jpeg,.jpg"
+        (change)="onFilesSelected($event)"
+      />
+    </section>
+
+    @if (uploadError()) {
+      <div class="error-banner" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        {{ uploadError() }}
+      </div>
+    }
+
+    @if (uploadSummary()) {
+      <div class="success-banner" role="status" aria-live="polite">
+        <mat-icon aria-hidden="true">check_circle</mat-icon>
+        {{ uploadSummary() }}
+      </div>
+    }
+
+    @if (analyzeSummary()) {
+      <div class="success-banner" role="status" aria-live="polite">
+        <mat-icon aria-hidden="true">insights</mat-icon>
+        {{ analyzeSummary() }}
+      </div>
+    }
+
+    <!-- Cross-diagram analysis (Story 3.7) -->
+    <section class="analysis-actions">
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="!hasParsedDiagrams() || isAnalyzing()"
+        (click)="analyzeFlows()"
+      >
+        @if (isAnalyzing()) {
+          <mat-spinner diameter="18" aria-label="Ładowanie" />
+        } @else {
+          <mat-icon>insights</mat-icon>
+        }
+        Analizuj user flows
+      </button>
+      <a mat-button [routerLink]="['/projects', projectId(), 'uml', 'flows']">
+        <mat-icon>route</mat-icon>
+        Zobacz user flows
+      </a>
+    </section>
+
+    <!-- Diagram List -->
+    <div class="diagrams-section">
+      <h3 class="section-title">
+        Diagramy UML
+        @if (diagrams().length > 0) {
+          <span class="total-count">({{ diagrams().length }})</span>
+        }
+      </h3>
+
+      @if (isLoadingList()) {
+        <div class="loading" role="status" aria-live="polite">
+          <mat-spinner diameter="20" aria-label="Ładowanie diagramów" />
+          <span>Ładowanie diagramów…</span>
+        </div>
+      } @else if (diagrams().length === 0) {
+        <p class="empty">Brak diagramów. Prześlij pierwszy diagram powyżej.</p>
+      } @else {
+        <div class="diagrams-list">
+          @for (d of diagrams(); track d.id) {
+            <div class="diagram-card" [class]="d.uiStatus">
+              <div class="diagram-info">
+                <mat-icon aria-hidden="true">{{ getDiagramIcon(d) }}</mat-icon>
+                <div class="diagram-details">
+                  <span class="diagram-filename">{{ d.filename }}</span>
+                  <span class="diagram-meta">
+                    {{ formatSize(d.fileSize) }} &bull;
+                    {{ d.format.toUpperCase() }} &bull; Typ:
+                    {{ getTypeLabel(d.diagramType) }}
+                  </span>
+                </div>
+              </div>
+              <div class="diagram-status">
+                @switch (d.uiStatus) {
+                  @case ("pending") {
+                    <mat-spinner diameter="16" aria-label="Oczekuje" />
+                    <span>Oczekuje…</span>
+                  }
+                  @case ("parsing") {
+                    <mat-spinner diameter="16" aria-label="Parsowanie" />
+                    <span>Parsowanie…</span>
+                  }
+                  @case ("completed") {
+                    <mat-icon class="status-icon ok">check_circle</mat-icon>
+                    <span>Zparsowany</span>
+                    @if (viewerLink(d); as link) {
+                      <a mat-button color="primary" [routerLink]="link"
+                        >Zobacz</a
+                      >
+                    }
+                  }
+                  @case ("failed") {
+                    <mat-icon class="status-icon error">error</mat-icon>
+                    <span>Błąd</span>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <app-footer />
+  </main>
+</div>

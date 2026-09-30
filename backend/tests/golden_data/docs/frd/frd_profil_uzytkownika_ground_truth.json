@@ -1,0 +1,32 @@
+{
+  "name": "frd_profil_uzytkownika",
+  "doc_category": "frd",
+  "format": "html",
+  "language": "pl",
+  "has_intentional_discrepancies": false,
+  "expected_classification": {
+    "doc_type": "specyfikacja_wymagań",
+    "min_confidence": 50.0
+  },
+  "expected_requirements": {
+    "min_count": 5,
+    "expected_texts": [
+      "WYM-001: Użytkownik może edytować dane swojego profilu.",
+      "WYM-002: Użytkownik może zmienić hasło do swojego konta.",
+      "WYM-003: System musi pozwalać na wgranie zdjęcia profilowego.",
+      "WYM-004: Użytkownik może ustawić preferowany język interfejsu.",
+      "WYM-010: System musi zapewniać wydajność ładowania profilu poniżej jednej sekundy."
+    ]
+  },
+  "expected_inconsistencies": {
+    "detectable_types": [],
+    "min_detectable_count": 0
+  },
+  "expected_glossary": {
+    "min_terms": 2,
+    "expected_terms": [
+      "Profil",
+      "Preferencja"
+    ]
+  }
+}

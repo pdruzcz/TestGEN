@@ -1,0 +1,47 @@
+{
+  "name": "Dashboard flow z API mocks",
+  "description": "Dashboard z network interceptors — page.route() dla mockowania API",
+  "url": "https://example.com/dashboard",
+  "test_cases": [
+    {
+      "scenario_name": "Load dashboard with mocked data",
+      "test_type": "e2e",
+      "url": "https://example.com/dashboard",
+      "ui_elements": [
+        {
+          "name": "stats_cards",
+          "locator_type": "testId",
+          "locator_value": "stats-cards",
+          "element_type": "container",
+          "page_name": "DashboardPage"
+        },
+        {
+          "name": "refresh_button",
+          "locator_type": "role",
+          "locator_value": "button",
+          "element_type": "button",
+          "page_name": "DashboardPage",
+          "role_name": "Refresh"
+        }
+      ],
+      "user_flow": {
+        "name": "Dashboard load",
+        "url": "https://example.com/dashboard",
+        "steps": [
+          {"action": "check", "element": {"name": "stats_cards"}},
+          {"action": "click", "element": {"name": "refresh_button"}}
+        ]
+      },
+      "api_mocks": [
+        {
+          "url": "**/api/dashboard/stats",
+          "method": "GET",
+          "status": 200,
+          "body": {"users": 42, "tests": 156, "pass_rate": 0.89}
+        }
+      ],
+      "expected_result": "42",
+      "comparison_type": "text_contains"
+    }
+  ]
+}

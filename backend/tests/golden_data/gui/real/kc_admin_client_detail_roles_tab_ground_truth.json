@@ -1,0 +1,84 @@
+{
+  "category": "real",
+  "description": "Keycloak 26.7.1 admin console (Apache-2.0) — szczegół klienta, zakładka Roles (przełączona zakładka — stan interakcji): wyszukiwarka ról + Add role + pusta lista ról klienta. Viewport 1280x800.",
+  "expected_component_count": 7,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar (Clients/Users/Sessions/...)",
+      "bbox": {
+        "x": 0,
+        "y": 80,
+        "width": 256,
+        "height": 720
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Masthead: user toggle (golden-admin)",
+      "bbox": {
+        "x": 1150,
+        "y": 22,
+        "width": 122,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "tab",
+      "label": "Zakładki klienta (Roles aktywna — przełączona zakładka)",
+      "bbox": {
+        "x": 276,
+        "y": 188,
+        "width": 640,
+        "height": 32
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Search role",
+      "bbox": {
+        "x": 276,
+        "y": 246,
+        "width": 480,
+        "height": 36
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Add role (przycisk z rozwijaną)",
+      "bbox": {
+        "x": 1140,
+        "y": 244,
+        "width": 128,
+        "height": 40
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "form",
+      "label": "Roles panel (lista ról klienta — pusta)",
+      "bbox": {
+        "x": 276,
+        "y": 310,
+        "width": 992,
+        "height": 220
+      },
+      "confidence": 0.7
+    },
+    {
+      "component_type": "button",
+      "label": "Save",
+      "bbox": {
+        "x": 1148,
+        "y": 716,
+        "width": 120,
+        "height": 40
+      },
+      "confidence": 0.8
+    }
+  ]
+}

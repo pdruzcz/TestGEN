@@ -1,0 +1,44 @@
+@startuml
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+interface Payable {
+  +pay(amount: double): bool
+  +refund(amount: double): bool
+}
+class Customer {
+  +customerId: int
+  +name: String
+  -email: String
+  +placeOrder(): Order
+}
+class Order {
+  +orderId: int
+  +status: OrderStatus
+  -total: double
+  +addItem(item: OrderItem): void
+  +checkout(): bool
+}
+class OrderItem {
+  +quantity: int
+  +unitPrice: double
+  +subtotal(): double
+}
+class ShoppingCart {
+  -items: List
+  +addProduct(product: Product): void
+  +clear(): void
+}
+class Product {
+  +sku: String
+  +price: double
+}
+Customer "1" --> "0..*" Order
+Order "1" *-- "1..*" OrderItem
+ShoppingCart o-- "0..*" Product
+Order ..|> Payable
+@enduml

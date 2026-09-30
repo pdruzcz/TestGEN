@@ -1,0 +1,41 @@
+{
+  "category": "xss",
+  "description": "Cross-site scripting golden samples: reflected, stored, DOM, React, Vue (Story 4.14).",
+  "samples": [
+    {
+      "file": "xss_reflected_python.py",
+      "language": "python",
+      "vulnerability_type": "xss",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "xss", "cwe_id": "CWE-79", "severity": "high" }]
+    },
+    {
+      "file": "xss_stored_java.jsp",
+      "language": "java",
+      "vulnerability_type": "xss",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "xss", "cwe_id": "CWE-79", "severity": "high" }]
+    },
+    {
+      "file": "xss_dom_javascript.js",
+      "language": "javascript",
+      "vulnerability_type": "xss",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "xss", "cwe_id": "CWE-79", "severity": "high" }]
+    },
+    {
+      "file": "xss_react_jsx.jsx",
+      "language": "javascript",
+      "vulnerability_type": "xss",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "xss", "cwe_id": "CWE-79", "severity": "high" }]
+    },
+    {
+      "file": "xss_vue_template.vue",
+      "language": "javascript",
+      "vulnerability_type": "xss",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "xss", "cwe_id": "CWE-79", "severity": "high" }]
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+<section class="subscription-detail">
+  <header class="page-title">
+    <h1>Subskrypcja</h1>
+    <p>Plan, okres rozliczeniowy, metoda płatności i stan subskrypcji.</p>
+  </header>
+
+  @if (loading()) {
+    <p class="status" role="status" aria-live="polite">
+      Pobieranie danych subskrypcji…
+    </p>
+  } @else if (error()) {
+    <mat-card class="card">
+      <p class="error" role="alert">{{ error() }}</p>
+      <a mat-flat-button color="primary" routerLink="/billing/plans">
+        Wróć do planów
+      </a>
+    </mat-card>
+  } @else if (detail(); as d) {
+    @if (d.status === "past_due") {
+      <div class="banner banner-warning" role="alert">
+        <mat-icon aria-hidden="true">warning</mat-icon>
+        <p>
+          Płatność za subskrypcję nie powiodła się — trwa windykacja. Sprawdź
+          metodę płatności, aby przywrócić automatyczne odnowienia.
+        </p>
+      </div>
+    }
+
+    @if (d.pendingChange; as pending) {
+      <div class="banner banner-info" role="status">
+        <mat-icon aria-hidden="true">swap_vert</mat-icon>
+        <p>
+          Zaplanowana zmiana planu: {{ pending.toPlan }} od
+          {{ dateLabel(pending.effectiveAt ?? d.currentPeriodEnd) }} — możesz ją
+          anulować w sekcji Plany.
+        </p>
+      </div>
+    } @else if (d.cancelAtPeriodEnd) {
+      <div class="banner banner-info" role="status">
+        <mat-icon aria-hidden="true">event_busy</mat-icon>
+        <p>
+          Subskrypcja {{ planLabel(d) }} anulowana — aktywna do
+          {{ dateLabel(d.currentPeriodEnd) }}, potem plan Freemium.
+        </p>
+      </div>
+    }
+
+    <mat-card class="card detail-card">
+      <ul class="rows">
+        <li class="row">
+          <div class="row-info">
+            <mat-icon aria-hidden="true">workspace_premium</mat-icon>
+            <div>
+              <p class="row-title">Plan</p>
+              <p class="row-subtitle">Aktualny plan i cena miesięczna</p>
+            </div>
+          </div>
+          <p class="row-value">{{ planLabel(d) }} — {{ priceLabel(d) }}</p>
+        </li>
+        <li class="row">
+          <div class="row-info">
+            <mat-icon aria-hidden="true">check_circle</mat-icon>
+            <div>
+              <p class="row-title">Status</p>
+              <p class="row-subtitle">Stan subskrypcji</p>
+            </div>
+          </div>
+          <p class="row-value" [class.value-warning]="d.status === 'past_due'">
+            {{ statusLabel(d) }}
+          </p>
+        </li>
+        <li class="row">
+          <div class="row-info">
+            <mat-icon aria-hidden="true">date_range</mat-icon>
+            <div>
+              <p class="row-title">Okres rozliczeniowy</p>
+              <p class="row-subtitle">Bieżący cykl miesięczny</p>
+            </div>
+          </div>
+          <p class="row-value">
+            {{ dateLabel(d.currentPeriodStart) }} –
+            {{ dateLabel(d.currentPeriodEnd) }}
+          </p>
+        </li>
+        <li class="row">
+          <div class="row-info">
+            <mat-icon aria-hidden="true">schedule</mat-icon>
+            <div>
+              <p class="row-title">Następne obciążenie</p>
+              <p class="row-subtitle">Automatyczne odnowienie</p>
+            </div>
+          </div>
+          <p class="row-value">
+            @if (d.nextChargeAt) {
+              {{ dateLabel(d.nextChargeAt) }} · {{ paymentMethodLabel(d) }}
+            } @else {
+              Brak zaplanowanego obciążenia
+            }
+          </p>
+        </li>
+        <li class="row">
+          <div class="row-info">
+            <mat-icon aria-hidden="true">credit_card</mat-icon>
+            <div>
+              <p class="row-title">Metoda płatności</p>
+              <p class="row-subtitle">Metoda obciążeń cyklicznych</p>
+            </div>
+          </div>
+          <p class="row-value">{{ paymentMethodLabel(d) }}</p>
+        </li>
+      </ul>
+    </mat-card>
+
+    @if (actionError()) {
+      <p class="action-error" role="alert">{{ actionError() }}</p>
+    }
+    @if (actionInfo()) {
+      <p class="action-info" role="status">{{ actionInfo() }}</p>
+    }
+
+    <div class="actions">
+      @if (isPaidPlan() && !isCancelled() && d.status === "active") {
+        <button
+          mat-flat-button
+          color="warn"
+          type="button"
+          (click)="openCancelDialog()"
+        >
+          <mat-icon aria-hidden="true">event_busy</mat-icon>
+          Anuluj subskrypcję
+        </button>
+      }
+      @if (isCancelled() && !hasPendingChange() && d.status === "active") {
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="reactivate()"
+        >
+          <mat-icon aria-hidden="true">autorenew</mat-icon>
+          Reaktywuj subskrypcję
+        </button>
+      }
+      @if (!isPaidPlan()) {
+        <a mat-flat-button color="primary" routerLink="/billing/plans">
+          <mat-icon aria-hidden="true">upgrade</mat-icon>
+          Uaktualnij plan
+        </a>
+      } @else if (!isCancelled()) {
+        <a mat-stroked-button color="primary" routerLink="/billing/plans">
+          <mat-icon aria-hidden="true">swap_vert</mat-icon>
+          Zmień plan
+        </a>
+      }
+      <a
+        mat-stroked-button
+        color="primary"
+        routerLink="/billing/payment-methods"
+      >
+        <mat-icon aria-hidden="true">credit_card</mat-icon>
+        Metody płatności
+      </a>
+      <p class="note">
+        Subskrypcja pozostaje aktywna do końca opłaconego okresu — anulowanie
+        nie odbiera dostępu natychmiast; możesz je cofnąć przed końcem okresu.
+      </p>
+    </div>
+  }
+</section>

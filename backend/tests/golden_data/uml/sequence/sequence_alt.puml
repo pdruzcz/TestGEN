@@ -1,0 +1,16 @@
+@startuml
+actor Klient
+participant Koszyk
+participant Platnosc
+participant Bank
+Klient -> Koszyk: zloz zamowienie
+Koszyk -> Platnosc: zainicjuj platnosc
+alt platnosc poprawna
+    Platnosc -> Bank: obciaz konto
+    Bank --> Platnosc: potwierdzenie
+    Platnosc --> Koszyk: sukces
+else platnosc odrzucona
+    Platnosc --> Koszyk: blad platnosci
+end
+Koszyk --> Klient: status zamowienia
+@enduml

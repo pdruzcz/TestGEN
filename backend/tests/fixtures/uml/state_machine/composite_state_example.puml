@@ -1,0 +1,13 @@
+@startuml
+[*] --> Rozlaczony
+Rozlaczony --> Polaczony : polacz / nawiaz_sesje
+state Polaczony {
+  [*] --> Bezczynny
+  Bezczynny --> Przetwarzanie : zadanie / rozpocznij
+  Przetwarzanie --> Bezczynny : zakoncz / zapisz
+  Przetwarzanie --> Blad : wyjatek / loguj
+  Blad --> Bezczynny : reset
+}
+Polaczony --> Rozlaczony : rozlacz / zamknij_sesje
+Rozlaczony --> [*]
+@enduml

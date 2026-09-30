@@ -1,0 +1,51 @@
+{
+  "category": "real",
+  "description": "the-internet (Sauce Labs, MIT) — /checkboxes. Dwa checkboxy (pierwszy zaznaczony, drugi odznaczony). Kuracja ręczna: detektor nie widział checkboxów w ogóle (tylko szum menu/dropdown z tekstu).",
+  "expected_component_count": 4,
+  "expected_components": [
+    {
+      "component_type": "link",
+      "label": "The Internet",
+      "bbox": {
+        "x": 30,
+        "y": 26,
+        "width": 120,
+        "height": 24
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Elemental Selenium",
+      "bbox": {
+        "x": 1010,
+        "y": 26,
+        "width": 240,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "checkbox",
+      "label": "checkbox 1 (checked)",
+      "bbox": {
+        "x": 618,
+        "y": 243,
+        "width": 22,
+        "height": 22
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "checkbox",
+      "label": "checkbox 2 (unchecked)",
+      "bbox": {
+        "x": 618,
+        "y": 288,
+        "width": 22,
+        "height": 22
+      },
+      "confidence": 0.9
+    }
+  ]
+}

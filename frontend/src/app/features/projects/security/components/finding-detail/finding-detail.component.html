@@ -1,0 +1,79 @@
+<div class="finding-detail">
+  <div class="finding-detail__head">
+    <h3>Szczegóły podatności</h3>
+    <div class="finding-detail__engine">
+      <span class="finding-detail__mode finding-detail__mode--active">
+        Silnik analizy: {{ engineModeLabel() }}
+      </span>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="generate()"
+        [disabled]="isLoading()"
+      >
+        <mat-icon>auto_fix_high</mat-icon>
+        Generuj rekomendację
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="finding-detail__error">{{ errorMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <mat-spinner diameter="28" aria-label="Ładowanie"></mat-spinner>
+  } @else if (recommendation(); as rec) {
+    <div class="finding-detail__section">
+      <h4>Opis problemu</h4>
+      <p>{{ rec.problemDescription }}</p>
+    </div>
+
+    <div class="finding-detail__section">
+      <h4>Ryzyko</h4>
+      <p>{{ rec.riskDescription }}</p>
+    </div>
+
+    <div class="finding-detail__section">
+      <h4>Rekomendacja naprawy</h4>
+      <p>{{ rec.fixDescription }}</p>
+    </div>
+
+    <div class="finding-detail__section">
+      <div class="finding-detail__code-head">
+        <h4>Kod naprawiony ({{ rec.language }})</h4>
+        <button mat-stroked-button (click)="copyCode()">
+          <mat-icon>{{ copied() ? "check" : "content_copy" }}</mat-icon>
+          {{ copied() ? "Skopiowano" : "Kopiuj kod" }}
+        </button>
+      </div>
+      <pre
+        class="finding-detail__snippet"
+      ><code>{{ rec.fixedCodeSnippet }}</code></pre>
+    </div>
+
+    @if (diffLines().length) {
+      <div class="finding-detail__section">
+        <h4>Diff (czerwony: podatny, zielony: naprawiony)</h4>
+        <pre
+          class="finding-detail__diff"
+        ><code>@for (line of diffLines(); track $index) {<span
+          class="finding-detail__diff-line finding-detail__diff-line--{{ line.kind }}"
+        >{{ line.text }}
+</span>}</code></pre>
+      </div>
+    }
+
+    <div class="finding-detail__source">
+      Źródło rekomendacji:
+      <span class="finding-detail__badge">{{
+        rec.engineSource === "llm" ? "LLM" : "Szablon natywny"
+      }}</span>
+    </div>
+  } @else {
+    <p class="finding-detail__hint">
+      Wybierz tryb i kliknij „Generuj rekomendację”, aby zobaczyć opis problemu,
+      ryzyko, rekomendację naprawy oraz diff z naprawionym kodem.
+    </p>
+  }
+</div>

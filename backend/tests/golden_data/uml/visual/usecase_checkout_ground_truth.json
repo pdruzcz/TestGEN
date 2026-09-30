@@ -1,0 +1,12 @@
+{
+  "diagram_type": "use_case",
+  "format": "svg",
+  "description": "Diagram przypadków użycia (SVG): aktor Customer i trzy przypadki (Login, Checkout, Pay). Ścieżka wizualna parse_svg.",
+  "expected_participants_count": 0,
+  "expected_elements_count": 4,
+  "expected_relationships_count": 3,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 0,
+  "expected_source": "ocr",
+  "expected_element_names": ["Login", "Checkout", "Pay", "Customer"]
+}

@@ -1,0 +1,71 @@
+.config-report {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+
+  &__empty {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  &__item {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__tech-icon {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  &__tech {
+    font-weight: 600;
+  }
+
+  &__rule {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.55);
+  }
+
+  &__desc {
+    margin: 0.5rem 0 0.25rem;
+  }
+
+  &__file {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0.25rem 0;
+  }
+
+  &__rec {
+    margin: 0.25rem 0;
+  }
+
+  &__fix {
+    margin-top: 0.5rem;
+
+    &-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #2e7d32;
+    }
+
+    pre {
+      background: #f5f5f5;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      margin: 0.25rem 0 0;
+    }
+  }
+}

@@ -1,0 +1,62 @@
+.security-report {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  &__error {
+    color: #c62828;
+  }
+
+  &__cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__card {
+    min-width: 120px;
+    text-align: center;
+    padding: 1rem 1.25rem;
+    border-left: 4px solid rgba(0, 0, 0, 0.2);
+
+    &--critical {
+      border-left-color: #b71c1c;
+    }
+    &--high {
+      border-left-color: #e53935;
+    }
+    &--medium {
+      border-left-color: #fb8c00;
+    }
+    &--low {
+      border-left-color: #fbc02d;
+    }
+  }
+
+  &__card-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  &__card-label {
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}

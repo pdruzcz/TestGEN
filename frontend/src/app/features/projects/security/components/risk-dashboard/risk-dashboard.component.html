@@ -1,0 +1,96 @@
+<section class="risk-dashboard">
+  <div class="risk-dashboard__head">
+    <h2>Dashboard ryzyka</h2>
+    <button
+      mat-stroked-button
+      (click)="load()"
+      [disabled]="isLoading()"
+    >
+      <mat-icon>assessment</mat-icon>
+      Oblicz priorytetyzację
+    </button>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="risk-dashboard__error">{{ errorMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <mat-spinner diameter="32" aria-label="Ładowanie"></mat-spinner>
+  } @else if (dashboard()) {
+    <div class="risk-dashboard__grid">
+      <mat-card class="risk-dashboard__panel">
+        <h3>Rozkład CVSS</h3>
+        <div class="risk-dashboard__hist">
+          @for (bar of distribution(); track bar.band) {
+            <div class="risk-dashboard__bar-row">
+              <span class="risk-dashboard__bar-label">{{ bar.label }}</span>
+              <div class="risk-dashboard__bar-track">
+                <div
+                  class="risk-dashboard__bar risk-dashboard__bar--{{ bar.band }}"
+                  [style.width.%]="bar.percent"
+                ></div>
+              </div>
+              <span class="risk-dashboard__bar-value">{{ bar.value }}</span>
+            </div>
+          }
+        </div>
+      </mat-card>
+
+      <mat-card class="risk-dashboard__panel">
+        <h3>Top 10 zagrożeń</h3>
+        <ol class="risk-dashboard__top">
+          @for (f of dashboard()!.top10Findings; track f.id) {
+            <li class="risk-dashboard__top-item">
+              <span class="badge badge--sev-{{ f.severity }}">{{
+                f.severity
+              }}</span>
+              <span class="risk-dashboard__top-type">{{
+                f.vulnerabilityType
+              }}</span>
+              <span class="risk-dashboard__cvss">CVSS {{ f.cvssScore ?? "—" }}</span>
+              @if (f.escalationReason) {
+                <span
+                  class="risk-dashboard__escalation"
+                  [title]="f.escalationReason"
+                  >⬆</span
+                >
+              }
+            </li>
+          }
+        </ol>
+      </mat-card>
+    </div>
+
+    <mat-card class="risk-dashboard__panel">
+      <h3>Rekomendowana kolejność napraw</h3>
+      <table class="risk-dashboard__table">
+        <caption class="visually-hidden">Rekomendowana kolejność napraw podatności</caption>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Typ</th>
+            <th scope="col">Waga</th>
+            <th scope="col">CVSS</th>
+            <th scope="col">Nakład pracy</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (step of dashboard()!.repairSequence; track step.findingId) {
+            <tr>
+              <td>{{ step.priority }}</td>
+              <td>{{ step.vulnerabilityType }}</td>
+              <td>
+                <span class="badge badge--sev-{{ step.severity }}">{{
+                  step.severity
+                }}</span>
+              </td>
+              <td>{{ step.cvssScore ?? "—" }}</td>
+              <td>{{ effortLabels[step.effort || ""] || step.effort || "—" }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </mat-card>
+  }
+</section>

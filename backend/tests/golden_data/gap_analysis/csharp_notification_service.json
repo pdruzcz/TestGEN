@@ -1,0 +1,22 @@
+{
+  "language": "csharp",
+  "name": "csharp_notification_service",
+  "requirements": [
+    {"req_id": "REQ-NOT-001", "text": "System must send email notifications", "category": "notification", "priority": "high"},
+    {"req_id": "REQ-NOT-002", "text": "System must send SMS notifications", "category": "notification", "priority": "high"},
+    {"req_id": "REQ-NOT-003", "text": "System must send push notifications", "category": "notification", "priority": "medium"},
+    {"req_id": "REQ-NOT-004", "text": "System must queue notifications when sending fails", "category": "reliability", "priority": "critical"},
+    {"req_id": "REQ-NOT-005", "text": "System must allow users to unsubscribe", "category": "feature", "priority": "medium"}
+  ],
+  "code_entities": [
+    {"entity_id": "not-1", "name": "SendEmailNotification", "type": "method", "file_path": "src/Notifications/NotificationService.cs", "line_number": 18, "language": "csharp", "docstring": "Send an email notification to the recipient"},
+    {"entity_id": "not-2", "name": "SendSmsNotification", "type": "method", "file_path": "src/Notifications/NotificationService.cs", "line_number": 42, "language": "csharp", "docstring": "Send an SMS notification"},
+    {"entity_id": "not-3", "name": "QueueFailedNotification", "type": "method", "file_path": "src/Notifications/Queue.cs", "line_number": 14, "language": "csharp", "docstring": "Queue a notification that failed to send"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-NOT-001", "REQ-NOT-002", "REQ-NOT-004"],
+    "missing_req_ids": ["REQ-NOT-003", "REQ-NOT-005"],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 55.0
+  }
+}

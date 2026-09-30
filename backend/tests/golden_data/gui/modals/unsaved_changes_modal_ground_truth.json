@@ -1,0 +1,12 @@
+{
+  "category": "modals",
+  "description": "Modal ostrzezenia o niezapisanych zmianach (dorynkowanie typu modal do >=10 wystapien GT, Story 3-14c T4).",
+  "expected_component_count": 5,
+  "expected_components": [
+    {"component_type": "modal", "label": "Niezapisane zmiany", "bbox": {"x": 420, "y": 260, "width": 440, "height": 240}, "confidence": 0.92},
+    {"component_type": "form", "label": "Formularz wyboru akcji", "bbox": {"x": 450, "y": 310, "width": 380, "height": 90}, "confidence": 0.8},
+    {"component_type": "button", "label": "Zapisz i zamknij", "bbox": {"x": 660, "y": 430, "width": 170, "height": 44}, "confidence": 0.95},
+    {"component_type": "button", "label": "Odrzuc zmiany", "bbox": {"x": 470, "y": 430, "width": 160, "height": 44}, "confidence": 0.93},
+    {"component_type": "link", "label": "Wroc do edycji", "bbox": {"x": 470, "y": 350, "width": 150, "height": 24}, "confidence": 0.8}
+  ]
+}

@@ -1,0 +1,8 @@
+@startuml
+start
+while (Items left?) is (yes)
+  :ProcessItem;
+endwhile (no)
+:Complete;
+stop
+@enduml

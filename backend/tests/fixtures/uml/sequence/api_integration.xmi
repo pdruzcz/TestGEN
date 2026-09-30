@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1"
+         xmlns:xmi="http://schema.omg.org/spec/XMI/2.1"
+         xmlns:uml="http://schema.omg.org/spec/UML/2.1">
+  <uml:Model xmi:type="uml:Model" name="ApiIntegration">
+    <packagedElement xmi:type="uml:Interaction" xmi:id="int_1" name="ApiFlow">
+      <lifeline xmi:type="uml:Lifeline" xmi:id="ll_client" name="Client"/>
+      <lifeline xmi:type="uml:Lifeline" xmi:id="ll_gateway" name="Gateway"/>
+      <lifeline xmi:type="uml:Lifeline" xmi:id="ll_backend" name="Backend"/>
+
+      <message xmi:type="uml:Message" xmi:id="m1" name="sendRequest"
+               messageSort="synchCall" sendEvent="occ1" receiveEvent="occ2"/>
+      <message xmi:type="uml:Message" xmi:id="m2" name="forward"
+               messageSort="synchCall" sendEvent="occ3" receiveEvent="occ4"/>
+      <message xmi:type="uml:Message" xmi:id="m3" name="okResponse"
+               messageSort="reply" sendEvent="occ5" receiveEvent="occ6"/>
+      <message xmi:type="uml:Message" xmi:id="m4" name="errorResponse"
+               messageSort="reply" sendEvent="occ7" receiveEvent="occ8"/>
+
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="occ1" covered="ll_client"/>
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="occ2" covered="ll_gateway"/>
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="occ3" covered="ll_gateway"/>
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="occ4" covered="ll_backend"/>
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="occ5" covered="ll_backend"/>
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="occ6" covered="ll_gateway"/>
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="occ7" covered="ll_backend"/>
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="occ8" covered="ll_gateway"/>
+
+      <fragment xmi:type="uml:CombinedFragment" xmi:id="cf1" interactionOperator="alt">
+        <operand xmi:type="uml:InteractionOperand" xmi:id="op1">
+          <guard xmi:type="uml:InteractionConstraint" xmi:id="g1">
+            <specification xmi:type="uml:LiteralString" xmi:id="s1" value="backend available"/>
+          </guard>
+        </operand>
+        <operand xmi:type="uml:InteractionOperand" xmi:id="op2">
+          <guard xmi:type="uml:InteractionConstraint" xmi:id="g2">
+            <specification xmi:type="uml:LiteralString" xmi:id="s2" value="backend error"/>
+          </guard>
+        </operand>
+      </fragment>
+    </packagedElement>
+  </uml:Model>
+</xmi:XMI>

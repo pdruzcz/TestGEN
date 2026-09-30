@@ -1,0 +1,40 @@
+.payment-methods-return {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .page-title {
+    h1 {
+      margin: 0 0 4px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 560px;
+    padding: 32px;
+    text-align: center;
+  }
+
+  .status {
+    margin: 0;
+    color: var(--mat-sys-on-surface-variant, #5f6368);
+  }
+
+  .success {
+    margin: 0;
+    color: var(--mat-sys-primary, #1976d2);
+    font-weight: 500;
+  }
+
+  .hint {
+    margin: 0;
+    font-size: 13px;
+    color: var(--mat-sys-outline, #9aa0a6);
+  }
+}

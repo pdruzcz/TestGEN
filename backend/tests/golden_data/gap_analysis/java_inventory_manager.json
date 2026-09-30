@@ -1,0 +1,23 @@
+{
+  "language": "java",
+  "name": "java_inventory_manager",
+  "requirements": [
+    {"req_id": "REQ-INV-001", "text": "System must add new products to the inventory", "category": "crud", "priority": "high"},
+    {"req_id": "REQ-INV-002", "text": "System must decrement stock after a sale", "category": "business", "priority": "critical"},
+    {"req_id": "REQ-INV-003", "text": "System must generate an inventory report", "category": "reporting", "priority": "medium"},
+    {"req_id": "REQ-INV-004", "text": "System must notify on low stock levels", "category": "notification", "priority": "high"},
+    {"req_id": "REQ-INV-005", "text": "System must import products from a CSV file", "category": "import", "priority": "low"},
+    {"req_id": "REQ-INV-006", "text": "System must handle multiple warehouses", "category": "feature", "priority": "medium"}
+  ],
+  "code_entities": [
+    {"entity_id": "inv-1", "name": "addProduct", "type": "method", "file_path": "src/main/java/com/example/InventoryManager.java", "line_number": 24, "language": "java", "docstring": "Add a new product to the inventory"},
+    {"entity_id": "inv-2", "name": "decrementStock", "type": "method", "file_path": "src/main/java/com/example/InventoryManager.java", "line_number": 48, "language": "java", "docstring": "Decrement stock level after a sale"},
+    {"entity_id": "inv-3", "name": "generateInventoryReport", "type": "method", "file_path": "src/main/java/com/example/ReportGenerator.java", "line_number": 16, "language": "java", "docstring": "Generate stock level inventory report"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-INV-001", "REQ-INV-002", "REQ-INV-003"],
+    "missing_req_ids": ["REQ-INV-004", "REQ-INV-005", "REQ-INV-006"],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 45.0
+  }
+}

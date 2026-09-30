@@ -1,0 +1,48 @@
+@startuml flow-analiza-kodu
+title Przepływ danych — Analiza kodu (end-to-end)
+
+skinparam activityFontSize 12
+skinparam arrowFontSize 11
+
+|Użytkownik|
+start
+:Przesyła pliki kodu\ndo projektu;
+
+|Backend API|
+:Walidacja plików\n(rozmiar, format, limity);
+:Zapis plików w **MinIO**\n(storage_key → source_files);
+:Zapis metadanych\nw **PostgreSQL**\n(source_files: status=processing);
+:Kolejkowanie zadania\nw **RabbitMQ**\n(kolejka: analysis);
+
+|Celery Worker|
+:Pobranie plików\nz MinIO;
+:Wykrywanie języka\ni frameworka;
+
+if (engine_mode?) then (native)
+    :Parsowanie AST\n(tree-sitter);
+    :Analiza deterministyczna:\n- złożoność cyklomatyczna\n- zależności modułów\n- struktury logiczne\n- przepływ danych;
+elseif (llm) then
+    :Przygotowanie promptu\n(PromptManager);
+    :Wywołanie API LLM\n(Anthropic / OpenAI);
+    :Parsowanie odpowiedzi LLM;
+else (hybrid)
+    :Parsowanie AST (native);
+    :Analiza deterministyczna;
+    :Wywołanie API LLM\n(wzbogacenie);
+    :Scalenie wyników\n(ResultMerger);
+endif
+
+:Zapis wyników w **PostgreSQL**\n(analysis_results.result_data → JSONB);
+:Aktualizacja statusu\n(source_files: status=completed);
+:Zapis wyniku zadania\nw **Redis** (result backend);
+
+|Backend API|
+:Powiadomienie użytkownika\n(WebSocket / polling);
+
+|Użytkownik|
+:Podgląd wyników analizy;
+:Generowanie testów\n(opcjonalnie);
+:Eksport raportu\n(PDF / HTML / Excel);
+stop
+
+@enduml

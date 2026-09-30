@@ -1,0 +1,73 @@
+{
+  "category": "real",
+  "description": "Angular Material docs (MIT) — komponent Dialog z OTWARTYM dialogiem (stan interakcji: otwarty modal; \"Delete file\" z przyciskami No/Ok). Viewport 1280x800.",
+  "expected_component_count": 6,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidenav (lista komponentów)",
+      "bbox": {
+        "x": 0,
+        "y": 64,
+        "width": 290,
+        "height": 736
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Search (toolbar)",
+      "bbox": {
+        "x": 900,
+        "y": 12,
+        "width": 340,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Open dialog without animation (trigger)",
+      "bbox": {
+        "x": 370,
+        "y": 200,
+        "width": 320,
+        "height": 50
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "modal",
+      "label": "Delete file (otwarty dialog)",
+      "bbox": {
+        "x": 400,
+        "y": 300,
+        "width": 480,
+        "height": 220
+      },
+      "confidence": 0.95
+    },
+    {
+      "component_type": "button",
+      "label": "No (w dialogu)",
+      "bbox": {
+        "x": 590,
+        "y": 460,
+        "width": 100,
+        "height": 44
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Ok (w dialogu)",
+      "bbox": {
+        "x": 700,
+        "y": 460,
+        "width": 100,
+        "height": 44
+      },
+      "confidence": 0.9
+    }
+  ]
+}

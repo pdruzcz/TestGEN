@@ -1,0 +1,358 @@
+<div class="integrations-page">
+  <app-navbar activeLink="profile" />
+  <div class="integrations-content">
+    <aside class="sidebar">
+      <h3 class="sidebar-title">Ustawienia</h3>
+      <a mat-button routerLink="/settings/profile" class="sidebar-link"> <mat-icon>person</mat-icon> Profil </a>
+      <a mat-button routerLink="/settings/users" class="sidebar-link"> <mat-icon>group</mat-icon> Użytkownicy </a>
+      <a mat-button routerLink="/settings/api-keys" class="sidebar-link"> <mat-icon>vpn_key</mat-icon> Klucze API </a>
+      <a mat-button routerLink="/settings/integrations/github" class="sidebar-link">
+        <mat-icon>hub</mat-icon> Integracja GitHub
+      </a>
+      <a mat-button routerLink="/settings/integrations/gitlab" class="sidebar-link">
+        <mat-icon>merge</mat-icon> Integracja GitLab
+      </a>
+      <a
+        mat-button
+        routerLink="/settings/integrations/webhooks"
+        class="sidebar-link sidebar-active"
+        aria-current="page"
+      >
+        <mat-icon>webhook</mat-icon> Webhooki
+      </a>
+    </aside>
+
+    <main class="main-content" id="main-content" tabindex="-1">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Webhooki</h1>
+          <p class="page-subtitle">
+            TestGEN powiadomi Twoje systemy, gdy zakończy analizę, wykryje podatność lub lukę, przygotuje raport albo
+            zmieni się plan.
+          </p>
+        </div>
+        <button mat-raised-button color="primary" (click)="openCreateForm()">
+          <mat-icon>add</mat-icon>
+          Dodaj webhook
+        </button>
+      </div>
+
+      @if (errorMessage() && !isFormOpen()) {
+        <p class="banner banner-error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      @if (infoMessage()) {
+        <p class="banner banner-info" role="status">
+          {{ infoMessage() }}
+          <button mat-button type="button" (click)="dismissInfo()">Zamknij</button>
+        </p>
+      }
+
+      <section class="panel">
+        <h2 class="panel-title">Skonfigurowane webhooki</h2>
+
+        @if (isLoading()) {
+          <div class="loading">
+            <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+            Ładowanie...
+          </div>
+        } @else if (webhooks().length === 0) {
+          <p class="empty-state">
+            Nie masz jeszcze żadnego webhooka. Dodaj pierwszy, aby otrzymywać powiadomienia o zdarzeniach w TestGEN.
+          </p>
+        } @else {
+          <table class="data-table">
+            <caption class="visually-hidden">
+              Lista webhooków wychodzących
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Adres</th>
+                <th scope="col">Zdarzenia</th>
+                <th scope="col">Stan</th>
+                <th scope="col">Ostatnia dostawa</th>
+                <th scope="col">Akcje</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (webhook of webhooks(); track webhook.id) {
+                <tr>
+                  <td class="url-cell">
+                    <span class="url-value">{{ webhook.url }}</span>
+                    @if (webhook.description) {
+                      <span class="url-desc">{{ webhook.description }}</span>
+                    }
+                    @if (testResultFor(webhook.id); as result) {
+                      <span
+                        class="test-result"
+                        [class.test-ok]="result.success"
+                        [class.test-fail]="!result.success"
+                        role="status"
+                      >
+                        {{ result.message }}
+                      </span>
+                    }
+                  </td>
+                  <td>
+                    <ul class="event-list">
+                      @for (event of webhook.events; track event) {
+                        <li>{{ eventLabel(event) }}</li>
+                      }
+                    </ul>
+                  </td>
+                  <td>
+                    <span class="badge" [class.badge-ok]="webhook.isActive" [class.badge-off]="!webhook.isActive">
+                      {{ webhook.isActive ? 'Aktywny' : 'Wyłączony' }}
+                    </span>
+                  </td>
+                  <td>
+                    @if (webhook.lastDeliveryAt) {
+                      <span class="badge" [class]="'status-' + webhook.lastDeliveryStatus">
+                        {{ statusLabel(webhook.lastDeliveryStatus) }}
+                      </span>
+                      <span class="event-detail">
+                        {{ webhook.lastDeliveryAt | date: 'dd.MM.yyyy HH:mm' }}
+                      </span>
+                    } @else {
+                      <span class="event-detail">Brak dostaw</span>
+                    }
+                  </td>
+                  <td class="actions">
+                    <button
+                      class="icon-btn"
+                      type="button"
+                      [disabled]="testingId() === webhook.id"
+                      (click)="testWebhook(webhook)"
+                      [attr.aria-label]="'Testuj połączenie dla ' + webhook.url"
+                    >
+                      <mat-icon aria-hidden="true">network_ping</mat-icon>
+                    </button>
+                    <button
+                      class="icon-btn"
+                      type="button"
+                      (click)="showDeliveries(webhook.id)"
+                      [attr.aria-label]="'Historia dostaw dla ' + webhook.url"
+                    >
+                      <mat-icon aria-hidden="true">history</mat-icon>
+                    </button>
+                    <button
+                      class="icon-btn"
+                      type="button"
+                      (click)="openEditForm(webhook)"
+                      [attr.aria-label]="'Edytuj webhook ' + webhook.url"
+                    >
+                      <mat-icon aria-hidden="true">edit</mat-icon>
+                    </button>
+                    <button
+                      class="icon-btn"
+                      type="button"
+                      (click)="toggleActive(webhook)"
+                      [attr.aria-label]="(webhook.isActive ? 'Wyłącz' : 'Włącz') + ' webhook ' + webhook.url"
+                    >
+                      <mat-icon aria-hidden="true">
+                        {{ webhook.isActive ? 'pause' : 'play_arrow' }}
+                      </mat-icon>
+                    </button>
+                    <button
+                      class="icon-btn"
+                      type="button"
+                      (click)="askRemove(webhook.id)"
+                      [attr.aria-label]="'Usuń webhook ' + webhook.url"
+                    >
+                      <mat-icon aria-hidden="true">delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </section>
+
+      @if (deliveriesFor()) {
+        <section class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Historia dostaw</h2>
+            <button mat-button type="button" (click)="closeDeliveries()">Zamknij</button>
+          </div>
+
+          <div class="filters">
+            <label class="field">
+              <span class="field-label">Status</span>
+              <select
+                [ngModel]="deliveryStatusFilter()"
+                (ngModelChange)="deliveryStatusFilter.set($event); applyDeliveryFilters()"
+                name="deliveryStatus"
+              >
+                <option value="">Wszystkie</option>
+                <option value="delivered">Dostarczone</option>
+                <option value="pending">Oczekujące</option>
+                <option value="failed">Nieudane</option>
+              </select>
+            </label>
+            <label class="field">
+              <span class="field-label">Zdarzenie</span>
+              <select
+                [ngModel]="deliveryEventFilter()"
+                (ngModelChange)="deliveryEventFilter.set($event); applyDeliveryFilters()"
+                name="deliveryEvent"
+              >
+                <option value="">Wszystkie</option>
+                @for (event of availableEvents(); track event) {
+                  <option [value]="event">{{ eventLabel(event) }}</option>
+                }
+              </select>
+            </label>
+          </div>
+
+          @if (isLoadingDeliveries()) {
+            <div class="loading">
+              <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+              Ładowanie...
+            </div>
+          } @else if (deliveries().length === 0) {
+            <p class="empty-state">Brak dostaw spełniających kryteria.</p>
+          } @else {
+            <table class="data-table">
+              <caption class="visually-hidden">
+                Historia dostaw webhooka
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Zdarzenie</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Próba</th>
+                  <th scope="col">Odpowiedź</th>
+                  <th scope="col">Kiedy</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (delivery of deliveries(); track delivery.id) {
+                  <tr>
+                    <td>{{ eventLabel(delivery.eventType) }}</td>
+                    <td>
+                      <span class="badge" [class]="'status-' + delivery.status">
+                        {{ deliveryStatusLabel(delivery.status) }}
+                      </span>
+                    </td>
+                    <td>{{ delivery.attemptNumber }}</td>
+                    <td>
+                      @if (delivery.responseStatus) {
+                        <code>{{ delivery.responseStatus }}</code>
+                      }
+                      @if (delivery.errorMessage) {
+                        <span class="event-detail">{{ delivery.errorMessage }}</span>
+                      }
+                      @if (delivery.nextRetryAt) {
+                        <span class="event-detail">
+                          Ponowienie: {{ delivery.nextRetryAt | date: 'dd.MM.yyyy HH:mm' }}
+                        </span>
+                      }
+                    </td>
+                    <td>{{ delivery.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </section>
+      }
+    </main>
+  </div>
+
+  @if (isFormOpen()) {
+    <div class="dialog-backdrop">
+      <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="webhook-form-title">
+        <h2 id="webhook-form-title" class="dialog-title">
+          {{ editingId() ? 'Edytuj webhook' : 'Nowy webhook' }}
+        </h2>
+
+        <label class="field">
+          <span class="field-label">Adres endpointu</span>
+          <input
+            type="url"
+            name="url"
+            placeholder="https://twoj-system.pl/testgen-hook"
+            [ngModel]="formUrl()"
+            (ngModelChange)="formUrl.set($event)"
+          />
+          <span class="field-hint">Wymagany HTTPS — payload niesie dane Twoich analiz.</span>
+        </label>
+
+        <label class="field">
+          <span class="field-label"> Sekret {{ editingId() ? '(zostaw puste, aby nie zmieniać)' : '' }} </span>
+          <input
+            type="password"
+            name="secret"
+            autocomplete="new-password"
+            [ngModel]="formSecret()"
+            (ngModelChange)="formSecret.set($event)"
+          />
+          <span class="field-hint">
+            Minimum 16 znaków. Tym sekretem podpisujemy payload — nagłówek
+            <code>X-TestGEN-Signature</code> zawiera HMAC-SHA256.
+          </span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Opis (opcjonalny)</span>
+          <input
+            type="text"
+            name="description"
+            maxlength="200"
+            placeholder="np. Kanał #dyżur na Slacku"
+            [ngModel]="formDescription()"
+            (ngModelChange)="formDescription.set($event)"
+          />
+        </label>
+
+        <fieldset class="field">
+          <legend class="field-label">Subskrybowane zdarzenia</legend>
+          @for (event of availableEvents(); track event) {
+            <label class="checkbox">
+              <input type="checkbox" [checked]="isEventSelected(event)" (change)="toggleEvent(event)" />
+              <span>
+                <strong>{{ eventLabel(event) }}</strong>
+                <span class="checkbox-hint">{{ eventHint(event) }}</span>
+              </span>
+            </label>
+          }
+        </fieldset>
+
+        @if (errorMessage()) {
+          <p class="form-error" role="alert">{{ errorMessage() }}</p>
+        }
+
+        <div class="dialog-actions">
+          <button mat-button type="button" (click)="closeForm()">Anuluj</button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            [disabled]="!isFormValid() || isSubmitting()"
+            (click)="submit()"
+          >
+            {{ isSubmitting() ? 'Zapisuję...' : 'Zapisz' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (pendingRemovalId()) {
+    <div class="dialog-backdrop">
+      <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="remove-webhook-title">
+        <h2 id="remove-webhook-title" class="dialog-title">Usunąć webhook?</h2>
+        <p class="dialog-text">
+          TestGEN przestanie wysyłać powiadomienia pod ten adres. Historia dostaw zostanie usunięta razem z webhookiem.
+        </p>
+        <div class="dialog-actions">
+          <button mat-button type="button" (click)="cancelRemove()">Anuluj</button>
+          <button mat-raised-button color="warn" type="button" (click)="confirmRemove()">Usuń</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <app-footer />
+</div>

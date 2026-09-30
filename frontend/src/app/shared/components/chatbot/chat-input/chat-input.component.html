@@ -1,0 +1,22 @@
+<div class="chat-input">
+  <textarea
+    #field
+    class="chat-input__field"
+    rows="1"
+    aria-label="Treść wiadomości"
+    placeholder="Zadaj pytanie asystentowi…"
+    [disabled]="disabled()"
+    (input)="onInput($event)"
+    (keydown)="onKeydown($event)"
+  ></textarea>
+
+  <button
+    type="button"
+    class="chat-input__send"
+    aria-label="Wyślij wiadomość"
+    [disabled]="disabled() || value().trim().length === 0"
+    (click)="submit()"
+  >
+    <mat-icon aria-hidden="true">send</mat-icon>
+  </button>
+</div>

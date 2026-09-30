@@ -1,0 +1,27 @@
+package com.example;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+/**
+ * Sprawdza czy Calculator::add poprawnie dodaje liczby.
+ *
+ * Wygenerowano automatycznie przez TestGEN - silnik natywny (TestNG).
+ * Nie modyfikuj recznie; zmiany zostana nadpisane przy kolejnej generacji.
+ */
+public class CalculatorTest {
+
+    private Calculator calculator;
+
+    @BeforeMethod
+    public void setUp() {
+        calculator = new Calculator();
+    }
+
+    @Test
+    public void testDodawanieDwochLiczbDodatnich() {
+        var result = calculator.add(1, 2);
+        Assert.assertEquals(result, 3);
+    }
+}

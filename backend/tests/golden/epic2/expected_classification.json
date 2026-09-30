@@ -1,0 +1,33 @@
+{
+  "name": "epic2_expected_classification",
+  "data_type": "expected_output",
+  "version": "1.0",
+  "metadata": {
+    "description": "Expected document classification results for Epic 2 sample document",
+    "feature": "classification",
+    "story": "2.3"
+  },
+  "tags": ["epic2", "classification", "expected"],
+  "data": {
+    "document_type": "SRS",
+    "confidence": 0.95,
+    "language": "pl",
+    "domain": "ecommerce",
+    "complexity": "medium",
+    "indicators": {
+      "has_requirements": true,
+      "has_glossary": true,
+      "has_traceability": false,
+      "has_test_cases": false
+    },
+    "keywords": ["system", "wymagania", "funkcjonalne", "niefunkcjonalne", "autoryzacja", "zamówienia"],
+    "standard_compliance": ["IEEE-830"],
+    "estimated_requirements_count": 8,
+    "sections": {
+      "requirements": 3,
+      "glossary": 1,
+      "introduction": 1,
+      "appendices": 0
+    }
+  }
+}

@@ -1,0 +1,22 @@
+.dast-config {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+
+  &__hint {
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  &__field {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  button {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+  }
+}

@@ -1,0 +1,28 @@
+{% for imp in imports %}
+{{ imp }}
+{% endfor %}
+
+"""{{ description }} — wygenerowano automatycznie przez TestGEN (unittest)."""
+
+
+class {{ class_name }}(unittest.TestCase):
+{% if setup_body %}
+
+    def setUp(self):
+{{ setup_body }}
+{% endif %}
+{% if teardown_body %}
+
+    def tearDown(self):
+{{ teardown_body }}
+{% endif %}
+{% for method in methods %}
+
+    def {{ method.name }}(self):
+{{ method.doc }}
+{{ method.body }}
+{% endfor %}
+
+
+if __name__ == "__main__":
+    unittest.main()

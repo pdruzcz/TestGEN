@@ -1,0 +1,25 @@
+{
+  "language": "typescript",
+  "name": "typescript_payment_service",
+  "requirements": [
+    {"req_id": "REQ-PAY-001", "text": "System must process credit card payments", "category": "payment", "priority": "critical"},
+    {"req_id": "REQ-PAY-002", "text": "System must validate the credit card number", "category": "validation", "priority": "high"},
+    {"req_id": "REQ-PAY-003", "text": "System must build a transaction confirmation response", "category": "response", "priority": "medium"},
+    {"req_id": "REQ-PAY-004", "text": "System must process refunds", "category": "payment", "priority": "high"},
+    {"req_id": "REQ-PAY-005", "text": "System must log transaction errors", "category": "logging", "priority": "medium"},
+    {"req_id": "REQ-PAY-006", "text": "System must support recurring payments", "category": "payment", "priority": "low"}
+  ],
+  "code_entities": [
+    {"entity_id": "pay-1", "name": "processCreditCardPayment", "type": "function", "file_path": "src/payment/service.ts", "line_number": 14, "language": "typescript", "docstring": "Process credit card payment through the gateway"},
+    {"entity_id": "pay-2", "name": "validateCardNumber", "type": "function", "file_path": "src/payment/validators.ts", "line_number": 28, "language": "typescript", "docstring": "Validate credit card number with Luhn algorithm"},
+    {"entity_id": "pay-3", "name": "buildTransactionConfirmation", "type": "function", "file_path": "src/payment/service.ts", "line_number": 64, "language": "typescript", "docstring": "Build transaction confirmation response"},
+    {"entity_id": "pay-4", "name": "processRefund", "type": "function", "file_path": "src/payment/service.ts", "line_number": 88, "language": "typescript", "docstring": "Process refund for a previous transaction"},
+    {"entity_id": "pay-5", "name": "logTransactionError", "type": "function", "file_path": "src/payment/logger.ts", "line_number": 12, "language": "typescript", "docstring": "Log transaction errors to the error log"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-PAY-001", "REQ-PAY-002", "REQ-PAY-003", "REQ-PAY-004", "REQ-PAY-005"],
+    "missing_req_ids": ["REQ-PAY-006"],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 75.0
+  }
+}

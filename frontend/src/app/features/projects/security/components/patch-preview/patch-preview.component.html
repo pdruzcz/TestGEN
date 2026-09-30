@@ -1,0 +1,59 @@
+<div class="patch-preview">
+  <div class="patch-preview__head">
+    <h3>Podgląd poprawki</h3>
+    <div class="patch-preview__engine">
+      <span class="patch-preview__mode patch-preview__mode--active">
+        Silnik analizy: {{ engineModeLabel() }}
+      </span>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="loadPreview()"
+        [disabled]="isLoading()"
+      >
+        <mat-icon>difference</mat-icon>
+        Generuj poprawkę
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="patch-preview__error">{{ errorMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <mat-spinner diameter="28" aria-label="Ładowanie"></mat-spinner>
+  } @else if (preview(); as p) {
+    @if (p.patchContent) {
+      <div class="patch-preview__diff">
+        @for (line of diffLines(); track $index) {
+          <div class="patch-preview__line patch-preview__line--{{ line.kind }}">
+            {{ line.text }}
+          </div>
+        }
+      </div>
+
+      <div class="patch-preview__actions">
+        <button mat-flat-button color="primary" (click)="download()">
+          <mat-icon>download</mat-icon>
+          Pobierz plik .patch
+        </button>
+        <span class="patch-preview__hint-apply">
+          Zastosuj przez
+          <code>git apply {{ generated()?.patchFilename || "fix.patch" }}</code>
+        </span>
+      </div>
+    } @else {
+      <p class="patch-preview__hint">
+        Brak różnicy między kodem podatnym a naprawionym — patch nie został
+        utworzony.
+      </p>
+    }
+  } @else {
+    <p class="patch-preview__hint">
+      Wybierz tryb i kliknij „Generuj poprawkę”, aby zobaczyć diff i pobrać plik
+      .patch kompatybilny z
+      <code>git apply</code>.
+    </p>
+  }
+</div>

@@ -1,0 +1,10 @@
+<pre class="code-block" [attr.data-language]="language()">
+  <code>
+    @for (line of lines(); track line.number) {
+      <span class="code-line">
+        <span class="line-no" aria-hidden="true">{{ line.number }}</span>
+        <span class="line-content" [innerHTML]="line.html"></span>
+      </span>
+    }
+  </code>
+</pre>

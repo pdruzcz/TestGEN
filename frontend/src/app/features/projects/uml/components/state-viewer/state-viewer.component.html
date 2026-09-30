@@ -1,0 +1,143 @@
+<div class="st-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="st-content" id="main-content" tabindex="-1">
+    <a
+      mat-button
+      [routerLink]="['/projects', projectId(), 'uml']"
+      class="back-link"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Wróć do diagramów
+    </a>
+
+    <h1 class="page-title">Diagram stanów</h1>
+
+    @if (isLoading()) {
+      <div class="loading" role="status" aria-live="polite">
+        <mat-spinner diameter="20" aria-label="Ładowanie" />
+        <span>Ładowanie…</span>
+      </div>
+    } @else if (!detail()?.parsedModel) {
+      <p class="empty">
+        Diagram nie został jeszcze sparsowany lub parsowanie nie powiodło się.
+      </p>
+    } @else {
+      @if (warnings().length > 0) {
+        <section class="card warnings-card">
+          <h2 class="section-title">Ostrzeżenia ({{ warnings().length }})</h2>
+          <ul class="warnings">
+            @for (w of warnings(); track $index) {
+              <li>{{ w }}</li>
+            }
+          </ul>
+        </section>
+      }
+
+      <section class="card">
+        <h2 class="section-title">Stany ({{ states().length }})</h2>
+        <div class="states">
+          @for (s of states(); track s.id) {
+            <div class="state">
+              <span class="s-name">{{ s.name }}</span>
+              @if (s.entryAction) {
+                <span class="s-action">entry / {{ s.entryAction }}</span>
+              }
+              @if (s.doAction) {
+                <span class="s-action">do / {{ s.doAction }}</span>
+              }
+              @if (s.exitAction) {
+                <span class="s-action">exit / {{ s.exitAction }}</span>
+              }
+              @if (s.parentStateId) {
+                <span class="s-parent">w: {{ stateName(s.parentStateId) }}</span>
+              }
+            </div>
+          }
+        </div>
+      </section>
+
+      @if (composites().length > 0) {
+        <section class="card">
+          <h2 class="section-title">Stany złożone ({{ composites().length }})</h2>
+          <div class="composites">
+            @for (c of composites(); track c.id) {
+              <div class="composite">
+                <span class="c-name">{{ c.name }}</span>
+                <span class="c-count">{{ c.childIds.length }} podstanów</span>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <section class="card">
+        <h2 class="section-title">Przejścia ({{ transitions().length }})</h2>
+        <ul class="transitions">
+          @for (t of transitions(); track t.id) {
+            <li class="transition">
+              <span class="t-source">{{ stateName(t.sourceId) }}</span>
+              <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+              <span class="t-target">{{ stateName(t.targetId) }}</span>
+              @if (t.event) {
+                <span class="t-event">{{ t.event }}</span>
+              }
+              @if (t.guard) {
+                <span class="t-guard">[{{ t.guard }}]</span>
+              }
+              @if (t.action) {
+                <span class="t-action">/ {{ t.action }}</span>
+              }
+            </li>
+          }
+        </ul>
+      </section>
+
+      @if (scenarios().length > 0) {
+        <section class="card">
+          <h2 class="section-title">Scenariusze testowe ({{ scenarios().length }})</h2>
+
+          <h3 class="sub-title">Pokrycie przejść ({{ transitionScenarios().length }})</h3>
+          <div class="scenarios">
+            @for (s of transitionScenarios(); track s.scenarioId) {
+              <div class="scenario sc-transition">
+                <span class="scenario-title">{{ s.title }}</span>
+                <span class="scenario-result">{{ s.expectedResult }}</span>
+              </div>
+            }
+          </div>
+
+          @if (pathScenarios().length > 0) {
+            <h3 class="sub-title">Ścieżki start → koniec ({{ pathScenarios().length }})</h3>
+            <div class="scenarios">
+              @for (s of pathScenarios(); track s.scenarioId) {
+                <div class="scenario sc-path">
+                  <span class="scenario-title">{{ s.title }}</span>
+                  <ol class="scenario-steps">
+                    @for (step of s.steps; track $index) {
+                      <li>{{ step }}</li>
+                    }
+                  </ol>
+                </div>
+              }
+            </div>
+          }
+
+          @if (negativeScenarios().length > 0) {
+            <h3 class="sub-title">Scenariusze negatywne ({{ negativeScenarios().length }})</h3>
+            <div class="scenarios">
+              @for (s of negativeScenarios(); track s.scenarioId) {
+                <div class="scenario sc-negative">
+                  <span class="scenario-title">{{ s.title }}</span>
+                  <span class="scenario-result">{{ s.expectedResult }}</span>
+                </div>
+              }
+            </div>
+          }
+        </section>
+      }
+    }
+
+    <app-footer />
+  </main>
+</div>

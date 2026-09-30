@@ -1,0 +1,15 @@
+{
+  "classification": {
+    "accuracy": 0.90
+  },
+  "requirement_extraction": {
+    "recall": 0.80,
+    "precision": 0.80
+  },
+  "discrepancy_detection": {
+    "recall": 0.80
+  },
+  "glossary_extraction": {
+    "recall": 0.80
+  }
+}

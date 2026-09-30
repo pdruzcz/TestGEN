@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="black"/>
+    </marker>
+  </defs>
+  <ellipse cx="120" cy="100" rx="70" ry="35" fill="none" stroke="black"/>
+  <text x="120" y="105" text-anchor="middle">Login</text>
+  <ellipse cx="120" cy="220" rx="70" ry="35" fill="none" stroke="black"/>
+  <text x="120" y="225" text-anchor="middle">Checkout</text>
+  <ellipse cx="120" cy="340" rx="70" ry="35" fill="none" stroke="black"/>
+  <text x="120" y="345" text-anchor="middle">Pay</text>
+  <rect x="350" y="190" width="120" height="60" fill="none" stroke="black"/>
+  <text x="410" y="225" text-anchor="middle">Customer</text>
+  <line x1="350" y1="210" x2="190" y2="100" stroke="black" marker-end="url(#arrow)"/>
+  <line x1="350" y1="220" x2="190" y2="220" stroke="black" marker-end="url(#arrow)"/>
+  <line x1="350" y1="235" x2="190" y2="340" stroke="black" marker-end="url(#arrow)"/>
+</svg>

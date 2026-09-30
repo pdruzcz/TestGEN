@@ -1,0 +1,24 @@
+{
+  "language": "python",
+  "name": "python_file_processor",
+  "requirements": [
+    {"req_id": "REQ-FILE-001", "text": "System must read CSV files", "category": "io", "priority": "high"},
+    {"req_id": "REQ-FILE-002", "text": "System must read JSON files", "category": "io", "priority": "high"},
+    {"req_id": "REQ-FILE-003", "text": "System must write data to an Excel file", "category": "io", "priority": "medium"},
+    {"req_id": "REQ-FILE-004", "text": "System must compress files into a ZIP archive", "category": "io", "priority": "low"},
+    {"req_id": "REQ-FILE-005", "text": "System must validate the file format before processing", "category": "validation", "priority": "high"},
+    {"req_id": "REQ-FILE-006", "text": "System must handle binary files", "category": "io", "priority": "medium"}
+  ],
+  "code_entities": [
+    {"entity_id": "file-1", "name": "read_csv", "type": "function", "file_path": "src/io/readers.py", "line_number": 8, "language": "python", "docstring": "Read a CSV file"},
+    {"entity_id": "file-2", "name": "read_json", "type": "function", "file_path": "src/io/readers.py", "line_number": 32, "language": "python", "docstring": "Read a JSON file"},
+    {"entity_id": "file-3", "name": "write_excel", "type": "function", "file_path": "src/io/writers.py", "line_number": 18, "language": "python", "docstring": "Write data to an Excel file"},
+    {"entity_id": "file-4", "name": "validate_file_format", "type": "function", "file_path": "src/io/validators.py", "line_number": 10, "language": "python", "docstring": "Validate the file format before processing"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-FILE-001", "REQ-FILE-002", "REQ-FILE-003", "REQ-FILE-005"],
+    "missing_req_ids": ["REQ-FILE-004", "REQ-FILE-006"],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 60.0
+  }
+}

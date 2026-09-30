@@ -1,0 +1,25 @@
+/// <reference types="cypress" />
+{% if needs_image_snapshot %}
+import 'cypress-image-snapshot/command';
+{% endif %}
+
+describe('{{ describe_title }}', () => {
+{% if before_each %}
+  beforeEach(() => {
+{% for cmd in before_each %}
+    {{ cmd }}
+{% endfor %}
+  });
+
+{% endif %}
+{% for test in tests %}
+  it('{{ test.name }}', () => {
+{% for cmd in test.commands %}
+    {{ cmd }}
+{% endfor %}
+  });
+{% if not loop.last %}
+
+{% endif %}
+{% endfor %}
+});

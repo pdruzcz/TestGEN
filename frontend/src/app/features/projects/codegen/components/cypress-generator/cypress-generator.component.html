@@ -1,0 +1,163 @@
+<div class="cg-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="cg-content" id="main-content" tabindex="-1">
+    <div class="cg-header">
+      <a
+        mat-button
+        [routerLink]="['/projects', projectId(), 'gherkin']"
+        class="back-link"
+      >
+        <mat-icon>arrow_back</mat-icon>
+        Wróć do scenariuszy Gherkin
+      </a>
+      <h1 class="page-title">Generator kodu testowego</h1>
+      <p class="page-subtitle">
+        Wygeneruj kod testowy E2E — Cypress (.cy.ts), SikuliX (.py), Selenium
+        (.py), Playwright (.spec.ts) lub Appium (.py, mobilne) — z wybranych
+        przypadków testowych GUI/e2e.
+      </p>
+    </div>
+
+    <section class="card controls">
+      <h2 class="section-title">Wybierz przypadki testowe</h2>
+
+      @if (isLoading()) {
+        <div class="loading">
+          <mat-spinner diameter="28" aria-label="Ładowanie" />
+        </div>
+      } @else if (testCases().length === 0) {
+        <p class="empty">
+          Brak przypadków testowych. Najpierw wygeneruj przypadki testowe.
+        </p>
+      } @else {
+        <ul class="tc-list">
+          @for (tc of testCases(); track tc.id) {
+            <li class="tc-item">
+              <mat-checkbox
+                [checked]="isSelected(tc.id)"
+                (change)="toggle(tc.id)"
+              >
+                {{ tc.title }}
+                <span class="tc-meta">({{ tc.type }})</span>
+              </mat-checkbox>
+            </li>
+          }
+        </ul>
+      }
+
+      <div class="control-grid">
+        <label class="field">
+          <span class="field-label">Framework</span>
+          <select
+            [ngModel]="framework()"
+            (ngModelChange)="framework.set($event)"
+            aria-label="Framework"
+          >
+            @for (option of frameworkOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </label>
+
+        @if (framework() === "cypress") {
+          <label class="field">
+            <span class="field-label">Bazowy URL (opcjonalnie)</span>
+            <input
+              type="text"
+              [ngModel]="baseUrl()"
+              (ngModelChange)="baseUrl.set($event)"
+              aria-label="Bazowy URL"
+              placeholder="https://app.example.com"
+            />
+          </label>
+        }
+
+        @if (framework() === "appium") {
+          <label class="field">
+            <span class="field-label">Platforma urządzenia</span>
+            <select
+              [ngModel]="platform()"
+              (ngModelChange)="platform.set($event)"
+              aria-label="Platforma urządzenia"
+            >
+              <option value="android">Android — UiAutomator2</option>
+              <option value="ios">iOS — XCUITest</option>
+            </select>
+          </label>
+        }
+      </div>
+
+      <div class="control-row">
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="isGenerating()"
+          (click)="generate()"
+        >
+          @if (isGenerating()) {
+            <mat-spinner diameter="18" aria-label="Generowanie" />
+          } @else {
+            <mat-icon>code</mat-icon>
+          }
+          Generuj kod {{ selectedOption().buttonLabel }}
+        </button>
+      </div>
+    </section>
+
+    @if (loadError()) {
+      <div class="error-banner" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        {{ loadError() }}
+      </div>
+    }
+
+    @if (infoMessage()) {
+      <div class="info-banner" role="status" aria-live="polite">
+        <mat-icon aria-hidden="true">info</mat-icon>
+        {{ infoMessage() }}
+      </div>
+    }
+
+    <section class="card">
+      <h2 class="section-title">Pobierz wygenerowany kod</h2>
+      <div class="control-grid">
+        <label class="field">
+          <span class="field-label">Identyfikator kodu</span>
+          <input
+            type="text"
+            [ngModel]="codeIdInput()"
+            (ngModelChange)="codeIdInput.set($event)"
+            aria-label="Identyfikator kodu"
+            placeholder="UUID wygenerowanego kodu"
+          />
+        </label>
+      </div>
+      <div class="control-row">
+        <button mat-stroked-button (click)="fetchCode()">
+          <mat-icon>search</mat-icon>
+          Pobierz kod
+        </button>
+      </div>
+    </section>
+
+    @if (generatedCode(); as code) {
+      <section class="card code-detail">
+        <div class="detail-header">
+          <h2 class="section-title">{{ code.filePath ?? code.id }}</h2>
+          <button mat-stroked-button (click)="download(code)">
+            <mat-icon>download</mat-icon>
+            Pobierz {{ downloadExtension(code.framework) }}
+          </button>
+        </div>
+        <div class="meta-row">
+          <span class="chip">{{ code.framework }}</span>
+          <span class="chip">{{ code.language }}</span>
+        </div>
+        <pre class="code-block"><code>{{ code.code }}</code></pre>
+      </section>
+    }
+
+    <app-footer />
+  </main>
+</div>

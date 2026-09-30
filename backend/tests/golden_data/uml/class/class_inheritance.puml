@@ -1,0 +1,17 @@
+@startuml
+abstract class BaseParser {
+    +parse(): Model
+}
+interface IValidator {
+    +validate(): bool
+}
+class SequenceParser {
+    +parsePlantuml(): Model
+}
+class ClassParser {
+    +parsePlantuml(): Model
+}
+BaseParser <|-- SequenceParser
+BaseParser <|-- ClassParser
+IValidator <|.. SequenceParser
+@enduml

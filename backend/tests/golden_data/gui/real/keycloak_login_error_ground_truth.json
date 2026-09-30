@@ -1,0 +1,84 @@
+{
+  "category": "real",
+  "description": "Keycloak 26.7.1 — logowanie po błędnych danych (czerwony komunikat błędu). Apache-2.0.",
+  "expected_component_count": 7,
+  "expected_components": [
+    {
+      "component_type": "form",
+      "label": "Sign in to your account",
+      "bbox": {
+        "x": 365,
+        "y": 257,
+        "width": 550,
+        "height": 461
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "menu",
+      "label": "Sign in to your account",
+      "bbox": {
+        "x": 488,
+        "y": 158,
+        "width": 304,
+        "height": 46
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Username or email",
+      "bbox": {
+        "x": 414,
+        "y": 391,
+        "width": 452,
+        "height": 40
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "menu",
+      "label": "Invalid username or password",
+      "bbox": {
+        "x": 414,
+        "y": 435,
+        "width": 190,
+        "height": 19
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Password",
+      "bbox": {
+        "x": 413,
+        "y": 571,
+        "width": 453,
+        "height": 41
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Sign In",
+      "bbox": {
+        "x": 413,
+        "y": 633,
+        "width": 453,
+        "height": 45
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Register",
+      "bbox": {
+        "x": 570,
+        "y": 662,
+        "width": 141,
+        "height": 20
+      },
+      "confidence": 0.8
+    }
+  ]
+}

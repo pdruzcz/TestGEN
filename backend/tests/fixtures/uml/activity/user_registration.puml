@@ -1,0 +1,16 @@
+@startuml
+start
+:Otwórz formularz rejestracji;
+:Wypełnij dane;
+if (Email poprawny?) then (tak)
+  if (Hasło silne?) then (tak)
+    :Utwórz konto;
+    :Wyślij email aktywacyjny;
+  else (nie)
+    :Pokaż wymagania hasła;
+  endif
+else (nie)
+  :Pokaż błąd email;
+endif
+stop
+@enduml

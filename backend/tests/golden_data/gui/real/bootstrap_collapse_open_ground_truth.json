@@ -1,0 +1,84 @@
+{
+  "category": "real_dense",
+  "description": "Bootstrap 5.3 docs (MIT) — /docs/5.3/components/collapse/ z ROZWINIĘTym panelem collapse (stan interakcji: rozwinięte menu; panel z linkami Dashboard/Orders/Analytics/Exports). Gęsty tekst docs — real_dense. Viewport 1280x800.",
+  "expected_component_count": 7,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar TOC (nawigacja docs)",
+      "bbox": {
+        "x": 0,
+        "y": 100,
+        "width": 280,
+        "height": 700
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "menu",
+      "label": "Navbar docs",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 56
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Search (navbar)",
+      "bbox": {
+        "x": 950,
+        "y": 10,
+        "width": 230,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Link with href / Toggle (trigger collapse)",
+      "bbox": {
+        "x": 330,
+        "y": 330,
+        "width": 170,
+        "height": 38
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "menu",
+      "label": "Panel collapse (rozwinięte: linki Dashboard/Orders/Analytics/Exports)",
+      "bbox": {
+        "x": 326,
+        "y": 376,
+        "width": 320,
+        "height": 170
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "link",
+      "label": "Dashboard (w rozwiniętym panelu)",
+      "bbox": {
+        "x": 340,
+        "y": 390,
+        "width": 200,
+        "height": 30
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "link",
+      "label": "Orders (w rozwiniętym panelu)",
+      "bbox": {
+        "x": 340,
+        "y": 425,
+        "width": 200,
+        "height": 30
+      },
+      "confidence": 0.8
+    }
+  ]
+}

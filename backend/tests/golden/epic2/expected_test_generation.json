@@ -1,0 +1,223 @@
+{
+  "name": "epic2_expected_test_generation",
+  "data_type": "expected_output",
+  "version": "1.0",
+  "metadata": {
+    "description": "Expected test generation results for Epic 2 sample document",
+    "feature": "test_generation",
+    "story": "2.10"
+  },
+  "tags": ["epic2", "test_generation", "expected"],
+  "data": {
+    "document_name": "specyfikacja_systemu_zamowien.pdf",
+    "total_requirements": 8,
+    "generated_tests": 11,
+    "coverage_percentage": 100.0,
+    "tests": [
+      {
+        "test_id": "TC-000",
+        "name": "Test: Użytkownik musi móc zalogować się do systemu podając login i hasło",
+        "description": "Użytkownik musi móc zalogować się do systemu podając login i hasło. System musi weryfikować poprawność danych.",
+        "steps": [
+          "Otwórz stronę logowania",
+          "Wprowadź poprawne dane logowania",
+          "Kliknij przycisk 'Zaloguj'",
+          "Weryfikuj poprawne zalogowania"
+        ],
+        "expected_result": "Użytkownik jest zalogowany do systemu",
+        "priority": "high",
+        "requirement_id": "FR-001",
+        "test_type": "functional",
+        "automation_feasibility": "auto"
+      },
+      {
+        "test_id": "TC-001",
+        "name": "Test (negatywny): FR-001",
+        "description": "Weryfikacja zachowania przy nieprawidłowych danych: Użytkownik musi móc zalogować się do system...",
+        "steps": [
+          "Przygotuj nieprawidłowe dane testowe",
+          "Wykonaj czynność zgodnie z wymaganieniem",
+          "Weryfikuj wystąpienie błędu/odrzucenia"
+        ],
+        "expected_result": "System odrzuca nieprawidłowe dane z odpowiednim komunikatem",
+        "priority": "high",
+        "requirement_id": "FR-001",
+        "test_type": "functional",
+        "automation_feasibility": "auto"
+      },
+      {
+        "test_id": "TC-002",
+        "name": "Test: Użytkownik musi mieć możliwość wylogowania się z systemu",
+        "description": "Użytkownik musi mieć możliwość wylogowania się z systemu. Sesja użytkownika powinna zostać zakończona.",
+        "steps": [
+          "Zaloguj się do systemu",
+          "Kliknij przycisk 'Wyloguj'",
+          "Weryfikuj zakończenie sesji",
+          "Sprawdź przekierowanie na stronę logowania"
+        ],
+        "expected_result": "Sesja użytkownika została zakończona",
+        "priority": "medium",
+        "requirement_id": "FR-002",
+        "test_type": "functional",
+        "automation_feasibility": "auto"
+      },
+      {
+        "test_id": "TC-003",
+        "name": "Test: Użytkownik z rolą 'Zamawiający' musi móc utworzyć nowe zamówienie",
+        "description": "Użytkownik z rolą 'Zamawiający' musi móc utworzyć nowe zamówienie. Zamówienie musi zawierać: nazwę produktu...",
+        "steps": [
+          "Zaloguj się jako użytkownik z rolą 'Zamawiający'",
+          "Otwórz formularz tworzenia zamówienia",
+          "Wprowadź nazwę produktu",
+          "Wprowadź ilość",
+          "Wprowadź cenę jednostkową",
+          "Wybierz datę dostawy",
+          "Kliknij 'Utwórz zamówienie'",
+          "Weryfikuj utworzenie zamówienia"
+        ],
+        "expected_result": "Zamówienie zostało utworzone z wszystkimi wymaganymi polami",
+        "priority": "high",
+        "requirement_id": "FR-003",
+        "test_type": "functional",
+        "automation_feasibility": "auto"
+      },
+      {
+        "test_id": "TC-004",
+        "name": "Test (negatywny): FR-003",
+        "description": "Weryfikacja zachowania przy nieprawidłowych danych: Użytkownik z rolą 'Zamawiający' musi móc utworzyć...",
+        "steps": [
+          "Przygotuj nieprawidłowe dane testowe",
+          "Wykonaj czynność zgodnie z wymaganieniem",
+          "Weryfikuj wystąpienie błędu/odrzucenia"
+        ],
+        "expected_result": "System odrzuca nieprawidłowe dane z odpowiednim komunikatem",
+        "priority": "high",
+        "requirement_id": "FR-003",
+        "test_type": "functional",
+        "automation_feasibility": "auto"
+      },
+      {
+        "test_id": "TC-005",
+        "name": "Test: Użytkownik może edytować zamówienie tylko jeśli znajduje się w statusie 'W trakcie realizacji'",
+        "description": "Użytkownik może edytować zamówienie tylko jeśli znajduje się w statusie 'W trakcie realizacji'.",
+        "steps": [
+          "Znajdź zamówienie w statusie 'W trakcie realizacji'",
+          "Otwórz formularz edycji",
+          "Zmodyfikuj dane zamówienia",
+          "Zapisz zmiany",
+          "Weryfikuj aktualizację zamówienia"
+        ],
+        "expected_result": "Zamówienie zostało zaktualizowane",
+        "priority": "medium",
+        "requirement_id": "FR-004",
+        "test_type": "functional",
+        "automation_feasibility": "auto"
+      },
+      {
+        "test_id": "TC-006",
+        "name": "Test: Czas odpowiedzi systemu na zapytanie HTTP",
+        "description": "Czas odpowiedzi systemu na zapytanie HTTP nie może przekraczać 2 sekund dla 95% zapytań.",
+        "steps": [
+          "Przygotuj środowisko testowe",
+          "Wykonaj 100 zapytań HTTP do systemu",
+          "Zmierz czas odpowiedzi dla każdego zapytania",
+          "Oblicz percentyl 95 czasu odpowiedzi",
+          "Weryfikuj wynik"
+        ],
+        "expected_result": "95% zapytań mieści się w limicie 2 sekund",
+        "priority": "high",
+        "requirement_id": "NFR-001",
+        "test_type": "performance",
+        "automation_feasibility": "auto"
+      },
+      {
+        "test_id": "TC-007",
+        "name": "Test: System musi obsługiwać minimum 1000 równoczesnych użytkowników",
+        "description": "System musi obsługiwać minimum 1000 równoczesnych użytkowników bez spadku wydajności poniżej 90%.",
+        "steps": [
+          "Przygotuj środowisko testowe",
+          "Zainicjuj 1000 równoczesnych połączeń użytkowników",
+          "Wykonuj operacje przez 10 minut",
+          "Monitoruj wydajność systemu",
+          "Weryfikuj brak spadku wydajności poniżej 90%"
+        ],
+        "expected_result": "System obsługuje 1000 użytkowników bez spadku wydajności poniżej 90%",
+        "priority": "high",
+        "requirement_id": "NFR-002",
+        "test_type": "performance",
+        "automation_feasibility": "auto"
+      },
+      {
+        "test_id": "TC-008",
+        "name": "Test: Wszystkie połączenia z systemem muszą być szyfrowane protokołem TLS 1.3",
+        "description": "Wszystkie połączenia z systemem muszą być szyfrowane protokołem TLS 1.3.",
+        "steps": [
+          "Przygotuj środowisko testowe",
+          "Spróbuj połączyć się przez HTTP (niezszyfrowane)",
+          "Spróbuj połączyć się przez TLS 1.2",
+          "Połącz się przez TLS 1.3",
+          "Weryfikuj wersję protokołu TLS"
+        ],
+        "expected_result": "Tylko połączenia TLS 1.3 są akceptowane",
+        "priority": "critical",
+        "requirement_id": "NFR-003",
+        "test_type": "security",
+        "automation_feasibility": "auto"
+      },
+      {
+        "test_id": "TC-009",
+        "name": "Test: System musi implementować mechanizm RBAC z co najmniej 3 poziomami uprawnień",
+        "description": "System musi implementować mechanizm RBAC (Role-Based Access Control) z co najmniej 3 poziomami uprawnień.",
+        "steps": [
+          "Przygotuj środowisko testowe",
+          "Utwórz użytkowników z różnymi rolami",
+          "Sprawdź uprawnienia dla każdej roli",
+          "Weryfikuj izolację uprawnień",
+          "Testuj próbę dostępu poza uprawnieniami"
+        ],
+        "expected_result": "System poprawnie implementuje RBAC z 3+ poziomami uprawnień",
+        "priority": "high",
+        "requirement_id": "NFR-004",
+        "test_type": "security",
+        "automation_feasibility": "auto"
+      },
+      {
+        "test_id": "TC-010",
+        "name": "Test (negatywny): NFR-004",
+        "description": "Weryfikacja zachowania przy nieprawidłowych danych: System musi implementować mechanizm RBAC...",
+        "steps": [
+          "Przygotuj nieprawidłowe dane testowe",
+          "Wykonaj czynność zgodnie z wymaganieniem",
+          "Weryfikuj wystąpienie błędu/odrzucenia"
+        ],
+        "expected_result": "System odrzuca nieprawidłowe dane z odpowiednim komunikatem",
+        "priority": "high",
+        "requirement_id": "NFR-004",
+        "test_type": "security",
+        "automation_feasibility": "auto"
+      }
+    ],
+    "statistics": {
+      "by_test_type": {
+        "functional": 6,
+        "performance": 2,
+        "security": 3,
+        "api": 0,
+        "ui": 0
+      },
+      "by_automation_feasibility": {
+        "auto": 11,
+        "semi_auto": 0,
+        "manual": 0
+      },
+      "by_priority": {
+        "critical": 1,
+        "high": 8,
+        "medium": 2,
+        "low": 0
+      },
+      "negative_tests": 4,
+      "positive_tests": 7
+    }
+  }
+}

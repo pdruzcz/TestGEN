@@ -1,0 +1,73 @@
+{
+  "category": "real",
+  "description": "Keycloak 26.7.1 — ekran logowania (theme keycloak, PatternFly). Apache-2.0.",
+  "expected_component_count": 6,
+  "expected_components": [
+    {
+      "component_type": "form",
+      "label": "Sign in to your account",
+      "bbox": {
+        "x": 365,
+        "y": 270,
+        "width": 550,
+        "height": 435
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "menu",
+      "label": "Sign in to your account",
+      "bbox": {
+        "x": 488,
+        "y": 170,
+        "width": 304,
+        "height": 46
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Username or email",
+      "bbox": {
+        "x": 414,
+        "y": 403,
+        "width": 452,
+        "height": 40
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Password",
+      "bbox": {
+        "x": 413,
+        "y": 558,
+        "width": 453,
+        "height": 41
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Sign In",
+      "bbox": {
+        "x": 413,
+        "y": 620,
+        "width": 453,
+        "height": 45
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Register",
+      "bbox": {
+        "x": 570,
+        "y": 649,
+        "width": 141,
+        "height": 20
+      },
+      "confidence": 0.8
+    }
+  ]
+}

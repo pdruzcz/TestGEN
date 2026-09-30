@@ -1,0 +1,24 @@
+{
+  "language": "python",
+  "name": "python_analytics_engine",
+  "requirements": [
+    {"req_id": "REQ-ANL-001", "text": "System must aggregate data from multiple sources", "category": "etl", "priority": "high"},
+    {"req_id": "REQ-ANL-002", "text": "System must compute the moving average of a series", "category": "analytics", "priority": "medium"},
+    {"req_id": "REQ-ANL-003", "text": "System must detect anomalies in time-series data", "category": "analytics", "priority": "high"},
+    {"req_id": "REQ-ANL-004", "text": "System must export an analytics report to PDF", "category": "export", "priority": "low"},
+    {"req_id": "REQ-ANL-005", "text": "System must render chart visualizations", "category": "ui", "priority": "medium"}
+  ],
+  "code_entities": [
+    {"entity_id": "anl-1", "name": "aggregate_sources", "type": "function", "file_path": "src/analytics/etl.py", "line_number": 14, "language": "python", "docstring": "Aggregate data from multiple sources"},
+    {"entity_id": "anl-2", "name": "compute_moving_average", "type": "function", "file_path": "src/analytics/stats.py", "line_number": 28, "language": "python", "docstring": "Compute the moving average of a series"},
+    {"entity_id": "anl-3", "name": "detect_anomalies", "type": "function", "file_path": "src/analytics/anomalies.py", "line_number": 18, "language": "python", "docstring": "Detect anomalies in time-series data"},
+    {"entity_id": "anl-4", "name": "export_pdf_report", "type": "function", "file_path": "src/analytics/export.py", "line_number": 22, "language": "python", "docstring": "Export an analytics report to PDF"},
+    {"entity_id": "anl-5", "name": "render_charts", "type": "function", "file_path": "src/analytics/viz.py", "line_number": 30, "language": "python", "docstring": "Render chart visualizations"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-ANL-001", "REQ-ANL-002", "REQ-ANL-003", "REQ-ANL-004", "REQ-ANL-005"],
+    "missing_req_ids": [],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 85.0
+  }
+}

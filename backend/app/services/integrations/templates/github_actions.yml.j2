@@ -1,0 +1,91 @@
+# Analiza TestGEN w GitHub Actions
+#
+# Wymagania:
+#   1. Sekret repozytorium {{ api_key_variable }} — klucz API z TestGEN
+#      (Ustawienia → Klucze API). Wystarczy zakres „pełny dostęp”,
+#      bo workflow wysyła kod i uruchamia analizę.
+#   2. Projekt o identyfikatorze {{ project_id }} musi istnieć w TestGEN.
+#
+# Wygenerowane przez TestGEN — dostosuj do swojego repozytorium.
+
+name: Analiza TestGEN
+
+on: [push, pull_request]
+
+jobs:
+  testgen:
+    name: Analiza jakości i bezpieczeństwa
+    runs-on: ubuntu-latest
+    timeout-minutes: {{ timeout_minutes }}
+
+    env:
+      TESTGEN_API_URL: {{ api_url }}
+      TESTGEN_PROJECT_ID: {{ project_id }}
+      TESTGEN_API_KEY: ${{ '{{' }} secrets.{{ api_key_variable }} {{ '}}' }}
+
+    steps:
+      - name: Pobranie kodu
+        uses: actions/checkout@v4
+
+      # Upload przyjmuje archiwum i rozpakowuje je po stronie TestGEN —
+      # dzięki temu wysyłamy jedno żądanie zamiast pliku po pliku.
+      - name: Spakowanie katalogu roboczego
+        run: zip -qr testgen-source.zip . -x ".git/*" -x "node_modules/*" -x "*.zip"
+
+      - name: Wysłanie kodu do TestGEN
+        run: |
+          curl --fail-with-body --silent --show-error \
+            -X POST "$TESTGEN_API_URL/api/v1/projects/$TESTGEN_PROJECT_ID/upload" \
+            -H "Authorization: Bearer $TESTGEN_API_KEY" \
+            -F "files=@testgen-source.zip"
+
+      - name: Uruchomienie analizy
+        id: analyze
+        run: |
+          RESPONSE=$(curl --fail-with-body --silent --show-error \
+            -X POST "$TESTGEN_API_URL/api/v1/projects/$TESTGEN_PROJECT_ID/analyze" \
+            -H "Authorization: Bearer $TESTGEN_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"engine_mode": "{{ engine_mode }}", "modules": [{{ modules | map("tojson") | join(", ") }}]}')
+          TASK_ID=$(echo "$RESPONSE" | jq -r '.task_id')
+          echo "Zadanie analizy: $TASK_ID"
+          echo "task_id=$TASK_ID" >> "$GITHUB_OUTPUT"
+
+      # Odpytujemy co 10 s; {{ poll_attempts }} prób ≈ {{ timeout_minutes }} min.
+      - name: Oczekiwanie na wynik
+        run: |
+          for i in $(seq 1 {{ poll_attempts }}); do
+            STATUS=$(curl --fail-with-body --silent --show-error \
+              "$TESTGEN_API_URL/api/v1/tasks/${{ '{{' }} steps.analyze.outputs.task_id {{ '}}' }}" \
+              -H "Authorization: Bearer $TESTGEN_API_KEY" | jq -r '.status')
+            echo "Status analizy: $STATUS"
+            case "$STATUS" in
+              completed|success) exit 0 ;;
+              failed|error) echo "::error::Analiza TestGEN zakończona błędem"; exit 1 ;;
+            esac
+            sleep 10
+          done
+          echo "::error::Analiza nie zakończyła się w ciągu {{ timeout_minutes }} min"
+          exit 1
+
+      # Próg jest liczony po stronie TestGEN — tak samo jak w status checkach
+      # na pull requestach, więc oba mechanizmy nie rozjadą się z czasem.
+      - name: Sprawdzenie progu znalezisk
+        run: |
+          SUMMARY=$(curl --fail-with-body --silent --show-error \
+            "$TESTGEN_API_URL/api/v1/projects/$TESTGEN_PROJECT_ID/ci-cd/summary?threshold={{ severity_threshold }}" \
+            -H "Authorization: Bearer $TESTGEN_API_KEY")
+          echo "$SUMMARY" | jq '.'
+          echo "$SUMMARY" > testgen-summary.json
+          if [ "$(echo "$SUMMARY" | jq -r '.should_fail')" = "true" ]; then
+            echo "::error::$(echo "$SUMMARY" | jq -r '.description')"
+            exit 1
+          fi
+
+      - name: Zapis podsumowania jako artefakt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testgen-summary
+          path: testgen-summary.json
+          if-no-files-found: ignore

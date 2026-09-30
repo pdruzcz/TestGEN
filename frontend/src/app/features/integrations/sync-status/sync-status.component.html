@@ -1,0 +1,196 @@
+<div class="sync-page">
+  <app-navbar />
+
+  <main class="sync-content">
+    <a class="back-link" mat-button routerLink="/settings/integrations">
+      <mat-icon>arrow_back</mat-icon>
+      Integracje
+    </a>
+
+    <header>
+      <h1 class="page-title">Synchronizacja z systemem zarządzania testami</h1>
+      <p class="page-subtitle">
+        Przypadki testowe mogą wędrować w obie strony: zmiany z TestGEN trafiają do TMS-a, a edycje wykonane w TMS-ie
+        wracają do TestGEN.
+      </p>
+    </header>
+
+    @if (errorMessage()) {
+      <div class="banner banner--error" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    @if (infoMessage()) {
+      <div class="banner banner--info" role="status">
+        <mat-icon>check_circle_outline</mat-icon>
+        <span>{{ infoMessage() }}</span>
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="loading">
+        <mat-spinner diameter="32" />
+        <span>Wczytuję stan synchronizacji…</span>
+      </div>
+    } @else {
+      @if (status(); as state) {
+        <section class="card status-card" [class.status-card--degraded]="isDegraded()">
+          <div class="status-head">
+            <div>
+              <h2 class="card-title">Stan</h2>
+              <p class="status-line">
+                <span class="pill" [class.pill--on]="state.isActive" [class.pill--off]="!state.isActive">
+                  {{ state.isActive ? 'Włączona' : 'Wyłączona' }}
+                </span>
+                <span class="pill pill--health" [class.pill--degraded]="isDegraded()">
+                  {{ isDegraded() ? 'Wymaga uwagi' : 'Sprawna' }}
+                </span>
+                <span class="muted"
+                  >{{ directionLabel(state.direction) }} · {{ intervalLabel(state.intervalMinutes) }}</span
+                >
+              </p>
+            </div>
+            <div class="status-actions">
+              <button mat-stroked-button type="button" [disabled]="isSaving()" (click)="runNow()">
+                <mat-icon>sync</mat-icon>
+                Synchronizuj teraz
+              </button>
+              <button mat-flat-button color="primary" type="button" [disabled]="isSaving()" (click)="toggleActive()">
+                {{ state.isActive ? 'Wyłącz' : 'Włącz' }}
+              </button>
+            </div>
+          </div>
+
+          <dl class="facts">
+            <div>
+              <dt>Ostatnia synchronizacja</dt>
+              <dd>{{ state.lastSyncAt ? (state.lastSyncAt | date: 'dd.MM.yyyy HH:mm') : 'jeszcze nie było' }}</dd>
+            </div>
+            <div>
+              <dt>Wynik</dt>
+              <dd>{{ state.lastSyncStatus ?? '—' }}</dd>
+            </div>
+            <div>
+              <dt>Zsynchronizowanych przypadków</dt>
+              <dd>{{ state.syncedCount }}</dd>
+            </div>
+            <div>
+              <dt>Następny przebieg</dt>
+              <dd>{{ state.nextSyncAt ? (state.nextSyncAt | date: 'dd.MM.yyyy HH:mm') : '—' }}</dd>
+            </div>
+          </dl>
+
+          @if (isDegraded()) {
+            <p class="degraded-note">
+              Trzy kolejne próby zakończyły się błędem. Synchronizacja wróci do działania sama, gdy połączenie z TMS-em
+              zostanie przywrócone.
+              @if (state.lastError) {
+                <span class="error-detail">Ostatni błąd: {{ state.lastError }}</span>
+              }
+            </p>
+          }
+        </section>
+      } @else {
+        <div class="banner banner--info">
+          <mat-icon>info_outline</mat-icon>
+          <span>Synchronizacja nie została jeszcze skonfigurowana dla tej integracji.</span>
+        </div>
+      }
+
+      <section class="card">
+        <h2 class="card-title">Ustawienia</h2>
+        <p class="card-hint">Zapis ustawień nie uruchamia synchronizacji — do tego służy przycisk „Włącz”.</p>
+
+        <div class="form-grid">
+          <label class="field">
+            <span class="field-label">Kierunek</span>
+            <select [(ngModel)]="draftDirection" name="direction">
+              @for (direction of directions; track direction) {
+                <option [value]="direction">{{ directionLabel(direction) }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Jak często</span>
+            <select [(ngModel)]="draftInterval" name="interval">
+              @for (minutes of intervals; track minutes) {
+                <option [value]="minutes">{{ intervalLabel(minutes) }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Gdy zmiana nastąpi po obu stronach</span>
+            <select [(ngModel)]="draftStrategy" name="strategy">
+              @for (strategy of strategies; track strategy) {
+                <option [value]="strategy">{{ strategyLabel(strategy) }}</option>
+              }
+            </select>
+          </label>
+        </div>
+
+        <button mat-flat-button color="primary" type="button" [disabled]="isSaving()" (click)="saveConfig()">
+          Zapisz ustawienia
+        </button>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">
+          Konflikty
+          @if (pendingConflicts().length) {
+            <span class="badge">{{ pendingConflicts().length }} do rozstrzygnięcia</span>
+          }
+        </h2>
+        <p class="card-hint">
+          Konflikt zapisujemy również wtedy, gdy rozstrzygnęła go reguła „wygrywa nowsza zmiana” — przegrana wersja jest
+          jedynym śladem po nadpisanych danych.
+        </p>
+
+        @if (!conflicts().length) {
+          <p class="empty">Brak konfliktów.</p>
+        } @else {
+          <ul class="conflict-list">
+            @for (conflict of conflicts(); track conflict.id) {
+              <li class="conflict">
+                <div class="conflict-head">
+                  <span class="conflict-id">TMS #{{ conflict.tmsTestId }}</span>
+                  <span class="conflict-status" [class.conflict-status--pending]="conflict.resolution === 'pending'">
+                    {{ resolutionLabel(conflict.resolution) }}
+                  </span>
+                  <span class="muted">{{ conflict.createdAt | date: 'dd.MM.yyyy HH:mm' }}</span>
+                </div>
+
+                <div class="versions">
+                  <div class="version">
+                    <span class="version-label">Wersja TestGEN</span>
+                    <span class="version-title">{{ versionTitle(conflict.testgenVersion) }}</span>
+                  </div>
+                  <div class="version">
+                    <span class="version-label">Wersja TMS</span>
+                    <span class="version-title">{{ versionTitle(conflict.tmsVersion) }}</span>
+                  </div>
+                </div>
+
+                @if (conflict.resolution === 'pending') {
+                  <div class="conflict-actions">
+                    <button mat-stroked-button type="button" (click)="resolve(conflict, 'testgen_wins')">
+                      Zostaw wersję TestGEN
+                    </button>
+                    <button mat-stroked-button type="button" (click)="resolve(conflict, 'tms_wins')">
+                      Przyjmij wersję TMS
+                    </button>
+                  </div>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    }
+  </main>
+
+  <app-footer />
+</div>

@@ -1,0 +1,152 @@
+<div class="analysis-page">
+  <app-navbar activeLink="projects" />
+  <main class="analysis-content" id="main-content" tabindex="-1">
+    <a
+      mat-button
+      [routerLink]="['/projects', projectId()]"
+      class="back-link"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Wróć do szczegółów projektu
+    </a>
+    <h1 class="page-title">Konfiguracja i uruchomienie analizy</h1>
+    <p class="page-subtitle">Dostosuj parametry analizy i uruchom ją dla projektu.</p>
+
+    <!-- ═══ Config Form (AC1, AC2, AC8) ═══ -->
+    @if (taskState() === 'idle' || taskState() === 'completed' || taskState() === 'failed' || taskState() === 'cancelled') {
+      <div class="config-card">
+        <app-analysis-config-form
+          [projectId]="projectId()"
+          (configChange)="onConfigChange($event)"
+          (submitConfig)="startAnalysis($event)"
+        />
+      </div>
+
+      <!-- Stats card -->
+      <div class="stats-card">
+        <div class="stats-row">
+          <div class="stat">
+            <span class="stat-value">{{ fileCount() }}</span>
+            <span class="stat-label">Pliki</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">{{ totalLoc() }}</span>
+            <span class="stat-label">LOC</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">{{ currentConfig().modules.length }}</span>
+            <span class="stat-label">Moduły</span>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ═══ Running state (AC4) ═══ -->
+    @if (taskState() === 'starting' || taskState() === 'running') {
+      <div class="progress-card running">
+        <div class="progress-info">
+          <span class="progress-status">
+            <mat-spinner diameter="18" aria-label="Ładowanie"></mat-spinner>
+            Analiza w toku...
+          </span>
+          <span class="progress-detail">{{ stepLabel() }}</span>
+        </div>
+
+        <!-- Stage indicators (AC4) -->
+        <div class="stages">
+          @for (stage of ['Kolejkowanie', 'Parsowanie', 'Analiza', 'Generowanie testów', 'Finalizacja']; track stage; let i = $index) {
+            <div class="stage" [class.active]="taskProgress() >= i * 20" [class.current]="taskProgress() >= i * 20 && taskProgress() < (i + 1) * 20">
+              <mat-icon>{{ taskProgress() >= (i + 1) * 20 ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              <span>{{ stage }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="progress-bar-container">
+          <mat-progress-bar
+            mode="determinate"
+            [value]="taskProgress()"
+            aria-label="Postęp analizy"
+          >
+          </mat-progress-bar>
+          <span class="progress-pct">{{ taskProgress() }}%</span>
+        </div>
+      </div>
+    }
+
+    <!-- ═══ Completed state (AC6) ═══ -->
+    @if (taskState() === 'completed') {
+      <div class="progress-card completed">
+        <div class="progress-info">
+          <span class="progress-status completed-text">
+            <mat-icon>check_circle</mat-icon>
+            Analiza zakończona
+          </span>
+          <span class="progress-detail">Wszystkie kroki zostały wykonane pomyślnie.</span>
+        </div>
+      </div>
+      @if (languages().length > 0) {
+        <div class="languages-card">
+          <span class="languages-title">Wykryte technologie</span>
+          <div class="languages-chips">
+            @for (lang of languages(); track lang.language) {
+              <span class="lang-chip">{{ lang.language }} ({{ lang.count }})</span>
+            }
+            @for (fw of frameworks(); track fw) {
+              <span class="framework-chip">{{ fw }}</span>
+            }
+          </div>
+        </div>
+      }
+    }
+
+    <!-- ═══ Cancelled state ═══ -->
+    @if (taskState() === 'cancelled') {
+      <div class="info-banner" role="status">
+        <mat-icon>cancel</mat-icon>
+        <span>Analiza została anulowana przez użytkownika.</span>
+      </div>
+    }
+
+    <!-- ═══ Failed state (AC7) ═══ -->
+    @if (taskState() === 'failed') {
+      <div class="error-banner" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        <div class="error-content">
+          <span class="error-title">Analiza nie powiodła się</span>
+          <span class="error-detail">{{ errorMessage() }}</span>
+        </div>
+      </div>
+    }
+
+    <!-- ═══ Action buttons (AC3, AC5) ═══ -->
+    <div class="actions-row">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="startAnalysis()"
+        [disabled]="taskState() === 'starting' || taskState() === 'running' || currentConfig().modules.length === 0"
+      >
+        @if (taskState() === 'starting' || taskState() === 'running') {
+          <mat-spinner diameter="20" aria-label="Ładowanie"></mat-spinner>
+        } @else {
+          <mat-icon>play_arrow</mat-icon>
+        }
+        {{ buttonLabel() }}
+      </button>
+
+      @if (taskState() === 'running') {
+        <button
+          mat-stroked-button
+          color="warn"
+          (click)="cancelAnalysis()"
+          [disabled]="cancelling()"
+        >
+          <mat-icon>stop</mat-icon>
+          Anuluj analizę
+        </button>
+      }
+    </div>
+  </main>
+  <app-footer />
+</div>

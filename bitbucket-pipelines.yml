@@ -1,0 +1,300 @@
+# =============================================================================
+# TestGEN CI/CD Pipeline — Bitbucket Pipelines
+# =============================================================================
+# Pipeline flow (per Architecture):
+#   Push → Lint (ruff + eslint) → Unit tests → Integration tests → Build Docker → E2E → Deploy
+#
+# Cache strategy:
+#   - pip: ~/.cache/pip (Python packages)
+#   - npm: ~/.npm (Node packages)
+#   - node: frontend/node_modules (installed modules)
+#
+# Artifacts:
+#   - test-results/*.xml (JUnit XML reports)
+#   - coverage/ (HTML + XML coverage reports)
+#
+# Merge check configuration:
+#   Pipeline failure automatically reports a red status check on the PR.
+#   To BLOCK merging on failure, manually configure in Bitbucket:
+#   Repository settings → Branch permissions → main → Require passing builds for merge
+# =============================================================================
+
+image: atlassian/default-image:4
+
+definitions:
+  caches:
+    pip: ~/.cache/pip
+    npm: ~/.npm
+    node: frontend/node_modules
+
+  services:
+    docker:
+      memory: 2048
+
+  steps:
+    # -- Reusable step definitions (YAML anchors) --
+    - step: &backend-lint
+        name: Backend Lint
+        image: python:3.12-slim
+        caches:
+          - pip
+        script:
+          - pip install "ruff>=0.9"
+          - cd backend
+          - ruff check app/ tests/
+          - ruff format --check app/ tests/
+        max-time: 15
+
+    - step: &frontend-lint
+        name: Frontend Lint
+        image: node:22-alpine
+        caches:
+          - npm
+          - node
+        script:
+          - cd frontend
+          - npm ci
+          - npx ng lint
+          - npx prettier --check "src/**/*.{ts,html,scss}"
+        max-time: 15
+
+    - step: &backend-tests
+        name: Backend Tests
+        image: python:3.12-slim
+        caches:
+          - pip
+        script:
+          - cd backend
+          - pip install -e ".[dev]"
+          - pytest tests/ -v --tb=short
+              --junitxml=test-results/backend-results.xml
+              --cov=app
+              --cov-report=xml:coverage/backend-coverage.xml
+              --cov-report=html:coverage/backend-html/
+              --cov-fail-under=80
+        artifacts:
+          - backend/test-results/**
+          - backend/coverage/**
+        max-time: 15
+
+    - step: &security-regression
+        name: Security Golden-Data Regression
+        # Story 4.14 (AC4): regression alert — fails the pipeline if SAST detection
+        # drops below 90%, FP rate exceeds 30%, taint recall drops below 75%, config
+        # detection drops below 90% or CVE parse coverage drops below 80%. Offline,
+        # native engines only (no LLM / DB / network).
+        image: python:3.12-slim
+        caches:
+          - pip
+        script:
+          - cd backend
+          - pip install -e ".[dev]"
+          - pytest tests/regression/ -v --tb=short -m golden_data
+              --junitxml=test-results/security-regression-results.xml
+        artifacts:
+          - backend/test-results/**
+        max-time: 15
+
+    - step: &golden-regression
+        name: UML/GUI Golden-Data Regression
+        # Story 3.14 (AC4) + Story 2-pdf-ocr: golden regression + accuracy gate.
+        # Fails if any PlantUML/XMI sample under-reports counts beyond 10%
+        # tolerance or any SVG sample drops below 70% recognition accuracy;
+        # emits a golden-accuracy.json artefact. The imaging stack
+        # (cv2/Tesseract/PyMuPDF) is installed here so the image-gated OCR
+        # (scanned-PDF + GUI screenshot) and cv2 accuracy tests actually RUN
+        # (previously skipped silently — see Story 2-pdf-ocr verification).
+        image: python:3.12-slim
+        caches:
+          - pip
+        script:
+          - apt-get update && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng tesseract-ocr-pol && rm -rf /var/lib/apt/lists/*
+          - cd backend
+          - pip install -e ".[dev,imaging]"
+          - pytest tests/golden_data/ -v --tb=short -m golden
+              --junitxml=test-results/golden-regression-results.xml
+          - python scripts/golden_accuracy.py
+        artifacts:
+          - backend/test-results/**
+        max-time: 20
+
+    - step: &billing-tests
+        name: Billing Scenario Tests (+ tpay sandbox)
+        # Story 7.12 (Task 7): macierz scenariuszy płatności z mockami tpay
+        # (zawsze, szybkie) + profil integracyjny z prawdziwym sandboxem
+        # (markery `billing`/`tpay_sandbox`) — wyłącznie gdy sekrety TPAY_*
+        # są zdefiniowane jako Repository/Deployment variables
+        # (TPAY_CLIENT_ID/TPAY_CLIENT_SECRET/TPAY_SECURITY_CODE/TPAY_MERCHANT_ID);
+        # bez sekretów testy sandboxa skipują z reason (Task 7.2).
+        image: python:3.12-slim
+        caches:
+          - pip
+        script:
+          - cd backend
+          - pip install -e ".[dev]"
+          # Scenariusze 1-14 z mockami (domyślnie w każdym CI — Task 7.2).
+          - pytest tests/scenarios/ -v --tb=short
+              --junitxml=test-results/billing-scenarios-results.xml
+          # Profil sandbox: markery billing + tpay_sandbox; opt-in sekretami.
+          - |
+            if [ -n "$TPAY_CLIENT_ID" ] && [ -n "$TPAY_CLIENT_SECRET" ] && [ -n "$TPAY_SECURITY_CODE" ] && [ -n "$TPAY_MERCHANT_ID" ]; then
+              export TPAY_ENV=sandbox TPAY_SANDBOX_E2E=1
+              pytest tests/integration/test_tpay_sandbox.py -m "billing or tpay_sandbox" -v --tb=short
+            else
+              echo "tpay sandbox pominięty — brak sekretów TPAY_* (testy skipują z reason)"
+            fi
+        artifacts:
+          - backend/test-results/**
+        max-time: 15
+
+    - step: &frontend-tests
+        name: Frontend Tests
+        image: node:22-alpine
+        caches:
+          - npm
+          - node
+        script:
+          - cd frontend
+          - npm ci
+          - npx ng test -- --coverage --ci
+        artifacts:
+          - frontend/test-results/**
+          - frontend/coverage/**
+        max-time: 15
+
+    - step: &accessibility-audit
+        name: Accessibility Audit (axe-core + Lighthouse)
+        # Story 6.9 (AC7/AC8): axe-core skanuje strony (0 critical/serious
+        # violations) + Lighthouse CI z budżetem accessibility >= 0.95.
+        # Wymaga zbudowanej i wyserwowanej aplikacji (frontend only, strony
+        # publiczne bez backendu).
+        image: mcr.microsoft.com/playwright:v1.56.1-noble
+        caches:
+          - npm
+          - node
+        script:
+          - cd frontend
+          - npm ci
+          - npx ng serve --port 4200 &
+          - npx wait-on http://localhost:4200 --timeout 120000
+          - npm run axe:ci
+          - npm run lighthouse:ci
+        artifacts:
+          - frontend/lighthouse-reports/**
+        max-time: 20
+
+    - step: &e2e-tests
+        name: E2E Tests (Playwright)
+        # Story 6.13 (AC1–AC7, AC9): pełny suite E2E na 3 przeglądarkach
+        # (Chromium/Firefox/WebKit), 4 workery, retries 2, trace/screenshot
+        # na failure. API w pełni mockowane (page.route) — backend zbędny;
+        # webServer (npm start) startuje sam Playwright. Budżet czasu: 30 min.
+        image: mcr.microsoft.com/playwright:v1.56.1-noble
+        caches:
+          - npm
+          - node
+        script:
+          - cd frontend
+          - npm ci
+          - npx playwright test
+        artifacts:
+          - frontend/playwright-report/**
+          - frontend/test-results/**
+        max-time: 30
+
+pipelines:
+  # ---------------------------------------------------------------------------
+  # Pull Request pipeline — runs on every PR to any branch
+  # ---------------------------------------------------------------------------
+  pull-requests:
+    '**':
+      # Stage 1: Lint (parallel — backend + frontend)
+      - parallel:
+          - step: *backend-lint
+          - step: *frontend-lint
+
+      # Stage 2: Tests (parallel — backend + frontend + security regression)
+      - parallel:
+          - step: *backend-tests
+          - step: *frontend-tests
+          - step: *security-regression
+          - step: *golden-regression
+          - step: *billing-tests
+
+      # Stage 3: Accessibility audit — axe + Lighthouse (manual; wymaga
+      # wyserwowanej aplikacji, patrz Story 6.9)
+      - step:
+          <<: *accessibility-audit
+          trigger: manual
+
+      # Stage 4: E2E Playwright (manual — Story 6.13; do włączenia jako
+      # automatyczny po pierwszej zielonej weryfikacji na CI)
+      - step:
+          <<: *e2e-tests
+          trigger: manual
+
+      # Stage 5: Placeholder — Integration tests (manual, future)
+      - step:
+          name: Integration Tests
+          trigger: manual
+          script:
+            - echo "Integration tests — to be added in future stories"
+          max-time: 15
+
+  # ---------------------------------------------------------------------------
+  # Main branch pipeline — full pipeline with build + optional deploy
+  # ---------------------------------------------------------------------------
+  branches:
+    main:
+      # Stage 1: Lint (parallel)
+      - parallel:
+          - step: *backend-lint
+          - step: *frontend-lint
+
+      # Stage 2: Tests (parallel)
+      - parallel:
+          - step: *backend-tests
+          - step: *frontend-tests
+          - step: *security-regression
+          - step: *golden-regression
+          - step: *billing-tests
+
+      # Stage 3: Build Docker images
+      - step:
+          name: Build Docker Images
+          size: 2x
+          services:
+            - docker
+          caches:
+            - docker
+          script:
+            - export IMAGE_TAG=${BITBUCKET_COMMIT:0:7}
+            - export BRANCH_TAG=$(echo ${BITBUCKET_BRANCH} | sed 's/[^a-zA-Z0-9]/-/g')
+            - docker build -t testgen-backend:${IMAGE_TAG} -t testgen-backend:${BRANCH_TAG} backend/
+            - docker build -t testgen-frontend:${IMAGE_TAG} -t testgen-frontend:${BRANCH_TAG} frontend/
+            # Future: push to container registry
+            # - docker push testgen-backend:${IMAGE_TAG}
+            # - docker push testgen-frontend:${IMAGE_TAG}
+          max-time: 15
+
+      # Stage 4: Accessibility audit — axe + Lighthouse (manual, Story 6.9)
+      - step:
+          <<: *accessibility-audit
+          trigger: manual
+
+      # Stage 5: E2E Playwright (manual — Story 6.13)
+      - step:
+          <<: *e2e-tests
+          trigger: manual
+
+      # Stage 6: Deploy to staging (manual trigger)
+      - step:
+          name: Deploy Staging
+          trigger: manual
+          deployment: staging
+          script:
+            # Future: push to registry → K8s deploy
+            # - docker push $REGISTRY/testgen-backend:$TAG
+            # - kubectl set image deployment/backend ...
+            - echo "Deploy to staging not yet configured"
+          max-time: 15

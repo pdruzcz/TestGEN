@@ -1,0 +1,10 @@
+@startuml
+left to right direction
+actor User
+usecase "Checkout" as UC1
+usecase "PayOnline" as UC2
+usecase "ApplyCoupon" as UC3
+User --> UC1
+UC1 ..> UC2 : <<include>>
+UC3 ..> UC1 : <<extend>>
+@enduml

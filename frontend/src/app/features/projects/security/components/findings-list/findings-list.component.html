@@ -1,0 +1,129 @@
+<div class="findings-list">
+  <div class="findings-list__filters">
+    <label>
+      Waga
+      <select
+        [ngModel]="severityFilter()"
+        (ngModelChange)="severityFilter.set($event)"
+      >
+        <option value="">Wszystkie</option>
+        <option value="critical">Krytyczne</option>
+        <option value="high">Wysokie</option>
+        <option value="medium">Średnie</option>
+        <option value="low">Niskie</option>
+        <option value="info">Info</option>
+      </select>
+    </label>
+
+    <label>
+      Źródło skanu
+      <select
+        [ngModel]="sourceFilter()"
+        (ngModelChange)="sourceFilter.set($event)"
+      >
+        <option value="">Wszystkie</option>
+        <option value="sast">SAST</option>
+        <option value="taint">Taint</option>
+        <option value="dependency">Zależności</option>
+        <option value="config">Konfiguracja</option>
+        <option value="dast">DAST</option>
+      </select>
+    </label>
+
+    <label>
+      Status
+      <select
+        [ngModel]="statusFilter()"
+        (ngModelChange)="statusFilter.set($event)"
+      >
+        <option value="">Wszystkie</option>
+        <option value="open">Otwarte</option>
+        <option value="acknowledged">Potwierdzone</option>
+        <option value="fixed">Naprawione</option>
+        <option value="false_positive">Fałszywe</option>
+      </select>
+    </label>
+
+    <label class="findings-list__search">
+      Filtruj
+      <input
+        type="text"
+        placeholder="typ / plik / CWE"
+        [ngModel]="textFilter()"
+        (ngModelChange)="textFilter.set($event)"
+      />
+    </label>
+  </div>
+
+  @if (filtered().length === 0) {
+    <p class="findings-list__empty">Brak podatności dla wybranych filtrów.</p>
+  } @else {
+    <table class="findings-list__table">
+      <caption class="visually-hidden">Lista podatności bezpieczeństwa</caption>
+      <thead>
+        <tr>
+          <th scope="col">Waga</th>
+          <th scope="col">Typ</th>
+          <th scope="col">Źródła</th>
+          <th scope="col">Plik</th>
+          <th scope="col">CWE</th>
+          <th scope="col">Pewność</th>
+          <th scope="col">Status</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (f of filtered(); track f.id) {
+          <tr>
+            <td>
+              <span class="badge badge--sev-{{ f.severity }}">{{
+                f.severity
+              }}</span>
+            </td>
+            <td>{{ f.vulnerabilityType }}</td>
+            <td class="findings-list__sources">
+              @for (s of sources(f); track s) {
+                <mat-icon [title]="s">{{ sourceIcon(s) }}</mat-icon>
+              }
+            </td>
+            <td class="findings-list__file">{{ f.filePath || "—" }}</td>
+            <td>{{ f.cweId || "—" }}</td>
+            <td>{{ (f.confidence * 100).toFixed(0) }}%</td>
+            <td>{{ f.status }}</td>
+            <td>
+              @if (projectId()) {
+                <button
+                  type="button"
+                  class="findings-list__detail-btn"
+                  (click)="toggleDetail(f.id)"
+                  [title]="
+                    selectedFindingId() === f.id
+                      ? 'Ukryj rekomendację'
+                      : 'Pokaż rekomendację'
+                  "
+                >
+                  <mat-icon>{{
+                    selectedFindingId() === f.id ? "expand_less" : "auto_fix_high"
+                  }}</mat-icon>
+                </button>
+              }
+            </td>
+          </tr>
+          @if (projectId() && selectedFindingId() === f.id) {
+            <tr class="findings-list__detail-row">
+              <td colspan="8">
+                <app-finding-detail [projectId]="projectId()!" [finding]="f" />
+                @if (supportsPoc(f)) {
+                  <app-poc-viewer [projectId]="projectId()!" [finding]="f" />
+                }
+                @if (supportsPatch(f)) {
+                  <app-patch-preview [projectId]="projectId()!" [finding]="f" />
+                }
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  }
+</div>

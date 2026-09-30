@@ -1,0 +1,41 @@
+@startuml c4-component-m5
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title TestGEN — C4 Level 3: Moduł M5 — Generowanie testów
+
+Container_Boundary(m5, "Moduł generowania testów (M5)") {
+    Component(tc_gen, "Test Case Generator", "Python", "Generuje przypadki testowe\nna podstawie wyników analizy")
+    Component(native_gen, "Native Generator", "Python + Jinja2", "Szablonowe generowanie\nprzypadków (deterministyczne)")
+    Component(llm_gen, "LLM Generator", "Python + LLM API", "Semantyczne generowanie\nprzypadków testowych (AI)")
+    Component(priority, "Prioritizer", "Python", "Priorytetyzacja testów:\nkrytyczny / wysoki / średni / niski")
+    Component(gherkin, "Gherkin / BDD", "Python", "Generowanie scenariuszy\nGiven-When-Then")
+    Component(codegen, "Code Generator", "Python + Jinja2", "Generowanie kodu testowego\nper framework")
+    Component(pytest_gen, "pytest Generator", "Jinja2 template", "Szablony pytest")
+    Component(junit_gen, "JUnit 5 Generator", "Jinja2 template", "Szablony JUnit 5")
+    Component(playwright_gen, "Playwright Generator", "Jinja2 template", "Szablony Playwright")
+    Component(cypress_gen, "Cypress Generator", "Jinja2 template", "Szablony Cypress")
+    Component(selenium_gen, "Selenium Generator", "Jinja2 template", "Szablony Selenium")
+    Component(sikulix_gen, "SikuliX Generator", "Jinja2 + visual pipeline", "Szablony SikuliX\n(testy GUI desktop)")
+}
+
+ContainerDb(postgres, "PostgreSQL", "")
+System_Ext(llm_ext, "API LLM", "")
+
+Rel(tc_gen, native_gen, "Tryb native", "")
+Rel(tc_gen, llm_gen, "Tryb LLM", "")
+Rel(llm_gen, llm_ext, "API call", "HTTPS")
+Rel(native_gen, priority, "Przypadki", "")
+Rel(llm_gen, priority, "Przypadki", "")
+Rel(priority, postgres, "Zapis test case'ów", "SQL")
+Rel(tc_gen, gherkin, "BDD flow", "")
+Rel(priority, codegen, "Zatwierdzone testy", "")
+Rel(codegen, pytest_gen, "Python", "")
+Rel(codegen, junit_gen, "Java", "")
+Rel(codegen, playwright_gen, "E2E Web", "")
+Rel(codegen, cypress_gen, "E2E Web", "")
+Rel(codegen, selenium_gen, "E2E Web", "")
+Rel(codegen, sikulix_gen, "Desktop GUI", "")
+
+@enduml

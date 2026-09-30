@@ -1,0 +1,12 @@
+{
+  "diagram_type": "activity",
+  "format": "svg",
+  "description": "Diagram czynności (SVG): Start -> decyzja (valid?) -> Process/Stop z fragmentem decyzji. Ścieżka wizualna parse_svg.",
+  "expected_participants_count": 0,
+  "expected_elements_count": 4,
+  "expected_relationships_count": 4,
+  "expected_fragments_count": 1,
+  "expected_flows_count": 0,
+  "expected_source": "ocr",
+  "expected_element_names": ["Start", "valid?", "Process", "Stop"]
+}

@@ -1,0 +1,10 @@
+{
+  "category": "kubernetes",
+  "config_type": "kubernetes",
+  "description": "Kubernetes misconfiguration golden samples (Story 4.14).",
+  "samples": [
+    { "file": "deployment_no_limits.yaml", "expected_rules": ["NO_RESOURCE_LIMITS"] },
+    { "file": "pod_privileged.yaml", "expected_rules": ["PRIVILEGED_CONTAINER"] },
+    { "file": "deployment_host_network.yaml", "expected_rules": ["HOST_NETWORK"] }
+  ]
+}

@@ -1,0 +1,22 @@
+@startuml
+' Golden sample: login sequence diagram (Story 3.1)
+actor User
+participant "Web App" as App
+participant "Auth API" as Api
+participant Database as DB
+
+User -> App: enter credentials
+activate App
+App -> Api: POST /login
+activate Api
+Api -> DB: SELECT user
+DB --> Api: user row
+alt valid password
+    Api --> App: 200 token
+else invalid password
+    Api --> App: 401 unauthorized
+end
+deactivate Api
+App --> User: show result
+deactivate App
+@enduml

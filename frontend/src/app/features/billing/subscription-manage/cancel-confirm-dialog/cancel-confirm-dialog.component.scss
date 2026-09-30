@@ -1,0 +1,53 @@
+mat-dialog-content {
+  p {
+    margin: 0 0 0.75rem;
+    line-height: 1.5;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+}
+
+.lost-label {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mat-sys-on-surface-variant, #5f6368);
+}
+
+.lost-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface-variant, #5f6368);
+  }
+
+  mat-icon {
+    flex-shrink: 0;
+    color: var(--mat-sys-error, #b3261e);
+  }
+}
+
+.hint {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-surface-variant, #5f6368);
+}
+
+.dialog-error {
+  margin-top: 0.75rem;
+  color: var(--mat-sys-error, #b3261e);
+  font-size: 0.875rem;
+}

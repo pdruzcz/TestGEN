@@ -1,0 +1,347 @@
+// Story 6.10 (AC1/AC2/AC5) — tryb wysokiego kontrastu.
+// Paleta czarno-biała z akcentami: tekst minimum 7:1 (AAA),
+// elementy UI minimum 4.5:1.
+//
+// Aktywacja: klasa `high-contrast` na <body> (ThemeService — toolbar,
+// localStorage lub systemowe `prefers-contrast: more`).
+
+// Kolory trybu wysokiego kontrastu (kontrast na białym #ffffff):
+$hc-text: #000000; // 21:1
+$hc-background: #ffffff;
+$hc-surface: #ffffff;
+$hc-border: #000000; // 21:1
+$hc-action: #001a99; // 14.3:1 — linki/akcje
+$hc-error: #740006; // 12.4:1
+$hc-success: #0d3d1c; // 12.7:1
+$hc-warning: #4d2e00; // 11.7:1
+$hc-focus: #000000; // 21:1
+$hc-disabled: #595959; // 7:1 — minimum AAA dla tekstu
+
+@mixin high-contrast-theme {
+  body.high-contrast {
+    background: $hc-background;
+    color: $hc-text;
+
+    // --- Tekst: wymuszenie 7:1+ (AAA) ---
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    span,
+    td,
+    th,
+    li,
+    label,
+    legend,
+    caption:not(.visually-hidden),
+    .mat-mdc-form-field,
+    .mat-mdc-cell,
+    .mat-mdc-header-cell {
+      color: $hc-text !important;
+    }
+
+    a,
+    a:visited,
+    .mat-mdc-button:not([disabled]) {
+      color: $hc-action !important;
+      text-decoration: underline;
+    }
+
+    // --- Powierzchnie i obramowania: widoczne granice elementów ---
+    .mat-mdc-card,
+    .mat-mdc-dialog-surface,
+    .mat-mdc-table,
+    table,
+    input,
+    select,
+    textarea {
+      background: $hc-surface !important;
+      color: $hc-text !important;
+      border-color: $hc-border !important;
+    }
+
+    input,
+    select,
+    textarea {
+      border: 2px solid $hc-border !important;
+    }
+
+    // --- Przyciski: pełny kontrast + wyraźna granica ---
+    .mat-mdc-raised-button:not([disabled]),
+    .mat-mdc-unelevated-button:not([disabled]),
+    button[mat-flat-button]:not([disabled]) {
+      background: $hc-text !important;
+      color: $hc-background !important;
+      border: 2px solid $hc-border !important;
+    }
+
+    // Etykieta przycisku to <span class="mdc-button__label"> — globalna
+    // reguła `span { color: $hc-text }` wymusiłaby czerń na czarnym tle
+    // przycisku (niewidoczny tekst). Wnętrze wypełnionych przycisków musi
+    // pozostać białe (kontrast 21:1).
+    .mat-mdc-raised-button:not([disabled]) span,
+    .mat-mdc-unelevated-button:not([disabled]) span,
+    button[mat-flat-button]:not([disabled]) span,
+    .mat-mdc-raised-button:not([disabled]) mat-icon,
+    .mat-mdc-unelevated-button:not([disabled]) mat-icon,
+    button[mat-flat-button]:not([disabled]) mat-icon {
+      color: $hc-background !important;
+    }
+
+    .mat-mdc-outlined-button:not([disabled]),
+    .mat-mdc-icon-button:not([disabled]) {
+      color: $hc-text !important;
+      border-color: $hc-border !important;
+    }
+
+    button:disabled,
+    .mat-mdc-button-base[disabled] {
+      color: $hc-disabled !important;
+    }
+
+    // Snackbar ma domyślnie ciemną powierzchnię — wymuszona czarna
+    // czcionka (reguła `span`) byłaby niewidoczna. W trybie HC snackbar
+    // przechodzi na białą powierzchnię z czarną ramką.
+    .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+      background: $hc-surface !important;
+      border: 2px solid $hc-border !important;
+    }
+
+    .mat-mdc-snack-bar-container .mdc-snackbar__label {
+      color: $hc-text !important;
+    }
+
+    // --- Statusy ---
+    .error-banner,
+    .mat-mdc-form-field-error,
+    mat-error {
+      color: $hc-error !important;
+    }
+
+    // --- Pasek dostępności (accessibility-toolbar): własne powierzchnie.
+    //     Globalna reguła `span { color: $hc-text }` wymuszałaby czarny
+    //     napis na ciemnym tle stanu .active (paleta zwykła #1f2933) —
+    //     stan aktywny musi być czarną powierzchnią z białym tekstem (21:1).
+    .a11y-toggle {
+      background: $hc-surface !important;
+      border-color: $hc-border !important;
+      color: $hc-text !important;
+    }
+
+    .a11y-toggle mat-icon {
+      color: $hc-text !important;
+    }
+
+    .a11y-panel {
+      background: $hc-surface !important;
+      border-color: $hc-border !important;
+    }
+
+    .a11y-btn {
+      background: $hc-surface !important;
+      border-color: $hc-border !important;
+      color: $hc-text !important;
+    }
+
+    .a11y-btn span,
+    .a11y-btn mat-icon {
+      color: $hc-text !important;
+    }
+
+    .a11y-btn.active {
+      background: $hc-text !important;
+      color: $hc-background !important;
+      border-color: $hc-border !important;
+    }
+
+    .a11y-btn.active span,
+    .a11y-btn.active mat-icon {
+      color: $hc-background !important;
+    }
+
+    // --- Navbar: pigułki nawigacji.
+    //     Globalna reguła `a { color: $hc-action }` dawała #001a99 na tle
+    //     aktywnej pigułki #1976d2 (kontrast ~1.8:1 — poniżej AA). W HC:
+    //     pigułki czarne na białym, aktywna = czarne tło + biały tekst (21:1),
+    //     hover z czarną ramką (zamiast szarego wypełnienia).
+    //     UWAGA specificity: `a:visited` z reguł globalnych to (0,2,2) —
+    //     wygrywałoby z pojedynczą klasą, dlatego selektory pigułek są
+    //     podwojone (.nav-pill.nav-active) i mają warianty :visited.
+    .nav-pill,
+    .nav-pill:visited {
+      color: $hc-text !important;
+    }
+
+    .nav-pill mat-icon {
+      color: $hc-text !important;
+    }
+
+    .nav-pill:hover {
+      background: $hc-surface !important;
+      outline: 2px solid $hc-border;
+    }
+
+    .nav-pill.nav-active,
+    .nav-pill.nav-active:visited {
+      background: $hc-text !important;
+      color: $hc-background !important;
+    }
+
+    .nav-pill.nav-active mat-icon,
+    .nav-pill.nav-active:visited mat-icon {
+      color: $hc-background !important;
+    }
+
+    .nav-pill.nav-active:hover,
+    .nav-pill.nav-active:visited:hover {
+      background: $hc-text !important;
+    }
+
+    .nav-avatar {
+      background: $hc-text !important;
+      color: $hc-background !important;
+      border: 2px solid $hc-border !important;
+    }
+
+    // --- Kafelki statystyk dashboardu (stat-card / stat-dark).
+    //     Globalna reguła `.mat-mdc-card { background: #fff }` wybiela także
+    //     ciemny wariant — jego biała ikona/label/wartość (paleta zwykła)
+    //     stają się niewidoczne. Wzorzec HC: wszystko czarne na białym;
+    //     niebieskie ikony (#1976d2) → czarne dla pełnej spójności trybu.
+    .stat-icon {
+      color: $hc-text !important;
+    }
+
+    .stat-dark .stat-icon,
+    .stat-dark .stat-label,
+    .stat-dark .stat-value {
+      color: $hc-text !important;
+    }
+
+    .plan-header mat-icon {
+      color: $hc-text !important;
+    }
+
+    .activity-dot {
+      background: $hc-text !important;
+    }
+
+    // --- Asystent AI (chatbot, Story 6.14): trigger i przycisk wysyłania
+    //     mają niebieskie tło z białą ikoną (paleta zwykła #0b57d0) — w HC
+    //     czarno-biało jak pozostałe przyciski akcyjne; panel i nagłówek
+    //     na białej powierzchni z czarnymi obramowaniami.
+    .chatbot-trigger {
+      background: $hc-text !important;
+      border-color: $hc-border !important;
+      color: $hc-background !important;
+    }
+
+    .chatbot-trigger mat-icon {
+      color: $hc-background !important;
+    }
+
+    .chatbot-panel {
+      background: $hc-surface !important;
+      border-color: $hc-border !important;
+    }
+
+    .chatbot-header {
+      background: $hc-surface !important;
+      border-bottom: 2px solid $hc-border !important;
+    }
+
+    .chatbot-title,
+    .chatbot-clear,
+    .chatbot-close {
+      color: $hc-text !important;
+    }
+
+    .chatbot-empty {
+      color: $hc-text !important;
+    }
+
+    .chat-input {
+      background: $hc-surface !important;
+      border-top: 2px solid $hc-border !important;
+    }
+
+    .chat-input__send {
+      background: $hc-text !important;
+      border-color: $hc-border !important;
+      color: $hc-background !important;
+    }
+
+    // --- Strefy uploadu (file-upload, project-files): chmurka, przerywana
+    //     ramka i stan drag z palety zwykłej (#1976d2/#e3f2fd) — w HC
+    //     czarno-biało (konwencja klas .drop-zone wspólna dla obu widoków).
+    .drop-zone {
+      background: $hc-surface !important;
+      border-color: $hc-border !important;
+    }
+
+    .drop-zone.drag-active {
+      background: $hc-surface !important;
+      border-color: $hc-border !important;
+    }
+
+    .drop-zone mat-icon,
+    .drop-icon,
+    .file-icon {
+      color: $hc-text !important;
+    }
+
+    .chat-message__avatar {
+      border-color: $hc-border !important;
+      color: $hc-text !important;
+    }
+
+    .chat-message__body {
+      background: $hc-surface !important;
+      border-color: $hc-border !important;
+      color: $hc-text !important;
+    }
+
+    .chat-ref {
+      color: $hc-action !important;
+    }
+
+    // --- Fokus: czarny, gruby outline (na białym tle 21:1) ---
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid $hc-focus !important;
+      outline-offset: 2px;
+    }
+
+    // --- AC5: wykresy — wzory czarne na białym (pattern fill widoczny
+    //     bez polegania na kolorze) ---
+    svg [class^="chart-color-"],
+    svg [class*=" chart-color-"] {
+      fill: $hc-text !important;
+      stroke: $hc-text !important;
+    }
+
+    svg pattern line,
+    svg pattern circle,
+    svg pattern path,
+    svg pattern rect {
+      stroke: $hc-text !important;
+      fill: $hc-text !important;
+    }
+  }
+
+  // AC2 — fallback czysto CSS: gdy system żąda wyższego kontrastu, a JS
+  // jeszcze nie zainicjalizował ThemeService (FOUC), media query wymusza
+  // podstawowy kontrast tekstu.
+  @media (prefers-contrast: more) {
+    body:not(.high-contrast) {
+      color: $hc-text;
+    }
+  }
+}

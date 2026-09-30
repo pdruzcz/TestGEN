@@ -1,0 +1,14 @@
+{
+  "description": "Zmieniono etykiete przycisku (Zaloguj -> Zaloguj sie) — zmiana tekstu (status MINOR_DIFF).",
+  "pixel_pct": 0.0,
+  "baseline_components": [
+    {"component_type": "input", "label": "Email", "bbox": {"x": 150, "y": 140, "width": 300, "height": 40}, "confidence": 0.9},
+    {"component_type": "button", "label": "Zaloguj", "bbox": {"x": 150, "y": 270, "width": 300, "height": 44}, "confidence": 0.95}
+  ],
+  "comparison_components": [
+    {"component_type": "input", "label": "Email", "bbox": {"x": 150, "y": 140, "width": 300, "height": 40}, "confidence": 0.9},
+    {"component_type": "button", "label": "Zaloguj sie", "bbox": {"x": 150, "y": 270, "width": 300, "height": 44}, "confidence": 0.95}
+  ],
+  "expected_status": "minor_diff",
+  "expected_change_types": ["text_change"]
+}

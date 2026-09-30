@@ -1,0 +1,6 @@
+# Golden misconfig fixture (Story 4.14) — unpinned :latest base image (CWE-1104).
+FROM node:latest
+RUN useradd -m app
+USER app
+HEALTHCHECK CMD curl -f http://localhost:3000/health || exit 1
+CMD ["node", "server.js"]

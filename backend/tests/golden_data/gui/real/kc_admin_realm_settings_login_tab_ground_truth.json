@@ -1,0 +1,150 @@
+{
+  "category": "real",
+  "description": "Keycloak 26.7.1 admin console (Apache-2.0) — Realm settings, zakładka Login (przełączona zakładka — stan interakcji): ciąg przełączników (User registration, Verify email, ...). Viewport 1280x800.",
+  "expected_component_count": 13,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar (Clients/Users/Sessions/...)",
+      "bbox": {
+        "x": 0,
+        "y": 80,
+        "width": 256,
+        "height": 720
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Masthead: user toggle (golden-admin)",
+      "bbox": {
+        "x": 1150,
+        "y": 22,
+        "width": 122,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "tab",
+      "label": "Zakładki (Login aktywna — przełączona zakładka)",
+      "bbox": {
+        "x": 276,
+        "y": 188,
+        "width": 520,
+        "height": 32
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "form",
+      "label": "Realm settings (Login)",
+      "bbox": {
+        "x": 276,
+        "y": 240,
+        "width": 992,
+        "height": 470
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "checkbox",
+      "label": "User registration (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 262,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "checkbox",
+      "label": "Verify email (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 306,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "checkbox",
+      "label": "Login with email (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 350,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "checkbox",
+      "label": "Duplicate emails (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 394,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "checkbox",
+      "label": "Forgot password (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 438,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "checkbox",
+      "label": "Remember me (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 482,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "checkbox",
+      "label": "Email as username (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 526,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "checkbox",
+      "label": "Permanent lockout (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 570,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "Save",
+      "bbox": {
+        "x": 1148,
+        "y": 716,
+        "width": 120,
+        "height": 40
+      },
+      "confidence": 0.85
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+<section class="security-report">
+  <div class="security-report__head">
+    <h2>Raport bezpieczeństwa</h2>
+    <button
+      mat-stroked-button
+      (click)="load()"
+      [disabled]="isLoading()"
+    >
+      <mat-icon>summarize</mat-icon>
+      Generuj raport zagregowany
+    </button>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="security-report__error">{{ errorMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <mat-spinner diameter="32" aria-label="Ładowanie"></mat-spinner>
+  } @else if (report()) {
+    <div class="security-report__cards">
+      @for (card of severityCards(); track card.key) {
+        <mat-card class="security-report__card security-report__card--{{ card.key }}">
+          <div class="security-report__card-value">{{ card.value }}</div>
+          <div class="security-report__card-label">{{ card.label }}</div>
+        </mat-card>
+      }
+    </div>
+
+    <div class="security-report__meta">
+      <span>Łącznie: {{ report()!.summary.totalFindings }}</span>
+      <span>Zdeduplikowane: {{ report()!.dedupCount }}</span>
+      <span>Korelacje SAST↔DAST: {{ report()!.correlationCount }}</span>
+    </div>
+
+    <app-findings-list [findings]="report()!.findings" [projectId]="projectId()" />
+
+    <app-patches-list [projectId]="projectId()" />
+  }
+</section>

@@ -1,0 +1,17 @@
+# Przykładowa konfiguracja CLI TestGEN — skopiuj do .testgen.yaml
+# i zatwierdź w repozytorium (bez klucza API!).
+
+project_id: 11111111-1111-1111-1111-111111111111
+api_url: https://api.testgen.io
+
+engine_mode: native          # native | llm | hybrid
+default_framework: pytest
+severity_threshold: critical # próg, przy którym CLI kończy się kodem 1
+
+# Klucz API trzymaj w zmiennej TESTGEN_API_KEY, nie tutaj —
+# plik .testgen.yaml trafia do repozytorium.
+# api_key: tgn_...
+
+exclude:
+  - "dane_testowe/*"
+  - "*.snapshot.json"

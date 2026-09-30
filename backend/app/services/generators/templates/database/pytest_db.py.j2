@@ -1,0 +1,57 @@
+{# ── Szablon kodu testowego warstwy danych (pytest + db_session, rollback) ──
+   Story 1.53 (FR70). Każdy test izolowany transakcją rollback — bez zapisu
+   do bazy produkcyjnej. Ciała testów oparte na surowym SQL (sqlalchemy.text),
+   samodzielne i kompilowalne (py_compile). #}
+# -*- coding: utf-8 -*-
+"""{{ module_name }} — testy warstwy danych.
+
+Wygenerowano automatycznie przez TestGEN — generator testów bazodanowych
+(Story 1.53, FR70). Izolacja: transakcja ``rollback`` po każdym teście —
+**bez zapisu do bazy produkcyjnej**. Uruchom na dedykowanej bazie testowej.
+Nie modyfikuj ręcznie; zmiany zostaną nadpisane przy kolejnej generacji.
+"""
+
+import pytest
+from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
+
+{% for imp in imports %}
+{{ imp }}
+{% endfor %}
+
+{% if needs_db_session %}
+
+@pytest.fixture
+def db_session():
+    """Sesja testowa z izolacją transakcyjną (rollback po każdym teście).
+
+    Placeholder — podłącz dedykowaną bazę testową (np. testowy schemat PG
+    lub ``sqlite:///:memory:`` z zaaplikowanym schematem projektu).
+    """
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+
+    engine = create_engine("sqlite:///:memory:")  # TODO: testowa bada projektu
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    try:
+        yield session
+    finally:
+        session.rollback()
+        session.close()
+{% endif %}
+
+{% for fn in test_functions %}
+
+{{ fn.body }}
+{% endfor %}
+{% if not test_functions %}
+# Brak przypadków testowych warstwy danych do wygenerowania.
+{% endif %}
+{% if security_notes %}
+
+# ── Bezpieczeństwo (AC12) — potencjalne SQLi, delegowane do modułu 4.2/4.3 ──
+{% for note in security_notes %}
+# {{ note }}
+{% endfor %}
+{% endif %}

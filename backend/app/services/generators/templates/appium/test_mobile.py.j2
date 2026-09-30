@@ -1,0 +1,109 @@
+{# ── Szablon Appium Mobile Test — Python ── Story 1.42 ── #}
+{# ── Makro: render_locator ── Generuje lokator elementu ── #}
+{% macro render_locator(locator) -%}
+_{{ locator.name }} = ({{ locator.code }})
+{%- endmacro %}
+
+
+{# ── Makro: render_wait ── Generuje explicit wait ── #}
+{% macro render_wait(wait_spec) -%}
+{{ wait_spec.code }}
+{%- endmacro %}
+
+
+{# ── Makro: render_assertion ── Generuje asercje ── #}
+{% macro render_assertion(assertion) -%}
+{{ assertion.code }}
+{%- endmacro %}
+
+
+{# ── Importy Appium ── #}
+{% for imp in imports %}
+{{ imp }}
+{% endfor %}
+
+"""
+Testy mobilne Appium — {{ module_name }} — platforma {{ platform }}.
+
+Wygenerowano automatycznie przez TestGEN - silnik natywny (Appium).
+Nie modyfikuj recznie; zmiany zostana nadpisane przy kolejnej generacji.
+"""
+
+
+{% for pom in page_objects %}
+class {{ pom.class_name }}:
+    """Ekran: {{ pom.page_name }}."""
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.wait = WebDriverWait(driver, 10)
+
+    {% for locator in pom.locators %}
+    {{ render_locator(locator) }}
+    {% endfor %}
+
+    {% for method in pom.methods %}
+    def {{ method.name }}(self{{ method.params }}):
+        {% for action in method.actions %}
+        {{ action.code }}
+        {% endfor %}
+
+    {% endfor %}
+
+{% endfor %}
+class {{ test_class_name }}:
+    """Testy mobilne: {{ module_name }} — platforma {{ platform }}."""
+
+    def setup_method(self):
+        """Konfiguracja drivera Appium."""
+        desired_caps = {
+        {% for key, value in desired_caps.items() %}
+            "{{ key }}": "{{ value }}",
+        {% endfor %}
+        }
+        self.driver = webdriver.Remote("http://localhost:4723/wd/hub", desired_caps)
+        self.wait = WebDriverWait(self.driver, 10)
+
+    def teardown_method(self):
+        """Zamknij driver Appium."""
+        self.driver.quit()
+
+    {% if has_webview %}
+    def _switch_to_webview(self):
+        """Przelacz na kontekst WEBVIEW."""
+        contexts = self.driver.contexts
+        webview = [c for c in contexts if "WEBVIEW" in c]
+        if webview:
+            self.driver.switch_to.context(webview[0])
+
+    def _switch_to_native(self):
+        """Przelacz na kontekst NATIVE_APP."""
+        self.driver.switch_to.context("NATIVE_APP")
+
+    {% endif %}
+    {% for test in test_methods %}
+    def {{ test.name }}(self):
+        """Test: {{ test.scenario }}."""
+        {% if test.url %}
+        self.driver.get("{{ test.url }}")
+        {% endif %}
+        {% for wait in test.waits %}
+        {{ render_wait(wait) }}
+        {% endfor %}
+        {% for step in test.steps %}
+        {# ── Krok: {{ step.description }} ── #}
+        {% if step.gesture_code %}
+        {{ step.gesture_code }}
+        {% endif %}
+        {% if step.action_code %}
+        {{ step.action_code }}
+        {% endif %}
+        {% endfor %}
+        {% for assertion in test.assertions %}
+        {{ render_assertion(assertion) }}
+        {% endfor %}
+        {% if not test.steps and not test.assertions %}
+        pass  # TODO: dodaj kroki testowe i asercje
+        {% endif %}
+
+    {% endfor %}

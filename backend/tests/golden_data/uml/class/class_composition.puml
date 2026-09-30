@@ -1,0 +1,15 @@
+@startuml
+class Order {
+  +id: int
+  +total: decimal
+}
+class OrderItem {
+  +quantity: int
+  +price: decimal
+}
+class Product {
+  +name: string
+}
+Order "1" *-- "many" OrderItem
+OrderItem --> Product
+@enduml

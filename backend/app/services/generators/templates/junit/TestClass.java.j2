@@ -1,0 +1,165 @@
+{# ── Makro: render_assertion ── Mapuje comparison_type na asercje JUnit 5 ── #}
+{% macro render_assertion(assertion) -%}
+{%- if assertion.comparison_type == "equals" %}
+        assertEquals({{ assertion.expected }}, {{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "not_equals" %}
+        assertNotEquals({{ assertion.expected }}, {{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "contains" %}
+        assertTrue({{ assertion.actual }}.contains({{ assertion.expected }}){% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "not_contains" %}
+        assertFalse({{ assertion.actual }}.contains({{ assertion.expected }}){% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "throws" %}
+        assertThrows({{ assertion.expected }}.class{% if assertion.message %}, "{{ assertion.message }}"{% endif %}, () -> {
+            {{ assertion.actual }};
+        });
+{%- elif assertion.comparison_type == "approx" %}
+        assertEquals({{ assertion.expected }}, {{ assertion.actual }}, 0.0001{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "is_none" %}
+        assertNull({{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "is_not_none" %}
+        assertNotNull({{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "is_instance" %}
+        assertInstanceOf({{ assertion.expected }}.class, {{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "is_true" %}
+        assertTrue({{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "is_false" %}
+        assertFalse({{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "greater_than" %}
+        assertTrue({{ assertion.actual }} > {{ assertion.expected }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "less_than" %}
+        assertTrue({{ assertion.actual }} < {{ assertion.expected }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "has_length" %}
+        assertEquals({{ assertion.expected }}, {{ assertion.actual }}.length(){% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- else %}
+        assertEquals({{ assertion.expected }}, {{ assertion.actual }}); // nieznany comparison_type: {{ assertion.comparison_type }}
+{%- endif %}
+{%- endmacro %}
+
+
+{# ── Makro: render_mock_field ── Generuje pole @Mock ── #}
+{% macro render_mock_field(mock) -%}
+    @Mock
+    private {{ mock.type }} {{ mock.name }};
+{%- endmacro %}
+
+
+{# ── Makro: render_parameterized_test ── Generuje @ParameterizedTest z @CsvSource ── #}
+{% macro render_csv_source(values) -%}
+    @ParameterizedTest
+    @CsvSource({
+{% for params in values %}
+        "{{ params }}"{% if not loop.last %},{% endif %}
+
+{% endfor %}
+    })
+{%- endmacro %}
+
+
+{# ── Makro: render_test_method ── Generuje kompletna metode testowa ── #}
+{% macro render_test_method(test) -%}
+{% if test.parameterized %}
+    @ParameterizedTest
+{% if test.csv_source %}
+    @CsvSource({
+{% for params in test.csv_source %}
+        "{{ params }}"{% if not loop.last %},{% endif %}
+
+{% endfor %}
+    })
+{% elif test.method_source %}
+    @MethodSource("{{ test.method_source }}")
+{% endif %}
+{% else %}
+    @Test
+{% endif %}
+{% if test.display_name %}
+    @DisplayName("{{ test.display_name }}")
+{% endif %}
+    void {{ test.name }}({% if test.parameters %}{% for p in test.parameters %}{{ p.type }} {{ p.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}) {
+{% if test.mock_stubbing %}
+{% for stub in test.mock_stubbing %}
+        {{ stub.code }}
+{% endfor %}
+{% endif %}
+{% if test.steps %}
+{% for step in test.steps %}
+        {{ step.code }}
+{% endfor %}
+{% endif %}
+{% if test.assertions %}
+{% for assertion in test.assertions %}
+{{ render_assertion(assertion) }}
+{% endfor %}
+{% endif %}
+{% if not test.steps and not test.assertions %}
+        // TODO: dodaj kroki testowe i asercje
+{% endif %}
+    }
+
+{%- endmacro %}
+
+
+package {{ package_name }};
+
+{% for imp in imports %}
+{{ imp }}
+{% endfor %}
+
+/**
+ * Testy klasy {{ tested_class }}.
+ *
+ * Wygenerowano automatycznie przez TestGEN - silnik natywny (JUnit 5).
+ * Nie modyfikuj recznie; zmiany zostana nadpisane przy kolejnej generacji.
+ */
+public class {{ test_class_name }} {
+
+{% if mocks %}
+    // ── Mocki ──
+{% for mock in mocks %}
+    {{ render_mock_field(mock) }}
+{% endfor %}
+
+    @InjectMocks
+    private {{ tested_class }} {{ tested_class_instance }};
+
+{% endif %}
+{% if has_lifecycle %}
+    @BeforeEach
+    void setUp() {
+{% if mocks %}
+        MockitoAnnotations.openMocks(this);
+{% endif %}
+{% for step in setup_steps %}
+        {{ step.code }}
+{% endfor %}
+    }
+
+{% if has_teardown %}
+
+    @AfterEach
+    void tearDown() {
+{% for step in teardown_steps %}
+        {{ step.code }}
+{% endfor %}
+    }
+
+{% endif %}
+{% endif %}
+{% if method_sources %}
+{% for ms in method_sources %}
+    private static Stream<{{ ms.return_type }}> {{ ms.name }}() {
+        return Stream.of(
+{% for args in ms.args %}
+            {{ args }}{% if not loop.last %},{% endif %}
+
+{% endfor %}
+        );
+    }
+
+{% endfor %}
+{% endif %}
+{% for test in test_methods %}
+{{ render_test_method(test) }}
+
+{% endfor %}
+}

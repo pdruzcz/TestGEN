@@ -1,0 +1,72 @@
+<div class="patches-list">
+  <div class="patches-list__head">
+    <h3>Poprawki bezpieczeństwa</h3>
+    <div class="patches-list__actions">
+      <button mat-flat-button color="primary" (click)="generate()" [disabled]="isLoading()">
+        <mat-icon>build</mat-icon>
+        Generuj poprawki
+      </button>
+      @if (result()) {
+        <button mat-stroked-button (click)="downloadAll()">
+          <mat-icon>download</mat-icon>
+          Pobierz wszystkie
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="patches-list__error">{{ errorMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <mat-spinner diameter="28" aria-label="Ładowanie"></mat-spinner>
+  } @else if (result(); as r) {
+    @if (conflicts().length > 0) {
+      <div class="patches-list__conflicts">
+        <mat-icon>warning</mat-icon>
+        Wykryto {{ conflicts().length }} konflikt(ów) patchy (nakładające się linie) —
+        zastosuj pojedynczo.
+      </div>
+    }
+
+    @for (group of groups(); track group.filePath) {
+      <div class="patches-list__file">
+        <h4>{{ group.filePath }}</h4>
+        <table class="patches-list__table">
+          <caption class="visually-hidden">Lista patchy bezpieczeństwa dla pliku</caption>
+          <tbody>
+            @for (patch of group.patches; track patch.findingId) {
+              <tr>
+                <td class="patches-list__name">{{ patch.patchFilename }}</td>
+                <td>
+                  @if (patch.isValid) {
+                    <span class="patches-list__badge patches-list__badge--ok">Poprawny</span>
+                  } @else {
+                    <span class="patches-list__badge patches-list__badge--invalid">Sprawdź ręcznie</span>
+                  }
+                  @if (conflictCount(patch) > 0) {
+                    <span class="patches-list__badge patches-list__badge--conflict">
+                      Konflikt patchy
+                    </span>
+                  }
+                </td>
+                <td>
+                  <button mat-stroked-button (click)="download(patch)">
+                    <mat-icon>download</mat-icon>
+                    Zastosuj pojedynczo
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  } @else {
+    <p class="patches-list__hint">
+      Kliknij „Generuj poprawki”, aby utworzyć pliki .patch dla wszystkich podatności
+      i pobrać je zbiorczo.
+    </p>
+  }
+</div>

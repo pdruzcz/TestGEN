@@ -1,0 +1,30 @@
+.section-label {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #616161;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.radio-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.export-count {
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+.mapping-toggle {
+  margin-bottom: 8px;
+}
+
+.btn-spinner {
+  display: inline-block;
+  margin-right: 6px;
+}

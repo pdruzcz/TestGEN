@@ -1,0 +1,9 @@
+{
+  "diagram_type": "use_case",
+  "description": "Aktorzy Guest/Member i przypadki uzycia (Browse/Buy/Register).",
+  "expected_participants_count": 2,
+  "expected_elements_count": 3,
+  "expected_relationships_count": 4,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 3
+}

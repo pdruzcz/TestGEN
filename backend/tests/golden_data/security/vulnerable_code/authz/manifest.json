@@ -1,0 +1,27 @@
+{
+  "category": "authz",
+  "description": "Broken access control golden samples: IDOR and missing auth checks (Story 4.14).",
+  "samples": [
+    {
+      "file": "authz_idor_python.py",
+      "language": "python",
+      "vulnerability_type": "idor",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "idor", "cwe_id": "CWE-639", "severity": "high" }]
+    },
+    {
+      "file": "authz_missing_python.py",
+      "language": "python",
+      "vulnerability_type": "broken_authz",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "broken_authz", "cwe_id": "CWE-862", "severity": "high" }]
+    },
+    {
+      "file": "authz_idor_java.java",
+      "language": "java",
+      "vulnerability_type": "idor",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "idor", "cwe_id": "CWE-639", "severity": "high" }]
+    }
+  ]
+}

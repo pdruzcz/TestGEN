@@ -1,0 +1,84 @@
+<h2 mat-dialog-title>
+  Zmiana planu na {{ data.targetPlan.displayName }}
+</h2>
+
+<mat-dialog-content>
+  @if (loading()) {
+    <div class="dialog-state" role="status" aria-live="polite">
+      <mat-spinner [diameter]="32" />
+      <p>Wyliczanie kwoty…</p>
+    </div>
+  } @else if (proration(); as p) {
+    @if (p.changeType === "upgrade") {
+      <p>
+        Przechodzisz z planu
+        <b>{{ data.currentPlan.displayName }}</b> na
+        <b>{{ data.targetPlan.displayName }}</b> — zmiana nastąpi
+        <b>natychmiast po opłaceniu</b>.
+      </p>
+      <dl class="proration-details">
+        <dt>Kwota do zapłaty teraz (proporcjonalnie)</dt>
+        <dd>
+          <b>{{ p.amount }} {{ p.currency }}</b>
+          za pozostałe {{ p.remainingDays }} z {{ p.periodDays }} dni okresu
+        </dd>
+        <dt>Od kolejnego cyklu</dt>
+        <dd>{{ p.fullPrice }} {{ p.currency }} / mies.</dd>
+      </dl>
+      @if (p.amount === "0.00") {
+        <p class="note">
+          Kwota 0,00 — plan zostanie zmieniony od razu, bez obciążenia; pełna
+          stawka od kolejnego cyklu.
+        </p>
+      }
+    } @else {
+      <p>
+        Obniżasz plan z <b>{{ data.currentPlan.displayName }}</b> na
+        <b>{{ data.targetPlan.displayName }}</b>.
+      </p>
+      <p class="warning" role="alert">
+        Zmiana będzie efektywna
+        <b>na koniec bieżącego okresu rozliczeniowego</b>
+        @if (p.nextChargeAt) {
+          ({{ p.nextChargeAt.slice(0, 10) }})
+        }
+        — do tego czasu zachowujesz obecne limity. Bez zwrotu za bieżący
+        okres; kolejne obciążenia zostają wstrzymane.
+      </p>
+      @if (lostFeatures().length > 0) {
+        <p><b>Po zmianie utracisz:</b></p>
+        <ul class="lost-features">
+          @for (item of lostFeatures(); track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      }
+      <p class="note">
+        Do końca okresu możesz zrezygnować z tej zmiany w panelu billingowym.
+      </p>
+    }
+  }
+
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="cancel()" [disabled]="submitting()">
+    Anuluj
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="confirm()"
+    [disabled]="loading() || submitting() || !proration()"
+  >
+    @if (submitting()) {
+      Przetwarzanie…
+    } @else {
+      Potwierdź
+    }
+  </button>
+</mat-dialog-actions>

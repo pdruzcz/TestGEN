@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>Anulować subskrypcję {{ data.planDisplayName }}?</h2>
+
+<mat-dialog-content>
+  <p class="lead">
+    Subskrypcja pozostaje aktywna do
+    <strong>{{ expiryDate() }}</strong> — do końca opłaconego okresu zachowujesz
+    pełny dostęp do funkcji planu.
+  </p>
+  <p>
+    Po zakończeniu okresu konto wróci automatycznie do planu
+    <strong>{{ effectivePlan() }}</strong
+    >.
+  </p>
+
+  @if (lostFeatures().length > 0) {
+    <p class="lost-label">Co tracisz po zmianie planu:</p>
+    <ul class="lost-list">
+      @for (feature of lostFeatures(); track feature) {
+        <li>
+          <mat-icon aria-hidden="true">cancel</mat-icon>
+          {{ feature }}
+        </li>
+      }
+    </ul>
+  }
+
+  <p class="hint">
+    Anulowanie możesz cofnąć — przycisk „Reaktywuj subskrypcję" będzie dostępny
+    do końca bieżącego okresu.
+  </p>
+
+  @if (error()) {
+    <p class="dialog-error" role="alert">{{ error() }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-button
+    type="button"
+    cdkFocusInitial
+    [disabled]="submitting()"
+    (click)="cancel()"
+  >
+    Wróć
+  </button>
+  <button
+    mat-flat-button
+    color="warn"
+    type="button"
+    [disabled]="submitting()"
+    (click)="confirm()"
+  >
+    {{ submitting() ? "Anulowanie…" : "Potwierdź anulowanie" }}
+  </button>
+</mat-dialog-actions>

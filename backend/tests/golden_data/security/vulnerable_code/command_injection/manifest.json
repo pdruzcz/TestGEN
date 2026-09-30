@@ -1,0 +1,27 @@
+{
+  "category": "command_injection",
+  "description": "Command injection golden samples: os.system, subprocess shell=True, child_process.exec (Story 4.14).",
+  "samples": [
+    {
+      "file": "cmdi_os_system_python.py",
+      "language": "python",
+      "vulnerability_type": "command_injection",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "command_injection", "cwe_id": "CWE-78", "severity": "critical" }]
+    },
+    {
+      "file": "cmdi_subprocess_python.py",
+      "language": "python",
+      "vulnerability_type": "command_injection",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "command_injection", "cwe_id": "CWE-78", "severity": "critical" }]
+    },
+    {
+      "file": "cmdi_child_process_javascript.js",
+      "language": "javascript",
+      "vulnerability_type": "command_injection",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "command_injection", "cwe_id": "CWE-78", "severity": "critical" }]
+    }
+  ]
+}

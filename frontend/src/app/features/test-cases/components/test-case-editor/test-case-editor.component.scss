@@ -1,0 +1,95 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #f7f8fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.editor-row {
+  display: flex;
+  gap: 12px;
+}
+
+.title-field {
+  flex: 1;
+}
+
+.small-field {
+  width: 180px;
+}
+
+.full-field {
+  width: 100%;
+}
+
+.steps-section {
+  margin-bottom: 16px;
+}
+
+.steps-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.steps-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.steps-empty {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 8px;
+}
+
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.step-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.step-row.cdk-drag-preview {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.drag-handle {
+  color: #9ca3af;
+  cursor: grab;
+}
+
+.step-number {
+  font-size: 13px;
+  color: #6b7280;
+  min-width: 20px;
+}
+
+.step-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 8px 4px;
+  background: transparent;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

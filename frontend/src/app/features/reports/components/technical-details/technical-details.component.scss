@@ -1,0 +1,154 @@
+:host {
+  display: block;
+}
+
+.report-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #263238;
+
+  mat-icon {
+    color: #1565c0;
+  }
+}
+
+.finding {
+  border: 1px solid #e0e0e0;
+  border-left-width: 4px;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+
+  &.sev-border-critical {
+    border-left-color: #c62828;
+  }
+
+  &.sev-border-high {
+    border-left-color: #ef6c00;
+  }
+
+  &.sev-border-medium {
+    border-left-color: #f9a825;
+  }
+
+  &.sev-border-low {
+    border-left-color: #2e7d32;
+  }
+}
+
+.finding-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.sev-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 10px;
+  color: #fff;
+
+  &.sev-critical {
+    background: #c62828;
+  }
+
+  &.sev-high {
+    background: #ef6c00;
+  }
+
+  &.sev-medium {
+    background: #f9a825;
+    color: #212121;
+  }
+
+  &.sev-low {
+    background: #2e7d32;
+  }
+}
+
+.source-badge,
+.meta-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #eceff1;
+  color: #37474f;
+}
+
+.finding-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #263238;
+}
+
+.finding-description {
+  margin: 0 0 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #424242;
+}
+
+.finding-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #616161;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  code {
+    background: #f5f5f5;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+}
+
+.recommendation {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  background: #e8f5e9;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+
+  mat-icon {
+    color: #2e7d32;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+  }
+}
+
+.empty-hint {
+  color: #757575;
+  font-size: 13px;
+  margin: 0;
+}

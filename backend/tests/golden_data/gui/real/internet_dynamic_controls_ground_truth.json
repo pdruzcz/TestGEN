@@ -1,0 +1,84 @@
+{
+  "category": "real",
+  "description": "the-internet (MIT) — /dynamic_controls. Checkbox + przycisk Remove; input + przycisk Enable.",
+  "expected_component_count": 7,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Dynamic Controls",
+      "bbox": {
+        "x": 154,
+        "y": 41,
+        "width": 250,
+        "height": 30
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "menu",
+      "label": "example demonstrates...",
+      "bbox": {
+        "x": 154,
+        "y": 83,
+        "width": 760,
+        "height": 45
+      },
+      "confidence": 0.7
+    },
+    {
+      "component_type": "checkbox",
+      "label": "a checkbox",
+      "bbox": {
+        "x": 178,
+        "y": 228,
+        "width": 66,
+        "height": 18
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Remove",
+      "bbox": {
+        "x": 178,
+        "y": 260,
+        "width": 90,
+        "height": 30
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Enable input field",
+      "bbox": {
+        "x": 178,
+        "y": 459,
+        "width": 160,
+        "height": 25
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Enable",
+      "bbox": {
+        "x": 178,
+        "y": 500,
+        "width": 90,
+        "height": 30
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Elemental Selenium",
+      "bbox": {
+        "x": 612,
+        "y": 565,
+        "width": 146,
+        "height": 18
+      },
+      "confidence": 0.8
+    }
+  ]
+}

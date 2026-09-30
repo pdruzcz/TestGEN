@@ -1,0 +1,162 @@
+<div class="gh-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="gh-content" id="main-content" tabindex="-1">
+    <div class="gh-header">
+      <a
+        mat-button
+        [routerLink]="['/projects', projectId(), 'uml']"
+        class="back-link"
+      >
+        <mat-icon>arrow_back</mat-icon>
+        Wróć do diagramów UML
+      </a>
+      <h1 class="page-title">Generator scenariuszy Gherkin/BDD</h1>
+      <p class="page-subtitle">
+        Wygeneruj scenariusze Gherkin (.feature) z odtworzonych przepływów
+        użytkownika (UML/GUI).
+      </p>
+      <a
+        mat-stroked-button
+        [routerLink]="['/projects', projectId(), 'codegen', 'cypress']"
+        class="back-link"
+      >
+        <mat-icon>code</mat-icon>
+        Generuj kod testowy Cypress
+      </a>
+    </div>
+
+    <section class="card controls">
+      <h3 class="section-title">Wybierz przepływy</h3>
+
+      @if (isLoading()) {
+        <div class="loading">
+          <mat-spinner diameter="28" aria-label="Ładowanie" />
+        </div>
+      } @else if (flows().length === 0) {
+        <p class="empty">
+          Brak odtworzonych przepływów. Najpierw uruchom analizę UML/GUI.
+        </p>
+      } @else {
+        <ul class="flow-list">
+          @for (f of flows(); track f.id) {
+            <li class="flow-item">
+              <mat-checkbox
+                [checked]="isFlowSelected(f.id ?? '')"
+                (change)="toggleFlow(f.id ?? '')"
+              >
+                {{ f.name }}
+                <span class="flow-meta"
+                  >({{ f.sourceType }}, kroki: {{ f.steps.length }})</span
+                >
+              </mat-checkbox>
+            </li>
+          }
+        </ul>
+      }
+
+      <div class="control-grid">
+        <label class="field">
+          <span class="field-label">Tryb silnika</span>
+          <span class="engine-mode-chip" aria-label="Tryb silnika analizy">
+            {{ engineModeLabel() }}
+          </span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Nazwa funkcjonalności (opcjonalnie)</span>
+          <input
+            type="text"
+            [ngModel]="featureName()"
+            (ngModelChange)="featureName.set($event)"
+            aria-label="Nazwa funkcjonalności"
+            placeholder="Domyślnie: nazwa przepływu"
+          />
+        </label>
+      </div>
+
+      <div class="control-row">
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="isGenerating()"
+          (click)="generate()"
+        >
+          @if (isGenerating()) {
+            <mat-spinner diameter="18" aria-label="Generowanie" />
+          } @else {
+            <mat-icon>auto_awesome</mat-icon>
+          }
+          Generuj scenariusze
+        </button>
+
+        <button mat-stroked-button (click)="loadFeatures()">
+          <mat-icon>refresh</mat-icon>
+          Odśwież listę
+        </button>
+      </div>
+    </section>
+
+    @if (loadError()) {
+      <div class="error-banner" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        {{ loadError() }}
+      </div>
+    }
+
+    @if (infoMessage()) {
+      <div class="info-banner" role="status" aria-live="polite">
+        <mat-icon aria-hidden="true">info</mat-icon>
+        {{ infoMessage() }}
+      </div>
+    }
+
+    <section class="card">
+      <h3 class="section-title">Wygenerowane funkcjonalności</h3>
+      @if (features().length === 0) {
+        <p class="empty">Brak wygenerowanych funkcjonalności.</p>
+      } @else {
+        <ul class="feature-list">
+          @for (feat of features(); track feat.id) {
+            <li class="feature-item">
+              <button class="feature-link" (click)="viewFeature(feat.id)">
+                {{ feat.featureName }}
+              </button>
+              <span class="chip">{{ feat.engineMode }}</span>
+              <span class="chip" [class]="'status-' + feat.status">
+                {{ statusLabel(feat.status) }}
+              </span>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    @if (selectedFeature(); as feature) {
+      <section class="card feature-detail">
+        <div class="detail-header">
+          <h3 class="section-title">{{ feature.featureName }}</h3>
+          <button mat-stroked-button (click)="download(feature)">
+            <mat-icon>download</mat-icon>
+            Pobierz .feature
+          </button>
+        </div>
+
+        @if (feature.validationWarnings.length > 0) {
+          <div class="warnings" role="status" aria-live="polite">
+            <h4>Ostrzeżenia walidacji</h4>
+            <ul>
+              @for (w of feature.validationWarnings; track w) {
+                <li>{{ w }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        <pre class="feature-code"><code>{{ feature.rawFeature }}</code></pre>
+      </section>
+    }
+
+    <app-footer />
+  </main>
+</div>

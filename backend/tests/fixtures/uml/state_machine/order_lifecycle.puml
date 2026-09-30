@@ -1,0 +1,10 @@
+@startuml
+[*] --> Nowe
+Nowe --> Oplacone : oplac [srodki_dostepne] / zarezerwuj
+Oplacone --> Wyslane : wyslij / utworz_przesylke
+Wyslane --> Dostarczone : dostarcz
+Dostarczone --> [*]
+Oplacone --> Anulowane : anuluj / zwrot
+Nowe --> Anulowane : anuluj
+Anulowane --> [*]
+@enduml

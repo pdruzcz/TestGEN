@@ -1,0 +1,10 @@
+{
+  "diagram_type": "use_case",
+  "format": "xmi",
+  "description": "Przypadki uzycia XMI: aktor Customer i 3 przypadki (Checkout, Pay, Browse).",
+  "expected_participants_count": 1,
+  "expected_elements_count": 3,
+  "expected_relationships_count": 0,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 3
+}

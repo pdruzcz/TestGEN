@@ -1,0 +1,95 @@
+.diff-viewer {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+  font-size: 13px;
+}
+
+.diff-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.diff-pane-title {
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #334155;
+  font-family: Roboto, sans-serif;
+
+  &:first-child {
+    border-right: 1px solid #e2e8f0;
+  }
+}
+
+.diff-body {
+  max-height: 480px;
+  overflow: auto;
+}
+
+.diff-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.diff-cell {
+  display: flex;
+  padding: 0 8px;
+  line-height: 1.6;
+  min-width: 0;
+
+  &.left {
+    border-right: 1px solid #e2e8f0;
+  }
+
+  &.same {
+    background: #ffffff;
+  }
+
+  &.removed {
+    background: #fee2e2;
+  }
+
+  &.added {
+    background: #dcfce7;
+  }
+
+  &.empty {
+    background: #f8fafc;
+  }
+}
+
+.line-no {
+  min-width: 32px;
+  text-align: right;
+  margin-right: 12px;
+  color: #94a3b8;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.line-content {
+  white-space: pre;
+  overflow-x: auto;
+
+  ::ng-deep .tok-keyword {
+    color: #1d4ed8;
+    font-weight: 600;
+  }
+
+  ::ng-deep .tok-string {
+    color: #15803d;
+  }
+
+  ::ng-deep .tok-number {
+    color: #b45309;
+  }
+
+  ::ng-deep .tok-comment {
+    color: #64748b;
+    font-style: italic;
+  }
+}

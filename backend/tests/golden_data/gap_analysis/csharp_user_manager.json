@@ -1,0 +1,22 @@
+{
+  "language": "csharp",
+  "name": "csharp_user_manager",
+  "requirements": [
+    {"req_id": "REQ-UM-001", "text": "System must register new users", "category": "feature", "priority": "critical"},
+    {"req_id": "REQ-UM-002", "text": "System must hash passwords using bcrypt", "category": "security", "priority": "critical"},
+    {"req_id": "REQ-UM-003", "text": "System must assign roles to users", "category": "authorization", "priority": "high"},
+    {"req_id": "REQ-UM-004", "text": "System must delegate permissions between roles", "category": "authorization", "priority": "medium"},
+    {"req_id": "REQ-UM-005", "text": "System must export the user list to CSV", "category": "export", "priority": "low"}
+  ],
+  "code_entities": [
+    {"entity_id": "um-1", "name": "RegisterUser", "type": "method", "file_path": "src/Users/UserManager.cs", "line_number": 22, "language": "csharp", "docstring": "Register a new user in the system"},
+    {"entity_id": "um-2", "name": "HashPassword", "type": "method", "file_path": "src/Users/Security.cs", "line_number": 14, "language": "csharp", "docstring": "Hash a password using bcrypt"},
+    {"entity_id": "um-3", "name": "AssignRole", "type": "method", "file_path": "src/Users/UserManager.cs", "line_number": 56, "language": "csharp", "docstring": "Assign a role to a user"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-UM-001", "REQ-UM-002", "REQ-UM-003"],
+    "missing_req_ids": ["REQ-UM-004", "REQ-UM-005"],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 55.0
+  }
+}

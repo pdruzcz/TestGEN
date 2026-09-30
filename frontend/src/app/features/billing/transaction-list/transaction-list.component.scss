@@ -1,0 +1,134 @@
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.page-title {
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+    color: var(--mat-sys-on-surface-variant, #5f6368);
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem;
+
+  .filter-status {
+    width: 11rem;
+  }
+
+  .filter-date {
+    width: 10rem;
+  }
+}
+
+.status {
+  margin: 0;
+  padding: 1rem 0;
+  color: var(--mat-sys-on-surface-variant, #5f6368);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+
+  th,
+  td {
+    padding: 0.625rem 0.75rem;
+    text-align: left;
+  }
+
+  thead th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--mat-sys-on-surface-variant, #5f6368);
+    border-bottom: 1px solid var(--mat-sys-outline-variant, #dde1e7);
+  }
+
+  tbody tr + tr th,
+  tbody tr + tr td {
+    border-top: 1px solid var(--mat-sys-outline-variant, #dde1e7);
+  }
+
+  .date-cell {
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .amount-col {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.chip-paid {
+  background: var(--mat-sys-primary-container, #e3eafc);
+  color: var(--mat-sys-on-primary-container, #1a2c5e);
+}
+
+.chip-pending {
+  background: var(--mat-sys-surface-container-high, #eef2f7);
+  color: var(--mat-sys-on-surface-variant, #5f6368);
+}
+
+.chip-failed {
+  background: var(--mat-sys-error-container, #fdecea);
+  color: var(--mat-sys-on-error-container, #410e0b);
+}
+
+.invoice-link {
+  color: var(--mat-sys-primary, #3f51b5);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.75rem;
+
+  .counter {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface-variant, #5f6368);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+
+  .note {
+    flex-basis: 100%;
+    margin: 0.25rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--mat-sys-on-surface-variant, #5f6368);
+  }
+}

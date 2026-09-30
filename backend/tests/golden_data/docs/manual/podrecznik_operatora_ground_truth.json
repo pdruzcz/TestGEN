@@ -1,0 +1,33 @@
+{
+  "name": "podrecznik_operatora",
+  "doc_category": "manual",
+  "format": "md",
+  "language": "pl",
+  "has_intentional_discrepancies": true,
+  "expected_classification": {
+    "doc_type": "podręcznik_użytkownika",
+    "min_confidence": 10.0
+  },
+  "expected_requirements": {
+    "min_count": 4,
+    "expected_texts": [
+      "WYM-001: Operator może uruchamiać codzienne raporty z ekranu operacji.",
+      "WYM-002: Operator może potwierdzać alarmy z listy zdarzeń.",
+      "WYM-003: System musi generować raport dzienny podsumowujący wszystkie operacje systemu przeprowadzone po zakończeniu każdego dnia roboczego.",
+      "WYM-004: System musi generować raport dzienny podsumowujący wszystkie operacje systemu przeprowadzone po zakończeniu każdego dnia roboczego."
+    ]
+  },
+  "expected_inconsistencies": {
+    "detectable_types": [
+      "duplicate"
+    ],
+    "min_detectable_count": 1
+  },
+  "expected_glossary": {
+    "min_terms": 2,
+    "expected_terms": [
+      "Operator",
+      "Alarm"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "language": "python",
+  "name": "python_order_service",
+  "description": "Golden próbka detektora martwego kodu (Story 5.10, AC5): 3 celowo martwe funkcje + 2 wykluczenia (endpoint + test).",
+  "files": [
+    {
+      "path": "services/orders.py",
+      "content": "import hashlib\n\n\ndef _legacy_hash(value: str) -> str:\n    \"\"\"Nieużywany helper — zastąpiony przez sha256.\"\"\"\n    return value[::-1]\n\n\ndef _unused_validator(data: dict) -> bool:\n    \"\"\"Walidator, którego nic nie wywołuje.\"\"\"\n    return bool(data)\n\n\ndef orphan_exported_formatter(text: str) -> str:\n    \"\"\"Publiczna funkcja modułowa bez wywołań i bez importów w projekcie.\"\"\"\n    return text.strip().lower()\n\n\ndef _hash256(value: str) -> str:\n    return hashlib.sha256(value.encode()).hexdigest()\n\n\ndef compute_checksum(value: str) -> str:\n    return _hash256(value)\n\n\n@app.get(\"/orders/status\")\ndef get_orders_status():\n    return {\"ok\": True}\n\n\ndef test_order_total():\n    assert compute_checksum(\"x\")\n\n\nchecksum = compute_checksum(\"order-1\")\n"
+    }
+  ],
+  "expected": {
+    "dead_code": [
+      { "file": "services/orders.py", "name": "_legacy_hash" },
+      { "file": "services/orders.py", "name": "_unused_validator" },
+      { "file": "services/orders.py", "name": "orphan_exported_formatter" }
+    ],
+    "excluded": [
+      { "name": "get_orders_status", "reason": "endpoint handler (dekorator @app.get)" },
+      { "name": "test_order_total", "reason": "funkcja testowa (test_*)" }
+    ]
+  }
+}

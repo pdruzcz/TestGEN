@@ -1,0 +1,117 @@
+{
+  "category": "real",
+  "description": "Keycloak 26.7.1 admin console (Apache-2.0) — Realm settings, zakładka General: pasek zakładek + formularz ustawień realmu (inputy, przełączniki, Save). Viewport 1280x800.",
+  "expected_component_count": 10,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar (Clients/Users/Sessions/...)",
+      "bbox": {
+        "x": 0,
+        "y": 80,
+        "width": 256,
+        "height": 720
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Masthead: user toggle (golden-admin)",
+      "bbox": {
+        "x": 1150,
+        "y": 22,
+        "width": 122,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "tab",
+      "label": "Zakładki (General/Login/Email/Themes/Tokens/...)",
+      "bbox": {
+        "x": 276,
+        "y": 188,
+        "width": 520,
+        "height": 32
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "form",
+      "label": "Realm settings (General)",
+      "bbox": {
+        "x": 276,
+        "y": 240,
+        "width": 992,
+        "height": 470
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Realm ID",
+      "bbox": {
+        "x": 300,
+        "y": 270,
+        "width": 300,
+        "height": 32
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Display name",
+      "bbox": {
+        "x": 300,
+        "y": 322,
+        "width": 300,
+        "height": 32
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "HTML Display name",
+      "bbox": {
+        "x": 300,
+        "y": 374,
+        "width": 620,
+        "height": 32
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "checkbox",
+      "label": "Enabled (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 268,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "checkbox",
+      "label": "SSL required (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 316,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Save",
+      "bbox": {
+        "x": 1148,
+        "y": 716,
+        "width": 120,
+        "height": 40
+      },
+      "confidence": 0.85
+    }
+  ]
+}

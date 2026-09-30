@@ -1,0 +1,59 @@
+<div class="chatbot">
+  <button
+    #trigger
+    type="button"
+    class="chatbot-trigger"
+    aria-label="Asystent AI"
+    aria-haspopup="dialog"
+    aria-controls="chatbot-panel"
+    [attr.aria-expanded]="isOpen()"
+    (click)="toggle()"
+  >
+    <mat-icon aria-hidden="true">smart_toy</mat-icon>
+  </button>
+
+  @if (isOpen()) {
+    <section
+      #panel
+      id="chatbot-panel"
+      class="chatbot-panel"
+      role="dialog"
+      aria-label="Asystent AI"
+      aria-modal="false"
+      (keydown)="onPanelKeydown($event)"
+    >
+      <header class="chatbot-header">
+        <h2 class="chatbot-title">Asystent AI</h2>
+        <button
+          type="button"
+          class="chatbot-clear"
+          aria-label="Wyczyść historię rozmowy"
+          (click)="clear()"
+        >
+          <mat-icon aria-hidden="true">delete_sweep</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="chatbot-close"
+          aria-label="Zamknij asystenta"
+          (click)="close()"
+        >
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      </header>
+
+      <div class="chatbot-log" role="log" aria-live="polite" aria-relevant="additions text">
+        @if (messages().length === 0) {
+          <p class="chatbot-empty">
+            Zadaj pytanie o wyniki analizy, przypadki testowe lub raporty.
+          </p>
+        }
+        @for (message of messages(); track message.id) {
+          <app-chat-message [message]="message" />
+        }
+      </div>
+
+      <app-chat-input [disabled]="isLoading()" (send)="onSend($event)" />
+    </section>
+  }
+</div>

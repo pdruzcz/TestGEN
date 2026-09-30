@@ -1,0 +1,168 @@
+<div class="h-page">
+  <app-navbar activeLink="projects" />
+  <main class="h-content" id="main-content" tabindex="-1">
+    <a mat-button [routerLink]="['/projects', projectId()]" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      Wróć do projektu
+    </a>
+
+    <div class="title-row">
+      <h1 class="page-title">Self-healing testów UI</h1>
+    </div>
+    <p class="desc">
+      Automatyczna naprawa zepsutych lokatorów Selenium/Playwright między dwiema
+      wersjami GUI. Wniosek FEPW: 30–50% mniej ręcznego utrzymania testów.
+    </p>
+
+    <mat-card class="launcher" appearance="outlined">
+      <mat-card-title>Uruchom healing</mat-card-title>
+      <div class="selectors">
+        <mat-form-field appearance="outline">
+          <mat-label>Wersja A (przed)</mat-label>
+          <mat-select [value]="versionA()" (valueChange)="versionA.set($event)">
+            @if (analyses().length === 0) {
+              <mat-option [disabled]="true">
+                Brak analiz GUI — wgraj źródło GUI (HTML/DOM)
+              </mat-option>
+            }
+            @for (a of analyses(); track a.id) {
+              <mat-option [value]="a.id">{{ analysisLabel(a) }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Wersja B (po)</mat-label>
+          <mat-select [value]="versionB()" (valueChange)="versionB.set($event)">
+            @if (analyses().length === 0) {
+              <mat-option [disabled]="true">
+                Brak analiz GUI — wgraj źródło GUI (HTML/DOM)
+              </mat-option>
+            }
+            @for (a of analyses(); track a.id) {
+              <mat-option [value]="a.id">{{ analysisLabel(a) }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="action-row">
+        <span class="hint">
+          Wybierz dwie wersje analizy GUI projektu do porównania lokatorów.
+        </span>
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!canLaunch()"
+          (click)="launch()"
+        >
+          @if (isLaunching()) {
+            <mat-spinner diameter="18" aria-label="Ładowanie" />
+          }
+          Napraw testy
+        </button>
+      </div>
+    </mat-card>
+
+    @if (errorMessage()) {
+      <div class="error">{{ errorMessage() }}</div>
+    }
+
+    @if (report(); as rep) {
+      <mat-card class="report" appearance="outlined">
+        <mat-card-title>
+          Raport healingu — {{ rep.stats?.["total"] ?? 0 }} lokatorów
+        </mat-card-title>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="v v-ok">{{ rep.stats?.["healed"] ?? 0 }}</span>
+            <span class="l">Naprawione</span>
+          </div>
+          <div class="stat">
+            <span class="v v-warn">{{ rep.stats?.["needs_review"] ?? 0 }}</span>
+            <span class="l">Do przeglądu</span>
+          </div>
+          <div class="stat">
+            <span class="v v-err">{{ rep.stats?.["failed"] ?? 0 }}</span>
+            <span class="l">Nieudane</span>
+          </div>
+          <div class="stat">
+            <span class="v">{{ rep.stats?.["healthy"] ?? 0 }}</span>
+            <span class="l">Działające</span>
+          </div>
+          <div class="stat">
+            <span class="v"
+              >{{
+                (rep.stats?.["avg_confidence"] ?? 0) * 100 | number: "1.0-0"
+              }}%</span
+            >
+            <span class="l">Śr. pewność</span>
+          </div>
+        </div>
+
+        @if (rep.items.length === 0) {
+          <p class="empty">Brak zepsutych lokatorów — wszystkie działają.</p>
+        }
+
+        <div class="items">
+          @for (item of rep.items; track item.id) {
+            <div
+              class="item"
+              [class.item-review]="item.status === 'needs_review'"
+              [class.item-failed]="item.status === 'failed'"
+            >
+              <div class="loc-row">
+                <span class="old">{{ item.oldLocator }}</span>
+                @if (item.newLocator) {
+                  <mat-icon>arrow_forward</mat-icon>
+                  <span class="new">{{ item.newLocator }}</span>
+                } @else {
+                  <span class="none">(brak kandydata)</span>
+                }
+              </div>
+              <div class="meta-row">
+                <span class="badge strat">{{
+                  strategyLabel(item.newStrategy || item.oldStrategy)
+                }}</span>
+                <span
+                  class="badge conf"
+                  [class]="confidenceClass(item.confidence)"
+                >
+                  {{ item.confidence * 100 | number: "1.0-0" }}%
+                </span>
+                <span class="badge status" [class]="'st-' + item.status">{{
+                  statusLabel(item.status)
+                }}</span>
+              </div>
+              @if (item.diffPreview) {
+                <pre class="diff">{{ item.diffPreview }}</pre>
+              }
+              @if (item.status === "needs_review" || item.status === "healed") {
+                <div class="actions">
+                  <button mat-stroked-button (click)="decide(item, 'reject')">
+                    Odrzuć
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="decide(item, 'accept')"
+                    [disabled]="item.status === 'healed'"
+                  >
+                    Akceptuj
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="report-actions">
+          <button mat-stroked-button (click)="refresh()">
+            <mat-icon>refresh</mat-icon>
+            Odśwież
+          </button>
+        </div>
+      </mat-card>
+    }
+  </main>
+  <app-footer />
+</div>

@@ -1,0 +1,51 @@
+{
+  "category": "real_dense",
+  "description": "Angular Material docs (MIT) — komponent Menu z ROZWINIĘTYM menu (stan interakcji: rozwinięte menu; panel overlay z pozycjami Item 1/2/...). Gęsty OCR — kategoria real_dense. Viewport 1280x800.",
+  "expected_component_count": 4,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidenav (lista komponentów)",
+      "bbox": {
+        "x": 0,
+        "y": 64,
+        "width": 290,
+        "height": 736
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Search (toolbar)",
+      "bbox": {
+        "x": 900,
+        "y": 12,
+        "width": 340,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Menu (trigger)",
+      "bbox": {
+        "x": 370,
+        "y": 195,
+        "width": 140,
+        "height": 50
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "menu",
+      "label": "Panel menu (rozwinięte: Item 1/Item 2/...)",
+      "bbox": {
+        "x": 366,
+        "y": 250,
+        "width": 240,
+        "height": 200
+      },
+      "confidence": 0.95
+    }
+  ]
+}

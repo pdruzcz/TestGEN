@@ -1,0 +1,7 @@
+@startuml
+start
+:Wprowadz dane logowania;
+:Wyslij formularz;
+:Wyswietl pulpit;
+stop
+@enduml

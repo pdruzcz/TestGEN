@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+actor "Klient" as Customer
+rectangle "Sklep internetowy" {
+  usecase "Przeglądaj produkty" as UC1
+  usecase "Dodaj do koszyka" as UC2
+  usecase "Płatność" as UC3
+  usecase "Walidacja karty" as UC4
+  usecase "Dostawa ekspresowa" as UC5
+}
+Customer -- UC1
+Customer -- UC2
+Customer -- UC3
+UC3 ..> UC4 : <<include>>
+UC5 ..> UC3 : <<extend>>
+@enduml

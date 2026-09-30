@@ -1,0 +1,103 @@
+<div class="seq-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="seq-content" id="main-content" tabindex="-1">
+    <a
+      mat-button
+      [routerLink]="['/projects', projectId(), 'uml']"
+      class="back-link"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Wróć do diagramów
+    </a>
+
+    <h1 class="page-title">Diagram sekwencji</h1>
+
+    @if (isLoading()) {
+      <div class="loading" role="status" aria-live="polite">
+        <mat-spinner diameter="20" aria-label="Ładowanie" />
+        <span>Ładowanie…</span>
+      </div>
+    } @else if (!detail()?.parsedModel) {
+      <p class="empty">
+        Diagram nie został jeszcze sparsowany lub parsowanie nie powiodło się.
+      </p>
+    } @else {
+      <section class="card">
+        <h2 class="section-title">Uczestnicy ({{ participants().length }})</h2>
+        <div class="participants">
+          @for (p of participants(); track p.alias) {
+            <div class="participant" [class]="'pt-' + p.participantType">
+              <mat-icon aria-hidden="true">
+                {{ p.participantType === "actor" ? "person" : "widgets" }}
+              </mat-icon>
+              <span class="p-name">{{ p.name }}</span>
+              <span class="p-type">{{ p.participantType }}</span>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">Wiadomości ({{ messages().length }})</h2>
+        <ol class="messages">
+          @for (m of messages(); track m.sequenceNumber) {
+            <li class="message" [class]="'mt-' + m.messageType">
+              <span class="m-from">{{ m.fromAlias }}</span>
+              <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+              <span class="m-to">{{ m.toAlias }}</span>
+              <span class="m-label">{{ m.label }}</span>
+              <span class="m-type">{{ m.messageType }}</span>
+            </li>
+          }
+        </ol>
+      </section>
+
+      @if (fragments().length > 0) {
+        <section class="card">
+          <h2 class="section-title">Fragmenty ({{ fragments().length }})</h2>
+          <div class="fragments">
+            @for (f of fragments(); track $index) {
+              <div class="fragment" [class]="'frag-' + f.fragmentType">
+                <span class="frag-type">{{ f.fragmentType.toUpperCase() }}</span>
+                <ul class="frag-conditions">
+                  @for (c of f.conditions; track $index) {
+                    <li>{{ c.label || "—" }}</li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      @if (testPaths().length > 0) {
+        <section class="card">
+          <h2 class="section-title">Ścieżki testowe ({{ testPaths().length }})</h2>
+          <div class="paths">
+            @for (path of testPaths(); track $index) {
+              <div class="path" [class]="'path-' + path.pathType">
+                <div class="path-header">
+                  <span class="path-badge">{{ pathLabel(path.pathType) }}</span>
+                  <span class="path-actor">Aktor: {{ path.initiatingActor }}</span>
+                </div>
+                @if (path.preconditions.length > 0) {
+                  <p class="path-pre">
+                    Warunki: {{ path.preconditions.join(", ") }}
+                  </p>
+                }
+                <ol class="path-steps">
+                  @for (s of path.steps; track $index) {
+                    <li>{{ s.fromAlias }} → {{ s.toAlias }}: {{ s.label }}</li>
+                  }
+                </ol>
+              </div>
+            }
+          </div>
+        </section>
+      }
+    }
+
+    <app-footer />
+  </main>
+</div>

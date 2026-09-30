@@ -1,0 +1,12 @@
+@startuml
+actor User
+participant App
+User -> App: login
+alt valid
+  loop attempts
+    App -> App: retry
+  end
+else invalid
+  App --> User: error
+end
+@enduml

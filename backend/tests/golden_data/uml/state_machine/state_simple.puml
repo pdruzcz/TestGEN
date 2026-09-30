@@ -1,0 +1,8 @@
+@startuml
+[*] --> Generated
+Generated --> Reviewed : review
+Reviewed --> Approved : approve
+Reviewed --> Rejected : reject
+Approved --> [*]
+Rejected --> [*]
+@enduml

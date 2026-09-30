@@ -1,0 +1,62 @@
+<section class="tech-details" aria-label="Szczegóły techniczne">
+  <div class="report-card">
+    <h3 class="card-title">
+      <mat-icon aria-hidden="true">plagiarism</mat-icon>
+      Szczegółowe ustalenia ({{ data().findings.length }})
+    </h3>
+
+    @if (data().findings.length === 0) {
+      <p class="empty-hint">
+        Brak ustaleń — analizy nie wykazały problemów w kodzie.
+      </p>
+    }
+
+    @for (f of data().findings; track f.source + f.id) {
+      <article class="finding sev-border-{{ f.severity }}">
+        <header class="finding-header">
+          <span class="sev-badge sev-{{ f.severity }}">
+            {{ severityLabels[f.severity] }}
+          </span>
+          <span class="source-badge">{{ sourceLabels[f.source] }}</span>
+          @if (f.cweId) {
+            <span class="meta-badge">{{ f.cweId }}</span>
+          }
+          @if (f.cvssScore !== null) {
+            <span class="meta-badge">CVSS {{ f.cvssScore }}</span>
+          }
+        </header>
+
+        <h4 class="finding-title">{{ f.title }}</h4>
+
+        @if (f.description && f.description !== f.title) {
+          <p class="finding-description">{{ f.description }}</p>
+        }
+
+        @if (location(f); as loc) {
+          <p class="finding-location">
+            <mat-icon aria-hidden="true">link</mat-icon>
+            Powiązanie: <code>{{ loc }}</code>
+          </p>
+        }
+
+        @if (f.codeSnippet) {
+          <app-code-highlighter
+            [code]="f.codeSnippet"
+            [language]="f.language ?? 'python'"
+            [startLine]="f.lineStart ?? 1"
+          />
+        }
+
+        @if (f.recommendation) {
+          <div class="recommendation">
+            <mat-icon aria-hidden="true">build</mat-icon>
+            <div>
+              <strong>Rekomendacja:</strong>
+              {{ f.recommendation }}
+            </div>
+          </div>
+        }
+      </article>
+    }
+  </div>
+</section>

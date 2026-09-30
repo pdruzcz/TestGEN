@@ -1,0 +1,45 @@
+{
+  "description": "Frozen taint-analysis golden data (Story 4.3). Each sample lists the expected vulnerability types and minimum number of taint paths the analyzer must report.",
+  "samples": [
+    {
+      "file": "taint_python_sqli.py",
+      "language": "python",
+      "expected_types": ["sql_injection"],
+      "expected_sink_types": ["sql"],
+      "min_paths": 1,
+      "sanitized": false
+    },
+    {
+      "file": "taint_python_cmd.py",
+      "language": "python",
+      "expected_types": ["command_injection"],
+      "expected_sink_types": ["exec"],
+      "min_paths": 1,
+      "sanitized": false
+    },
+    {
+      "file": "taint_javascript_xss.js",
+      "language": "javascript",
+      "expected_types": ["xss"],
+      "expected_sink_types": ["html"],
+      "min_paths": 1,
+      "sanitized": false
+    },
+    {
+      "file": "taint_java_sqli.java",
+      "language": "java",
+      "expected_types": ["sql_injection"],
+      "expected_sink_types": ["sql"],
+      "min_paths": 1,
+      "sanitized": false
+    },
+    {
+      "file": "taint_python_inadequate_sanitizer.py",
+      "language": "python",
+      "expected_types": ["sql_injection"],
+      "expected_sink_types": ["sql"],
+      "min_paths": 1,
+      "sanitized": true
+    }
+  ]
+}

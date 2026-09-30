@@ -1,0 +1,51 @@
+{
+  "category": "taint_paths",
+  "description": "Taint-analysis golden samples with ground-truth source->sink flows (Story 4.14).",
+  "samples": [
+    {
+      "file": "taint_sqli_python.py",
+      "language": "python",
+      "vulnerability_type": "sql_injection",
+      "expected_sink_types": ["sql"],
+      "min_paths": 1,
+      "sanitized": false,
+      "ground_truth_path": { "source": "request.GET", "sink": "cursor.execute" }
+    },
+    {
+      "file": "taint_cmd_python.py",
+      "language": "python",
+      "vulnerability_type": "command_injection",
+      "expected_sink_types": ["exec"],
+      "min_paths": 1,
+      "sanitized": false,
+      "ground_truth_path": { "source": "request.GET", "sink": "os.system" }
+    },
+    {
+      "file": "taint_xss_javascript.js",
+      "language": "javascript",
+      "vulnerability_type": "xss",
+      "expected_sink_types": ["html"],
+      "min_paths": 1,
+      "sanitized": false,
+      "ground_truth_path": { "source": "req.query", "sink": "innerHTML" }
+    },
+    {
+      "file": "taint_sqli_java.java",
+      "language": "java",
+      "vulnerability_type": "sql_injection",
+      "expected_sink_types": ["sql"],
+      "min_paths": 1,
+      "sanitized": false,
+      "ground_truth_path": { "source": "request.getParameter", "sink": "executeQuery" }
+    },
+    {
+      "file": "taint_inadequate_sanitizer_python.py",
+      "language": "python",
+      "vulnerability_type": "sql_injection",
+      "expected_sink_types": ["sql"],
+      "min_paths": 1,
+      "sanitized": true,
+      "ground_truth_path": { "source": "request.GET", "sink": "cursor.execute" }
+    }
+  ]
+}

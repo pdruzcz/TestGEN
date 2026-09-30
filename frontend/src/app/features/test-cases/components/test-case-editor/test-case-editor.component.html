@@ -1,0 +1,94 @@
+<form
+  class="editor"
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  (keydown.escape)="onEscape($event)"
+>
+  <div class="editor-row">
+    <mat-form-field appearance="outline" class="title-field">
+      <mat-label>Tytuł</mat-label>
+      <input matInput formControlName="title" maxlength="500" />
+      @if (form.controls.title.hasError("required")) {
+        <mat-error>Tytuł jest wymagany</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="small-field">
+      <mat-label>Priorytet</mat-label>
+      <mat-select formControlName="priority">
+        @for (opt of priorityOptions; track opt[0]) {
+          <mat-option [value]="opt[0]">{{ opt[1] }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="small-field">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        @for (opt of statusOptions; track opt[0]) {
+          <mat-option [value]="opt[0]">{{ opt[1] }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline" class="full-field">
+    <mat-label>Opis</mat-label>
+    <textarea matInput formControlName="description" rows="2"></textarea>
+  </mat-form-field>
+
+  <div class="steps-section">
+    <div class="steps-header">
+      <span class="steps-label">Kroki testowe</span>
+      <button mat-button type="button" (click)="addStep()">
+        <mat-icon>add</mat-icon>
+        Dodaj krok
+      </button>
+    </div>
+
+    @if (stepsArray.length === 0) {
+      <p class="steps-empty">Brak kroków — dodaj pierwszy krok.</p>
+    }
+
+    <div
+      class="steps-list"
+      cdkDropList
+      (cdkDropListDropped)="onStepDrop($event)"
+    >
+      @for (step of stepsArray.controls; track step; let i = $index) {
+        <div class="step-row" cdkDrag>
+          <mat-icon class="drag-handle" cdkDragHandle>drag_indicator</mat-icon>
+          <span class="step-number">{{ i + 1 }}.</span>
+          <input
+            class="step-input"
+            [formControl]="step"
+            [attr.aria-label]="'Krok ' + (i + 1)"
+          />
+          <button
+            mat-icon-button
+            type="button"
+            [attr.aria-label]="'Usuń krok ' + (i + 1)"
+            (click)="removeStep(i)"
+          >
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <mat-form-field appearance="outline" class="full-field">
+    <mat-label>Oczekiwany wynik</mat-label>
+    <textarea matInput formControlName="expectedResult" rows="2"></textarea>
+  </mat-form-field>
+
+  <div class="editor-actions">
+    <button mat-button type="button" (click)="cancelEdit.emit()">
+      Anuluj
+    </button>
+    <button mat-raised-button color="primary" type="submit">
+      <mat-icon>save</mat-icon>
+      Zapisz
+    </button>
+  </div>
+</form>

@@ -1,0 +1,110 @@
+<div class="flow-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="flow-content" id="main-content" tabindex="-1">
+    <div class="flow-header">
+      <a
+        mat-button
+        [routerLink]="['/projects', projectId(), 'gui']"
+        class="back-link"
+      >
+        <mat-icon>arrow_back</mat-icon>
+        Wróć do zrzutów ekranu
+      </a>
+      <h1 class="page-title">Przepływy użytkownika (GUI)</h1>
+      <p class="page-subtitle">
+        Rekonstrukcja sekwencji akcji z kolejnych zrzutów ekranu.
+      </p>
+    </div>
+
+    <section class="card controls">
+      <div class="control-row">
+        <span class="engine-mode-chip" aria-label="Tryb silnika analizy">
+          Silnik analizy: {{ engineModeLabel() }}
+        </span>
+
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="isReconstructing()"
+          (click)="reconstruct()"
+        >
+          @if (isReconstructing()) {
+            <mat-spinner diameter="18" aria-label="Uruchamianie" />
+          } @else {
+            <mat-icon>auto_awesome</mat-icon>
+          }
+          Rekonstruuj przepływ
+        </button>
+
+        <button mat-stroked-button (click)="refresh()">
+          <mat-icon>refresh</mat-icon>
+          Odśwież
+        </button>
+      </div>
+
+      @if (infoMessage()) {
+        <div class="info-banner" role="status" aria-live="polite">
+          <mat-icon aria-hidden="true">info</mat-icon>
+          {{ infoMessage() }}
+        </div>
+      }
+    </section>
+
+    @if (isLoading()) {
+      <div class="loading" role="status" aria-live="polite">
+        <mat-spinner diameter="20" aria-label="Ładowanie przepływów" />
+        <span>Ładowanie przepływów…</span>
+      </div>
+    } @else if (loadError()) {
+      <div class="error-banner" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        {{ loadError() }}
+      </div>
+    } @else if (flows().length === 0) {
+      <div class="card">
+        <p class="empty">
+          Brak zrekonstruowanych przepływów. Uruchom rekonstrukcję powyżej.
+        </p>
+      </div>
+    } @else {
+      @for (flow of flows(); track flow.id) {
+        <section class="card flow-card">
+          <div class="flow-title-row">
+            <h3 class="flow-name">{{ flow.name }}</h3>
+            <span class="chip">{{ statusLabel(flow.status) }}</span>
+            <span class="chip">Kroki: {{ flow.steps.length }}</span>
+          </div>
+
+          @if (flow.warnings && flow.warnings.length > 0) {
+            <div class="warnings" role="status" aria-live="polite">
+              <ul>
+                @for (w of flow.warnings; track w) {
+                  <li>{{ w }}</li>
+                }
+              </ul>
+            </div>
+          }
+
+          @if (flow.steps.length === 0) {
+            <p class="empty">Brak kroków w tym przepływie.</p>
+          } @else {
+            <ol class="steps">
+              @for (step of flow.steps; track step.sequence) {
+                <li class="step">
+                  <span class="step-seq">{{ step.sequence }}</span>
+                  <span class="step-action">{{ step.action }}</span>
+                  @if (step.targetElement) {
+                    <span class="step-target">→ {{ step.targetElement }}</span>
+                  }
+                </li>
+              }
+            </ol>
+          }
+        </section>
+      }
+    }
+
+    <app-footer />
+  </main>
+</div>

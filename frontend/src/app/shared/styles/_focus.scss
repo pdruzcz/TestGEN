@@ -1,0 +1,43 @@
+// Story 6.9 (AC3) — wspólne style wskaźnika fokusu.
+// Outline min. 2px, kontrast >= 3:1, tylko dla nawigacji klawiaturą
+// (:focus-visible — mysz nie wyzwala wskaźnika).
+@use "colors" as colors;
+
+$focus-outline-width: 2px;
+$focus-outline-color: colors.$wcag-focus-outline;
+$focus-outline-offset: 2px;
+
+/// Mixin nakładający zgodny z WCAG wskaźnik fokusu na element.
+@mixin focus-visible-outline {
+  &:focus-visible {
+    outline: $focus-outline-width solid $focus-outline-color;
+    outline-offset: $focus-outline-offset;
+    border-radius: 2px;
+  }
+}
+
+/// Globalne style fokusu — do włączenia raz w styles.scss.
+@mixin global-focus-styles {
+  // Jednolity, widoczny wskaźnik dla wszystkich elementów interaktywnych.
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  [tabindex],
+  [role="button"],
+  [role="link"],
+  [role="tab"],
+  [role="menuitem"],
+  [role="option"] {
+    &:focus-visible {
+      outline: $focus-outline-width solid $focus-outline-color !important;
+      outline-offset: $focus-outline-offset;
+    }
+
+    // Brak wskaźnika dla interakcji myszą (fokus bez :focus-visible).
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+  }
+}

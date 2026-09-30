@@ -1,0 +1,108 @@
+<div class="result-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="result-content" id="main-content" tabindex="-1">
+    <div class="result-header">
+      <a
+        mat-button
+        [routerLink]="['/projects', projectId(), 'gui']"
+        class="back-link"
+      >
+        <mat-icon>arrow_back</mat-icon>
+        Wróć do zrzutów ekranu
+      </a>
+      <h1 class="page-title">Wynik analizy GUI</h1>
+    </div>
+
+    @if (isLoading()) {
+      <div class="loading" role="status" aria-live="polite">
+        <mat-spinner diameter="20" aria-label="Ładowanie wyniku" />
+        <span>Ładowanie wyniku…</span>
+      </div>
+    } @else if (loadError()) {
+      <div class="error-banner" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        {{ loadError() }}
+      </div>
+    } @else if (result(); as res) {
+      <div class="summary-bar">
+        <span class="chip">Status: {{ res.status }}</span>
+        <span class="chip">Komponenty: {{ res.components.length }}</span>
+        <span class="chip">Bloki tekstu: {{ res.ocrTextBlocks.length }}</span>
+        <span class="chip">Czas: {{ res.processingTimeMs }} ms</span>
+      </div>
+
+      @if (res.warnings.length > 0) {
+        <div class="warnings" role="status" aria-live="polite">
+          <h3 class="section-title">
+            <mat-icon aria-hidden="true">warning</mat-icon> Ostrzeżenia
+          </h3>
+          <ul>
+            @for (w of res.warnings; track w) {
+              <li>{{ w }}</li>
+            }
+          </ul>
+        </div>
+      }
+
+      <!-- Detected components -->
+      <section class="card">
+        <h3 class="section-title">Wykryte komponenty</h3>
+        @if (res.components.length === 0) {
+          <p class="empty">Nie wykryto komponentów.</p>
+        } @else {
+          <div class="component-list">
+            @for (c of res.components; track c.id) {
+              <div class="component-row">
+                <span class="ctype">{{ componentTypeLabel(c.componentType) }}</span>
+                <span class="clabel">{{ c.label || "—" }}</span>
+                @if (c.bbox; as b) {
+                  <span class="cbbox">
+                    [{{ b.x }}, {{ b.y }} · {{ b.width }}×{{ b.height }}]
+                  </span>
+                }
+                <span class="cconf">{{ (c.confidence * 100).toFixed(0) }}%</span>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- Layout tree -->
+      <section class="card">
+        <h3 class="section-title">Struktura układu</h3>
+        @if (flatLayout().length === 0) {
+          <p class="empty">Brak drzewa układu.</p>
+        } @else {
+          <ul class="layout-tree">
+            @for (node of flatLayout(); track $index) {
+              <li [style.padding-left.px]="node.depth * 20">
+                <mat-icon aria-hidden="true">subdirectory_arrow_right</mat-icon>
+                <span class="node-type">{{ componentTypeLabel(node.type) }}</span>
+                @if (node.label) {
+                  <span class="node-label">— {{ node.label }}</span>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <!-- OCR text blocks -->
+      <section class="card">
+        <h3 class="section-title">Rozpoznany tekst (OCR)</h3>
+        @if (res.ocrTextBlocks.length === 0) {
+          <p class="empty">Nie rozpoznano tekstu.</p>
+        } @else {
+          <div class="text-blocks">
+            @for (t of res.ocrTextBlocks; track $index) {
+              <span class="text-chip">{{ t.text }}</span>
+            }
+          </div>
+        }
+      </section>
+    }
+
+    <app-footer />
+  </main>
+</div>

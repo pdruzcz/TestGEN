@@ -1,0 +1,12 @@
+describe('{{ suite_name }}', () => {
+{% for case in cases %}
+  // {{ case.description }}
+  it('{{ case.test_name }}', () => {
+    cy.visit('{{ url }}');
+    cy.matchImageSnapshot('{{ case.snapshot_name }}', {
+      failureThreshold: {{ threshold }},
+      failureThresholdType: 'percent'
+    });
+  });
+{% endfor %}
+});

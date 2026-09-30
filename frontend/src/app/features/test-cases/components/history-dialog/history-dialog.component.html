@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>Historia zmian — {{ data.title }}</h2>
+
+<mat-dialog-content>
+  @if (isLoading()) {
+    <div class="dialog-loading">
+      <mat-spinner diameter="28" aria-label="Ładowanie"></mat-spinner>
+      <span>Ładowanie historii...</span>
+    </div>
+  } @else if (hasError()) {
+    <div class="dialog-empty">
+      <mat-icon>error_outline</mat-icon>
+      <p>Nie udało się pobrać historii zmian.</p>
+    </div>
+  } @else if (entries().length === 0) {
+    <div class="dialog-empty">
+      <mat-icon>history</mat-icon>
+      <p>Brak zapisanych zmian dla tego przypadku testowego.</p>
+    </div>
+  } @else {
+    <table class="history-table">
+      <caption class="visually-hidden">Historia zmian przypadku testowego</caption>
+      <thead>
+        <tr>
+          <th scope="col">Data</th>
+          <th scope="col">Autor</th>
+          <th scope="col">Pole</th>
+          <th scope="col">Przed</th>
+          <th scope="col">Po</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (entry of entries(); track $index) {
+          <tr>
+            <td class="nowrap">
+              {{ entry.changedAt | date: "dd.MM.yyyy HH:mm" }}
+            </td>
+            <td>{{ entry.author ?? "system" }}</td>
+            <td>{{ fieldLabel(entry.field) }}</td>
+            <td class="value-cell">{{ truncate(entry.oldValue) }}</td>
+            <td class="value-cell">{{ truncate(entry.newValue) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Zamknij</button>
+</mat-dialog-actions>

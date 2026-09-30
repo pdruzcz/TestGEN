@@ -1,0 +1,41 @@
+@startuml c4-component-m6
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title TestGEN — C4 Level 3: Moduł M6 — Analiza bezpieczeństwa
+
+Container_Boundary(m6, "Moduł analizy bezpieczeństwa (M6)") {
+    Component(orchestrator, "Dual-Path Orchestrator", "Python", "Orkiestruje skanowanie:\nnatywne reguły + LLM")
+    Component(sast, "SAST Scanner", "Python", "Statyczna analiza kodu\n(Semgrep/Bandit reguły)")
+    Component(taint, "Taint Analysis", "Python", "Śledzenie przepływu danych:\nSQL injection, XSS, path traversal")
+    Component(dep_scan, "Dependency Scanner", "Python", "Skanowanie zależności:\nbazy CVE, ocena ryzyka")
+    Component(config_scan, "Config Scanner", "Python", "Analiza konfiguracji:\nhardening, sekrety w kodzie")
+    Component(cve_pipeline, "CVE Pipeline", "Python + Celery", "Aktualizacja bazy CVE\nz NVD/GitHub/OSV")
+    Component(cvss, "CVSS Calculator", "Python", "Obliczanie wyników CVSS\nper podatność")
+    Component(llm_sast, "LLM SAST", "Python + LLM API", "Semantyczna analiza\nbezpieczeństwa via AI")
+    Component(report, "Security Report", "Python", "Raport podatności:\nCritical/High/Medium/Low")
+    Component(sbom, "SBOM Generator", "Python", "Software Bill of Materials\n(CycloneDX / SPDX)")
+}
+
+ContainerDb(postgres, "PostgreSQL", "")
+System_Ext(nvd, "NVD / GitHub Advisory", "")
+System_Ext(llm_ext, "API LLM", "")
+
+Rel(orchestrator, sast, "Native path", "")
+Rel(orchestrator, llm_sast, "LLM path", "")
+Rel(sast, taint, "Wykryte źródła", "")
+Rel(orchestrator, dep_scan, "Zależności", "")
+Rel(orchestrator, config_scan, "Pliki konfiguracji", "")
+Rel(dep_scan, cve_pipeline, "Sprawdzenie CVE", "")
+Rel(cve_pipeline, nvd, "Aktualizacja", "HTTPS")
+Rel(sast, cvss, "Podatności", "")
+Rel(taint, cvss, "Podatności", "")
+Rel(dep_scan, cvss, "Podatności", "")
+Rel(llm_sast, llm_ext, "API call", "HTTPS")
+Rel(cvss, report, "Ocenione podatności", "")
+Rel(llm_sast, report, "Wyniki LLM", "")
+Rel(report, postgres, "Zapis raportu", "SQL")
+Rel(orchestrator, sbom, "Lista zależności", "")
+
+@enduml

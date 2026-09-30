@@ -1,0 +1,44 @@
+@startuml c4-component-m1
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title TestGEN — C4 Level 3: Moduł M1 — Analiza kodu
+
+Container_Boundary(m1, "Moduł analizy kodu (M1)") {
+    Component(upload, "Upload Handler", "FastAPI route", "Odbiera pliki kodu źródłowego,\nzapisuje w MinIO")
+    Component(ast_parser, "AST Parser", "tree-sitter", "Parsuje kod do drzewa\nskładniowego (AST)")
+    Component(py_adapter, "Python Adapter", "tree-sitter-python", "Ekstrakcja klas, funkcji,\nimportów z Pythona")
+    Component(java_adapter, "Java Adapter", "tree-sitter-java", "Ekstrakcja klas, metod,\nzależności z Javy")
+    Component(js_adapter, "JS/TS Adapter", "tree-sitter-javascript/\ntypescript", "Ekstrakcja komponentów,\nfunkcji z JS/TS")
+    Component(csharp_adapter, "C# Adapter", "tree-sitter-c-sharp", "Ekstrakcja klas, metod,\nnamespace'ów z C#")
+    Component(native, "Native Analysis", "Python", "Analiza deterministyczna:\nkompleksowość, zależności,\nstruktury logiczne")
+    Component(llm_analysis, "LLM Analysis", "Python + LLM API", "Analiza semantyczna:\nlogika biznesowa, przepływy,\nkrawędziowe przypadki")
+    Component(gateway, "LLM Gateway", "Python", "Abstrakcja dostawcy LLM\n(Anthropic / OpenAI)")
+    Component(merger, "Result Merger", "Python", "Scalanie wyników native + LLM,\ndeduplikacja, priorytetyzacja")
+    Component(storage, "Analysis Storage", "Python + SQLAlchemy", "Zapis wyników do bazy\n(JSONB) i MinIO")
+}
+
+ContainerDb(postgres, "PostgreSQL", "")
+ContainerDb(minio, "MinIO", "")
+System_Ext(llm_ext, "API LLM", "")
+
+Rel(upload, minio, "Zapisuje pliki", "S3 API")
+Rel(upload, ast_parser, "Przekazuje pliki", "")
+Rel(ast_parser, py_adapter, "Python", "")
+Rel(ast_parser, java_adapter, "Java", "")
+Rel(ast_parser, js_adapter, "JS/TS", "")
+Rel(ast_parser, csharp_adapter, "C#", "")
+Rel(py_adapter, native, "Drzewo AST", "")
+Rel(java_adapter, native, "Drzewo AST", "")
+Rel(js_adapter, native, "Drzewo AST", "")
+Rel(csharp_adapter, native, "Drzewo AST", "")
+Rel(native, merger, "Wyniki natywne", "")
+Rel(ast_parser, llm_analysis, "Kod + kontekst", "")
+Rel(llm_analysis, gateway, "Wywołanie", "")
+Rel(gateway, llm_ext, "API call", "HTTPS")
+Rel(llm_analysis, merger, "Wyniki LLM", "")
+Rel(merger, storage, "Scalone wyniki", "")
+Rel(storage, postgres, "Zapis", "SQL")
+
+@enduml

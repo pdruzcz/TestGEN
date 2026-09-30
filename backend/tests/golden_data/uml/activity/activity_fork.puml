@@ -1,0 +1,11 @@
+@startuml
+start
+:ReceiveOrder;
+fork
+  :ChargeCard;
+fork again
+  :ReserveStock;
+end fork
+:ConfirmOrder;
+stop
+@enduml

@@ -1,0 +1,57 @@
+{
+  "name": "Checkout flow — XPath selektory",
+  "description": "Checkout z XPath (test walidacji selektorow) + mix semantyczne + XPath",
+  "url": "https://shop.example.com/checkout",
+  "test_cases": [
+    {
+      "scenario_name": "Complete checkout",
+      "test_type": "e2e",
+      "url": "https://shop.example.com/checkout",
+      "ui_elements": [
+        {
+          "name": "shipping_address",
+          "locator_type": "xpath",
+          "locator_value": "//input[@data-testid='shipping-address']",
+          "element_type": "input",
+          "page_name": "CheckoutPage"
+        },
+        {
+          "name": "place_order_button",
+          "locator_type": "role",
+          "locator_value": "button",
+          "element_type": "button",
+          "page_name": "CheckoutPage",
+          "role_name": "Place Order"
+        },
+        {
+          "name": "confirmation_text",
+          "locator_type": "text",
+          "locator_value": "Order confirmed",
+          "element_type": "text",
+          "page_name": "ConfirmationPage"
+        }
+      ],
+      "user_flow": {
+        "name": "Checkout",
+        "url": "https://shop.example.com/checkout",
+        "steps": [
+          {"action": "fill", "element": {"name": "shipping_address"}, "value": "ul. Testowa 1, Warszawa"},
+          {"action": "click", "element": {"name": "place_order_button"}}
+        ]
+      },
+      "api_mocks": [
+        {
+          "url": "**/api/orders",
+          "method": "POST",
+          "status": 201,
+          "body": {"order_id": "ORD-123", "status": "confirmed"}
+        }
+      ],
+      "expected_result": "Order confirmed",
+      "comparison_type": "text_contains",
+      "assertions": [
+        {"type": "text_contains", "element": "confirmation_text", "expected": "Order confirmed"}
+      ]
+    }
+  ]
+}

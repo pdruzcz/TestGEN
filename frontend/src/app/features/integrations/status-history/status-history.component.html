@@ -1,0 +1,74 @@
+<div class="history-page">
+  <app-navbar activeLink="profile" />
+  <main class="history-content" id="main-content" tabindex="-1">
+    <div class="page-header">
+      <div>
+        <a mat-button [routerLink]="backLink" class="back-link">
+          <mat-icon aria-hidden="true">arrow_back</mat-icon>
+          Wróć do integracji
+        </a>
+        <h1 class="page-title">Historia status checków</h1>
+        <p class="page-subtitle">Wyniki analiz zgłoszone do repozytorium przy pushach i zmianach.</p>
+      </div>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="banner banner-error" role="alert">{{ errorMessage() }}</p>
+    }
+
+    @if (isLoading()) {
+      <div class="loading">
+        <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+        Ładowanie...
+      </div>
+    } @else if (events().length === 0) {
+      <p class="empty-state">
+        Brak zdarzeń dla tej integracji. Pojawią się tu po pierwszym pushu lub zmianie w repozytorium.
+      </p>
+    } @else {
+      <table class="data-table">
+        <caption class="visually-hidden">
+          Historia status checków
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Zdarzenie</th>
+            <th scope="col">Commit</th>
+            <th scope="col">Status</th>
+            <th scope="col">Status check</th>
+            <th scope="col">Czas analizy</th>
+            <th scope="col">Kiedy</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (event of events(); track event.id) {
+            <tr>
+              <td>{{ eventLabel(event) }}</td>
+              <td>
+                <code>{{ shortSha(event.commitSha) }}</code>
+              </td>
+              <td>
+                <span class="badge" [class]="'status-' + event.status">
+                  {{ statusLabel(event.status) }}
+                </span>
+              </td>
+              <td>
+                @if (hasStatusCheck(event)) {
+                  <span class="check-sent">wysłany</span>
+                } @else {
+                  <span class="check-skipped">—</span>
+                }
+                @if (event.errorMessage) {
+                  <span class="event-detail">{{ event.errorMessage }}</span>
+                }
+              </td>
+              <td>{{ durationLabel(event) }}</td>
+              <td>{{ event.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </main>
+  <app-footer />
+</div>

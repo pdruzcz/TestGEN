@@ -1,0 +1,85 @@
+@startuml c4-code-pipeline
+title TestGEN — C4 Level 4: Pipeline przetwarzania (wzorzec potoku)
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+
+package "Pipeline przetwarzania" {
+
+    interface "PipelineStep" as step {
+        + execute(context: PipelineContext) : PipelineContext
+        + validate(context) : bool
+    }
+
+    class "PipelineContext" as ctx {
+        + project_id: UUID
+        + tenant_id: UUID
+        + source_files: list[SourceFile]
+        + parsed_data: dict
+        + analysis_results: dict
+        + test_cases: list[TestCase]
+        + engine_mode: EngineMode
+        + errors: list[str]
+    }
+
+    class "ParseStep" as parse {
+        - ast_parser: ASTParser
+        - doc_parser: DocumentParser
+        --
+        + execute(context) : PipelineContext
+        .. parsuje pliki źródłowe ..
+    }
+
+    class "AnalyzeStep" as analyze {
+        - analysis_engine: AnalysisEngine
+        --
+        + execute(context) : PipelineContext
+        .. uruchamia dual-path analizę ..
+    }
+
+    class "GenerateStep" as generate {
+        - test_generator: TestCaseGenerator
+        - codegen: CodeGenerator
+        --
+        + execute(context) : PipelineContext
+        .. generuje przypadki i kod testowy ..
+    }
+
+    class "SecurityStep" as security {
+        - sast_scanner: SASTScanner
+        - dep_scanner: DependencyScanner
+        --
+        + execute(context) : PipelineContext
+        .. skanuje bezpieczeństwo ..
+    }
+
+    class "StoreStep" as store {
+        - analysis_storage: AnalysisStorage
+        --
+        + execute(context) : PipelineContext
+        .. zapisuje wyniki do DB i MinIO ..
+    }
+
+    class "AnalysisPipeline" as pipeline {
+        - steps: list[PipelineStep]
+        --
+        + run(context) : PipelineContext
+        + add_step(step: PipelineStep)
+        - handle_error(step, error)
+    }
+
+    step <|.. parse
+    step <|.. analyze
+    step <|.. generate
+    step <|.. security
+    step <|.. store
+    pipeline --> step : orchestrates
+    pipeline --> ctx : passes through
+}
+
+parse -[hidden]right-> analyze
+analyze -[hidden]right-> generate
+generate -[hidden]right-> security
+security -[hidden]right-> store
+
+@enduml

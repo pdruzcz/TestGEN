@@ -1,0 +1,12 @@
+{
+  "category": "navigation",
+  "description": "Nawigacja okruszkowa (breadcrumb) wraz z zakladkami sekcji.",
+  "expected_component_count": 5,
+  "expected_components": [
+    {"component_type": "link", "label": "Projekty", "bbox": {"x": 40, "y": 20, "width": 90, "height": 24}, "confidence": 0.84},
+    {"component_type": "link", "label": "Projekt A", "bbox": {"x": 140, "y": 20, "width": 100, "height": 24}, "confidence": 0.84},
+    {"component_type": "tab", "label": "Przeglad", "bbox": {"x": 40, "y": 70, "width": 120, "height": 40}, "confidence": 0.88},
+    {"component_type": "tab", "label": "Diagramy", "bbox": {"x": 170, "y": 70, "width": 120, "height": 40}, "confidence": 0.88},
+    {"component_type": "tab", "label": "Testy", "bbox": {"x": 300, "y": 70, "width": 120, "height": 40}, "confidence": 0.88}
+  ]
+}

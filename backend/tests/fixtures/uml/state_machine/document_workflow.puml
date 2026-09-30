@@ -1,0 +1,9 @@
+@startuml
+[*] --> Szkic
+Szkic --> DoRecenzji : zglos / powiadom_recenzenta
+DoRecenzji --> Zaakceptowany : zaakceptuj [kompletny]
+DoRecenzji --> Szkic : odrzuc / zwroc_uwagi
+Zaakceptowany --> Opublikowany : opublikuj / udostepnij
+Opublikowany --> Zarchiwizowany : zarchiwizuj
+Zarchiwizowany --> [*]
+@enduml

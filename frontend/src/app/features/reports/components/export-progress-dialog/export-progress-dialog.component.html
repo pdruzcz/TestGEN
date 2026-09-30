@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Eksport {{ data.formatLabel }}</h2>
+<mat-dialog-content>
+  <div class="dialog-body" role="status" aria-live="polite">
+    <p>Trwa generowanie pliku {{ data.formatLabel }}…</p>
+    <mat-progress-bar mode="indeterminate" aria-label="Postęp eksportu" />
+    <p class="hint">
+      Plik zostanie pobrany automatycznie po zakończeniu i pozostanie
+      dostępny na serwerze przez 7 dni.
+    </p>
+  </div>
+</mat-dialog-content>

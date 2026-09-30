@@ -1,0 +1,12 @@
+@startuml
+abstract class Animal {
+  +name: string
+  +move()
+}
+class Mammal
+class Dog
+class Cat
+Animal <|-- Mammal
+Mammal <|-- Dog
+Mammal <|-- Cat
+@enduml

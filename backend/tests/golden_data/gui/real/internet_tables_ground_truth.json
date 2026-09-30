@@ -1,0 +1,128 @@
+{
+  "category": "real",
+  "description": "the-internet (MIT) — /tables. Dwie tabele danych (4 wiersze kazda) z akcjami edit/delete.",
+  "expected_component_count": 11,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Data Tables",
+      "bbox": {
+        "x": 155,
+        "y": 41,
+        "width": 150,
+        "height": 30
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "menu",
+      "label": "Each table...",
+      "bbox": {
+        "x": 154,
+        "y": 92,
+        "width": 900,
+        "height": 50
+      },
+      "confidence": 0.7
+    },
+    {
+      "component_type": "menu",
+      "label": "Example 1",
+      "bbox": {
+        "x": 154,
+        "y": 164,
+        "width": 97,
+        "height": 27
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "menu",
+      "label": "Example 2",
+      "bbox": {
+        "x": 154,
+        "y": 433,
+        "width": 97,
+        "height": 27
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "menu",
+      "label": "table 1 rows",
+      "bbox": {
+        "x": 154,
+        "y": 200,
+        "width": 700,
+        "height": 230
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "menu",
+      "label": "table 2 rows",
+      "bbox": {
+        "x": 154,
+        "y": 470,
+        "width": 700,
+        "height": 230
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "button",
+      "label": "edit (row 1, t1)",
+      "bbox": {
+        "x": 790,
+        "y": 289,
+        "width": 34,
+        "height": 16
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "delete (row 1, t1)",
+      "bbox": {
+        "x": 790,
+        "y": 383,
+        "width": 69,
+        "height": 16
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "edit (row 1, t2)",
+      "bbox": {
+        "x": 790,
+        "y": 557,
+        "width": 34,
+        "height": 16
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "delete (row 2, t2)",
+      "bbox": {
+        "x": 790,
+        "y": 652,
+        "width": 69,
+        "height": 16
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "link",
+      "label": "Elemental Selenium",
+      "bbox": {
+        "x": 612,
+        "y": 735,
+        "width": 146,
+        "height": 18
+      },
+      "confidence": 0.8
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "diagram_type": "class",
+  "description": "Abstrakcyjna hierarchia dziedziczenia Animal->Mammal->{Dog,Cat}.",
+  "expected_participants_count": 0,
+  "expected_elements_count": 4,
+  "expected_relationships_count": 3,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 0
+}

@@ -1,0 +1,9 @@
+{
+  "diagram_type": "activity",
+  "description": "Diagram czynnosci z petla while (przetwarzanie elementow).",
+  "expected_participants_count": 0,
+  "expected_elements_count": 5,
+  "expected_relationships_count": 5,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 3
+}

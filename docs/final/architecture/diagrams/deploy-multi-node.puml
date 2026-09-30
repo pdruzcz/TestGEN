@@ -1,0 +1,84 @@
+@startuml deploy-multi-node
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+
+LAYOUT_WITH_LEGEND()
+
+title TestGEN — Deployment: Multi-node (Kubernetes / Helm)
+
+Deployment_Node(k8s, "Klaster Kubernetes", "3+ node'ów") {
+
+    Deployment_Node(ingress_node, "Ingress Controller") {
+        Container(ingress, "Ingress nginx", "L7 Load Balancer", "SSL termination,\nrouting: / → frontend,\n/api → backend")
+    }
+
+    Deployment_Node(app_ns, "Namespace: testgen") {
+
+        Deployment_Node(frontend_dep, "Deployment: frontend") {
+            Container(frontend, "frontend", "Angular 21\nnginx:alpine", "2–4 repliki\nHPA: CPU > 70%")
+        }
+
+        Deployment_Node(backend_dep, "Deployment: backend") {
+            Container(backend, "backend", "Python 3.12\nFastAPI", "2–6 replik\nHPA: CPU > 70%")
+        }
+
+        Deployment_Node(worker_dep, "Deployment: celery-worker") {
+            Container(workers, "celery-worker", "Python 3.12\nCelery 5", "2–8 replik\nHPA: queue depth > 100")
+        }
+
+        Deployment_Node(beat_dep, "Deployment: celery-beat") {
+            Container(beat, "celery-beat", "Python 3.12\nCelery 5", "1 replika\n(singleton)")
+        }
+    }
+
+    Deployment_Node(data_ns, "Namespace: testgen-data") {
+
+        Deployment_Node(pg_ss, "StatefulSet: postgresql") {
+            ContainerDb(pg_primary, "PostgreSQL Primary", "PostgreSQL 16", "Zapis/odczyt\nPVC: 100 Gi")
+            ContainerDb(pg_replica, "PostgreSQL Replica", "PostgreSQL 16", "Tylko odczyt\nstreaming replication")
+        }
+
+        Deployment_Node(pgbouncer_dep, "Deployment: pgbouncer") {
+            Container(pgbouncer, "PgBouncer", "Connection pooler", "pool_mode=transaction\nmax_client_conn=400")
+        }
+
+        Deployment_Node(redis_ss, "StatefulSet: redis") {
+            ContainerDb(redis_m, "Redis Primary", "Redis 7", "Zapis/odczyt")
+            ContainerDb(redis_s, "Redis Sentinel", "Redis Sentinel", "HA failover")
+        }
+
+        Deployment_Node(rmq_ss, "StatefulSet: rabbitmq") {
+            ContainerQueue(rabbitmq, "RabbitMQ", "RabbitMQ 3.12\nCluster", "3 node'y\nquorum queues")
+        }
+
+        Deployment_Node(minio_ss, "StatefulSet: minio") {
+            ContainerDb(minio, "MinIO", "MinIO", "Distributed mode\n4+ node'y, PVC: 200 Gi")
+        }
+    }
+
+    Deployment_Node(mon_ns, "Namespace: monitoring") {
+        Container(prometheus, "Prometheus", "Monitoring", "Scrape targets,\nalert rules")
+        Container(grafana, "Grafana", "Dashboardy", "Wizualizacja\nmetryk i logów")
+        Container(loki, "Loki", "Log aggregation", "Zbieranie logów\nz promtail")
+        Container(alertmanager, "Alertmanager", "Alert routing", "E-mail, Slack,\nPagerDuty")
+    }
+}
+
+Rel(ingress, frontend, "HTTP", "")
+Rel(ingress, backend, "HTTP", "")
+Rel(backend, pgbouncer, "SQL", "")
+Rel(pgbouncer, pg_primary, "SQL", "")
+Rel(pgbouncer, pg_replica, "SQL (read)", "")
+Rel(pg_primary, pg_replica, "Streaming repl.", "")
+Rel(backend, rabbitmq, "AMQP", "")
+Rel(backend, redis_m, "Cache", "")
+Rel(backend, minio, "S3 API", "")
+Rel(workers, rabbitmq, "Consume", "")
+Rel(workers, pg_primary, "SQL", "")
+Rel(workers, redis_m, "Result", "")
+Rel(beat, rabbitmq, "Schedule", "")
+Rel(prometheus, backend, "Scrape /metrics", "")
+Rel(prometheus, alertmanager, "Alerty", "")
+Rel(grafana, prometheus, "Zapytania PromQL", "")
+Rel(grafana, loki, "Zapytania LogQL", "")
+
+@enduml

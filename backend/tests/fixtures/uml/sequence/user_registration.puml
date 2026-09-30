@@ -1,0 +1,16 @@
+@startuml
+actor Visitor as V
+participant "Registration Form" as Form
+participant "Account Service" as Acc
+participant "Email Service" as Mail
+
+V -> Form: submit registration
+Form -> Acc: create account
+Acc --> Form: account created
+opt email verification enabled
+    Acc -> Mail: send verification email
+    Mail --> Acc: email queued
+    Acc --> V: check your inbox
+end
+Form --> V: registration complete
+@enduml

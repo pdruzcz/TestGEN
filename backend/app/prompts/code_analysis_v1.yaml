@@ -1,0 +1,47 @@
+name: code_analysis.extract_functions
+version: v1
+description: Extract function definitions from source code
+model: claude-sonnet-4-20250514
+max_tokens: 4096
+temperature: 0.3
+template: |
+  You are an expert code analyst. Analyze the following source code and extract all function definitions.
+
+  File: {{ filename }}
+  Language: {{ language }}
+
+  ```{{ language }}
+  {{ content }}
+  ```
+
+  Return a JSON array with the following structure:
+  [
+    {
+      "name": "function_name",
+      "line_start": 10,
+      "line_end": 25,
+      "parameters": [{"name": "param1", "type": "str", "default": null}],
+      "return_type": "void",
+      "decorators": ["@staticmethod"],
+      "docstring": "Function description...",
+      "complexity": 5
+    }
+  ]
+
+  Focus on:
+  - Function signature and parameters
+  - Return type (explicit or inferred)
+  - Decorators
+  - Docstrings
+  - Cyclomatic complexity estimate
+
+variables:
+  - name: filename
+    type: string
+    required: true
+  - name: language
+    type: string
+    required: true
+  - name: content
+    type: string
+    required: true

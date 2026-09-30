@@ -1,0 +1,11 @@
+@startuml
+actor Uzytkownik
+usecase "Zloz zamowienie" as UC1
+usecase "Zaloguj sie" as UC2
+usecase "Zaplac karta" as UC3
+usecase "Zastosuj kupon" as UC4
+Uzytkownik --> UC1
+UC1 .> UC2 : include
+UC1 .> UC3 : include
+UC1 <. UC4 : extend
+@enduml

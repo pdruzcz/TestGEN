@@ -1,0 +1,95 @@
+{
+  "category": "real",
+  "description": "Angular Material docs (MIT) — komponent Table, przykłady live: tabela elementów z paginatorem + tabela z filtrem (input) i paginatorem. Viewport 1280x800.",
+  "expected_component_count": 8,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidenav (lista komponentów)",
+      "bbox": {
+        "x": 0,
+        "y": 64,
+        "width": 290,
+        "height": 736
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Search (toolbar)",
+      "bbox": {
+        "x": 900,
+        "y": 12,
+        "width": 340,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "table",
+      "label": "Elements table (demo z paginatorem)",
+      "bbox": {
+        "x": 340,
+        "y": 170,
+        "width": 900,
+        "height": 200
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Paginator page size (demo)",
+      "bbox": {
+        "x": 340,
+        "y": 380,
+        "width": 90,
+        "height": 40
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Paginator: strzałka wstecz (demo)",
+      "bbox": {
+        "x": 1130,
+        "y": 380,
+        "width": 40,
+        "height": 40
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Paginator: strzałka w przód (demo)",
+      "bbox": {
+        "x": 1180,
+        "y": 380,
+        "width": 40,
+        "height": 40
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Filter (demo tabeli z filtrem)",
+      "bbox": {
+        "x": 340,
+        "y": 500,
+        "width": 300,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "table",
+      "label": "Filterable table (demo)",
+      "bbox": {
+        "x": 340,
+        "y": 560,
+        "width": 900,
+        "height": 180
+      },
+      "confidence": 0.85
+    }
+  ]
+}

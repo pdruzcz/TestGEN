@@ -1,0 +1,73 @@
+<div class="bell-wrap">
+  <button
+    mat-icon-button
+    type="button"
+    class="bell-button"
+    (click)="toggle()"
+    [attr.aria-label]="bellAriaLabel()"
+    [attr.aria-expanded]="open()"
+    aria-haspopup="true"
+  >
+    <mat-icon>notifications</mat-icon>
+    @if (unreadCount() > 0) {
+      <span class="bell-badge" aria-hidden="true">{{
+        unreadCount() > 99 ? "99+" : unreadCount()
+      }}</span>
+    }
+  </button>
+
+  @if (open()) {
+    <div class="bell-dropdown" role="region" aria-label="Lista powiadomień">
+      <div class="bell-header">
+        <span class="bell-title">Powiadomienia</span>
+        @if (hasUnread()) {
+          <button
+            mat-button
+            type="button"
+            class="mark-all"
+            (click)="markAllAsRead()"
+          >
+            Oznacz wszystkie jako przeczytane
+          </button>
+        }
+      </div>
+
+      @if (loading()) {
+        <p class="bell-state" role="status">Ładowanie powiadomień…</p>
+      } @else if (notifications().length === 0) {
+        <p class="bell-state" role="status">Brak powiadomień</p>
+      } @else {
+        <ul class="bell-list" role="list">
+          @for (n of notifications(); track n.id) {
+            <li class="bell-item" [class.unread]="!n.isRead">
+              <span
+                class="severity-dot {{ severityClass(n) }}"
+                aria-hidden="true"
+              ></span>
+              <div class="item-body">
+                <a class="item-link" [routerLink]="n.ctaUrl || null">
+                  <span class="item-title">{{ n.title }}</span>
+                  <span class="item-message">{{ n.message }}</span>
+                  <span class="item-date">{{
+                    n.createdAt | date: "dd.MM.yyyy HH:mm"
+                  }}</span>
+                </a>
+              </div>
+              @if (!n.isRead) {
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="mark-read"
+                  (click)="markAsRead(n, $event)"
+                  [attr.aria-label]="'Oznacz jako przeczytane: ' + n.title"
+                >
+                  <mat-icon>check</mat-icon>
+                </button>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+</div>

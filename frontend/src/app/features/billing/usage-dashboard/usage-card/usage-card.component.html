@@ -1,0 +1,57 @@
+<mat-card
+  class="usage-card"
+  [class.expanded]="expanded()"
+  [attr.aria-label]="'Zużycie zasobu ' + label()"
+>
+  <mat-card-content>
+    <div class="card-top">
+      <h3 class="card-name">{{ label() }}</h3>
+      <span [class]="'pct ' + barState()">{{ pctLabel() }}</span>
+    </div>
+
+    <p class="value">{{ valueLabel() }}</p>
+
+    @if (barValue() !== null) {
+      <mat-progress-bar
+        mode="determinate"
+        [value]="barValue()!"
+        [attr.aria-label]="barAriaLabel()"
+        [class]="'bar-' + barState()"
+      />
+    }
+
+    <!-- AC3 — szczegóły z wykresem historii po kliknięciu karty -->
+    <button
+      mat-button
+      type="button"
+      class="details-toggle"
+      (click)="toggle()"
+      [attr.aria-expanded]="expanded()"
+      [attr.aria-controls]="detailsId()"
+    >
+      <mat-icon>{{ expanded() ? "expand_less" : "expand_more" }}</mat-icon>
+      {{ expanded() ? "Ukryj szczegóły" : "Szczegóły i historia" }}
+    </button>
+
+    @if (expanded()) {
+      <div [attr.id]="detailsId()" class="details">
+        @if (historyLoading()) {
+          <p class="history-state" role="status">Ładowanie historii…</p>
+        } @else if (historyError()) {
+          <p class="history-state error" role="alert">
+            {{ historyError() }}
+          </p>
+          <button mat-stroked-button type="button" (click)="loadHistory()">
+            Spróbuj ponownie
+          </button>
+        } @else {
+          <app-usage-chart
+            [points]="historyPoints()"
+            [limit]="counter().limit"
+            [valueUnit]="chartValueUnit()"
+          />
+        }
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

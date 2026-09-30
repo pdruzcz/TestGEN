@@ -1,0 +1,39 @@
+{
+  "description": "Frozen SAST detection ground truth for Story 4.1 vulnerable samples.",
+  "samples": [
+    {
+      "file": "vulnerable_python.py",
+      "language": "python",
+      "expected_types": [
+        "command_injection",
+        "code_injection",
+        "sql_injection",
+        "weak_cryptography",
+        "insecure_deserialization",
+        "hardcoded_secret"
+      ],
+      "min_findings": 6
+    },
+    {
+      "file": "vulnerable_javascript.js",
+      "language": "javascript",
+      "expected_types": [
+        "xss",
+        "code_injection",
+        "command_injection",
+        "hardcoded_secret"
+      ],
+      "min_findings": 4
+    },
+    {
+      "file": "vulnerable_java.java",
+      "language": "java",
+      "expected_types": [
+        "hardcoded_secret",
+        "sql_injection",
+        "weak_cryptography"
+      ],
+      "min_findings": 3
+    }
+  ]
+}

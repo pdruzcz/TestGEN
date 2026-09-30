@@ -1,0 +1,114 @@
+.patch-preview {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  background: #fafafa;
+  margin-top: 0.75rem;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+  }
+
+  &__engine {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__mode {
+    border: 1px solid #b0bec5;
+    background: #fff;
+    border-radius: 16px;
+    padding: 0.2rem 0.85rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: #455a64;
+
+    &--active {
+      background: #1976d2;
+      border-color: #1976d2;
+      color: #fff;
+    }
+  }
+
+  &__error {
+    margin: 0.75rem 0;
+    color: #c62828;
+  }
+
+  &__diff {
+    margin-top: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.82rem;
+    background: #fff;
+  }
+
+  &__line {
+    white-space: pre;
+    padding: 0 0.75rem;
+    line-height: 1.5;
+
+    &--add {
+      background: #e6ffed;
+      color: #22863a;
+    }
+
+    &--del {
+      background: #ffeef0;
+      color: #b31d28;
+    }
+
+    &--meta {
+      background: #f1f8ff;
+      color: #6f42c1;
+    }
+
+    &--context {
+      color: #444;
+    }
+  }
+
+  &__actions {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__hint-apply {
+    font-size: 0.82rem;
+    color: #607d8b;
+
+    code {
+      background: #eceff1;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+  }
+
+  &__hint {
+    margin-top: 1rem;
+    color: #78909c;
+    font-style: italic;
+
+    code {
+      background: #eceff1;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-style: normal;
+    }
+  }
+}

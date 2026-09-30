@@ -1,0 +1,78 @@
+@startuml c4-code-parsers
+title TestGEN — C4 Level 4: Parsery języków (wzorzec strategii)
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+
+package "Parsery kodu źródłowego" {
+
+    abstract class "BaseParser" as base {
+        # language: str
+        # ts_parser: tree_sitter.Parser
+        --
+        + parse(source: str) : ParsedCode
+        + extract_classes() : list[ClassInfo]
+        + extract_functions() : list[FunctionInfo]
+        + extract_imports() : list[ImportInfo]
+        # {abstract} get_language() : tree_sitter.Language
+        # {abstract} get_queries() : dict[str, str]
+    }
+
+    class "PythonParser" as python {
+        + get_language() : Language
+        + get_queries() : dict
+        + extract_decorators() : list
+        + extract_docstrings() : list
+    }
+
+    class "JavaParser" as java {
+        + get_language() : Language
+        + get_queries() : dict
+        + extract_annotations() : list
+        + extract_packages() : list
+    }
+
+    class "TypeScriptParser" as ts {
+        + get_language() : Language
+        + get_queries() : dict
+        + extract_interfaces() : list
+        + extract_types() : list
+    }
+
+    class "CSharpParser" as csharp {
+        + get_language() : Language
+        + get_queries() : dict
+        + extract_namespaces() : list
+        + extract_attributes() : list
+    }
+
+    class "CppParser" as cpp {
+        + get_language() : Language
+        + get_queries() : dict
+        + extract_headers() : list
+        + extract_templates() : list
+    }
+
+    class "PHPParser" as php {
+        + get_language() : Language
+        + get_queries() : dict
+        + extract_traits() : list
+    }
+
+    base <|-- python
+    base <|-- java
+    base <|-- ts
+    base <|-- csharp
+    base <|-- cpp
+    base <|-- php
+}
+
+note right of base
+  Wszystkie parsery używają
+  tree-sitter jako backendu.
+  Każdy język definiuje własne
+  zapytania (queries) do
+  ekstrakcji elementów AST.
+end note
+
+@enduml

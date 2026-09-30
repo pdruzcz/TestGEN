@@ -1,0 +1,239 @@
+<section class="exec-summary" aria-label="Podsumowanie wykonawcze">
+  <!-- Definicje wzorków SVG (AC6 — WCAG: wzorek + kolor) -->
+  <svg width="0" height="0" class="pattern-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <pattern id="pat-stripes" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+        <rect width="8" height="8" class="pat-bg" />
+        <line x1="0" y1="0" x2="0" y2="8" class="pat-fg" stroke-width="3" />
+      </pattern>
+      <pattern id="pat-dots" patternUnits="userSpaceOnUse" width="8" height="8">
+        <rect width="8" height="8" class="pat-bg" />
+        <circle cx="4" cy="4" r="1.8" class="pat-fg-fill" />
+      </pattern>
+      <pattern id="pat-hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(-45)">
+        <rect width="8" height="8" class="pat-bg" />
+        <line x1="0" y1="0" x2="0" y2="8" class="pat-fg" stroke-width="2" />
+      </pattern>
+      <pattern id="pat-cross" patternUnits="userSpaceOnUse" width="8" height="8">
+        <rect width="8" height="8" class="pat-bg" />
+        <path d="M0 4 H8 M4 0 V8" class="pat-fg" stroke-width="1.5" fill="none" />
+      </pattern>
+      <pattern id="pat-vertical" patternUnits="userSpaceOnUse" width="6" height="6">
+        <rect width="6" height="6" class="pat-bg" />
+        <line x1="3" y1="0" x2="3" y2="6" class="pat-fg" stroke-width="2" />
+      </pattern>
+    </defs>
+  </svg>
+
+  <!-- KPI (AC2) -->
+  <div class="kpi-grid">
+    <div class="kpi-card kpi-score">
+      <span class="kpi-label">Zgodność z dokumentacją</span>
+      <span class="kpi-value">
+        @if (data().kpis.complianceScore !== null) {
+          {{ data().kpis.complianceScore | number: "1.0-0" }}%
+        } @else {
+          —
+        }
+      </span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Pokrycie wymagań</span>
+      <span class="kpi-value">
+        @if (data().kpis.coveragePercentage !== null) {
+          {{ data().kpis.coveragePercentage | number: "1.0-0" }}%
+        } @else {
+          —
+        }
+      </span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Wykryte problemy</span>
+      <span class="kpi-value">{{ data().kpis.totalFindings }}</span>
+    </div>
+    <div class="kpi-card kpi-critical">
+      <span class="kpi-label">Problemy krytyczne</span>
+      <span class="kpi-value">{{ data().kpis.criticalCount }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Przypadki testowe</span>
+      <span class="kpi-value">{{ data().kpis.testCasesTotal }}</span>
+    </div>
+  </div>
+
+  <!-- Kluczowe wnioski (AC4 — prosty język polski) -->
+  <div class="report-card">
+    <h3 class="card-title">
+      <mat-icon aria-hidden="true">lightbulb</mat-icon>
+      Kluczowe wnioski
+    </h3>
+    <ul class="conclusions">
+      @for (c of data().conclusions; track $index) {
+        <li>{{ c }}</li>
+      }
+    </ul>
+  </div>
+
+  <div class="charts-row">
+    <!-- Rozkład problemów (donut) -->
+    <div class="report-card chart-card">
+      <h3 class="card-title">
+        <mat-icon aria-hidden="true">donut_small</mat-icon>
+        Rozkład problemów
+      </h3>
+      @if (severityChart().total > 0) {
+        <div class="donut-wrap">
+          <svg
+            [attr.width]="severityChart().size"
+            [attr.height]="severityChart().size"
+            [attr.viewBox]="'0 0 ' + severityChart().size + ' ' + severityChart().size"
+            role="img"
+            aria-label="Wykres kołowy rozkładu problemów według istotności"
+          >
+            @for (seg of severityChart().segments; track seg.label) {
+              <path [attr.d]="seg.path" class="donut-seg {{ seg.colorClass }}" />
+              <path
+                [attr.d]="seg.path"
+                [attr.fill]="'url(#' + seg.patternId + ')'"
+                class="donut-pattern"
+              />
+            }
+          </svg>
+          <ul class="chart-legend">
+            @for (seg of severityChart().segments; track seg.label) {
+              <li>
+                <svg width="16" height="16" aria-hidden="true">
+                  <rect width="16" height="16" class="legend-swatch {{ seg.colorClass }}" />
+                  <rect width="16" height="16" [attr.fill]="'url(#' + seg.patternId + ')'" opacity="0.5" />
+                </svg>
+                {{ seg.label }}: {{ seg.value }} ({{ seg.percentage }}%)
+              </li>
+            }
+          </ul>
+        </div>
+      } @else {
+        <p class="empty-hint">Brak wykrytych problemów.</p>
+      }
+    </div>
+
+    <!-- Trend zgodności (linia) -->
+    <div class="report-card chart-card">
+      <h3 class="card-title">
+        <mat-icon aria-hidden="true">trending_up</mat-icon>
+        Trend zgodności
+      </h3>
+      @if (data().trendPoints.length > 1) {
+        <svg
+          [attr.width]="trendChart().width"
+          [attr.height]="trendChart().height"
+          [attr.viewBox]="'0 0 ' + trendChart().width + ' ' + trendChart().height"
+          class="line-chart"
+          role="img"
+          aria-label="Wykres liniowy trendu zgodności w kolejnych analizach"
+        >
+          @for (grid of trendChart().gridLines; track grid.value) {
+            <line
+              x1="0"
+              [attr.x2]="trendChart().width"
+              [attr.y1]="grid.y"
+              [attr.y2]="grid.y"
+              class="grid-line"
+            />
+            <text x="2" [attr.y]="grid.y - 3" class="grid-label">{{ grid.value }}</text>
+          }
+          <path [attr.d]="trendChart().areaPath" class="line-area" />
+          <path [attr.d]="trendChart().path" class="line-path" fill="none" />
+          @for (p of trendChart().points; track $index) {
+            <circle [attr.cx]="p.x" [attr.cy]="p.y" r="4" class="line-point">
+              <title>{{ p.label }}: {{ p.value }}%</title>
+            </circle>
+          }
+        </svg>
+      } @else {
+        <p class="empty-hint">
+          Za mało analiz, aby pokazać trend (wymagane co najmniej 2).
+        </p>
+      }
+    </div>
+  </div>
+
+  <!-- Zgodność per moduł (słupki) -->
+  <div class="report-card">
+    <h3 class="card-title">
+      <mat-icon aria-hidden="true">bar_chart</mat-icon>
+      Zgodność według modułów
+    </h3>
+    @if (moduleChart().bars.length > 0) {
+      <div class="bar-chart">
+        @for (bar of moduleChart().bars; track bar.label) {
+          <div class="bar-row">
+            <span class="bar-label" [title]="bar.label">{{ bar.label }}</span>
+            <svg
+              [attr.width]="moduleChart().width"
+              [attr.height]="bar.height"
+              class="bar-svg"
+              role="img"
+              [attr.aria-label]="bar.label + ': ' + bar.value + '%'"
+            >
+              <rect
+                x="0"
+                y="0"
+                [attr.width]="bar.width"
+                [attr.height]="bar.height"
+                rx="3"
+                class="bar-rect {{ bar.colorClass }}"
+              />
+              <rect
+                x="0"
+                y="0"
+                [attr.width]="bar.width"
+                [attr.height]="bar.height"
+                rx="3"
+                [attr.fill]="'url(#' + bar.patternId + ')'"
+                class="bar-pattern"
+              />
+            </svg>
+            <span class="bar-value">{{ bar.value }}%</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="empty-hint">Brak danych o zgodności modułów.</p>
+    }
+  </div>
+
+  <!-- Tabela podsumowująca (AC2) -->
+  <div class="report-card">
+    <h3 class="card-title">
+      <mat-icon aria-hidden="true">table_chart</mat-icon>
+      Podsumowanie testów
+    </h3>
+    <table class="summary-table">
+      <caption class="visually-hidden">Podsumowanie testów</caption>
+      <thead>
+        <tr>
+          <th scope="col">Wskaźnik</th>
+          <th scope="col">Wartość</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Przypadki testowe (łącznie)</td>
+          <td>{{ data().kpis.testCasesTotal }}</td>
+        </tr>
+        <tr>
+          <td>Gotowe do uruchomienia</td>
+          <td>{{ data().kpis.testCasesReady }}</td>
+        </tr>
+        <tr>
+          <td>Zakończone pozytywnie</td>
+          <td>{{ data().kpis.testCasesPassed }}</td>
+        </tr>
+        <tr>
+          <td>Data wygenerowania raportu</td>
+          <td>{{ data().generatedAt | date: "dd.MM.yyyy HH:mm" }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

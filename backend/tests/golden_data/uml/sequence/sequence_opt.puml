@@ -1,0 +1,9 @@
+@startuml
+participant Client
+participant API
+Client -> API: request
+opt cache miss
+  API -> API: compute
+end
+API --> Client: response
+@enduml

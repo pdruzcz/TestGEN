@@ -1,0 +1,62 @@
+// Story 6.9 (AC4) — minimalny rozmiar celu dotykowego 44x44px
+// (WCAG 2.1 SC 2.5.5 Target Size).
+
+$touch-target-min: 44px;
+
+/// Mixin gwarantujący minimalny rozmiar celu dotykowego.
+@mixin touch-target($size: $touch-target-min) {
+  min-width: $size;
+  min-height: $size;
+}
+
+/// Wariant dla elementów, których wizualny rozmiar ma pozostać mniejszy —
+/// powiększa obszar klikalny pseudo-elementem bez zmiany layoutu.
+@mixin touch-target-overlay($size: $touch-target-min) {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $size;
+    height: $size;
+    min-width: $size;
+    min-height: $size;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/// Globalne nadpisania Angular Material — do włączenia raz w styles.scss.
+@mixin global-touch-targets {
+  // Przyciski Material (flat/raised/stroked/text) — min. wysokość 44px.
+  .mat-mdc-button,
+  .mat-mdc-raised-button,
+  .mat-mdc-unelevated-button,
+  .mat-mdc-outlined-button {
+    min-height: $touch-target-min;
+  }
+
+  // Przyciski ikonowe — pełne 44x44.
+  .mat-mdc-icon-button {
+    @include touch-target;
+  }
+
+  // Natywne elementy formularzy i przyciski poza Material.
+  button:not([mat-icon-button]):not(.mat-mdc-button-base),
+  select,
+  input:not([type="checkbox"]):not([type="radio"]) {
+    min-height: $touch-target-min;
+  }
+
+  // Checkboxy i radio Material — obszar interakcji 44x44.
+  .mat-mdc-checkbox .mdc-checkbox,
+  .mat-mdc-radio-button .mdc-radio {
+    @include touch-target-overlay;
+  }
+
+  // Wiersze paginatora i chipy.
+  .mat-mdc-paginator-page-size .mat-mdc-select-trigger {
+    min-height: $touch-target-min;
+  }
+}

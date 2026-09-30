@@ -1,0 +1,46 @@
+<div class="preview" aria-label="Podgląd raportu">
+  <!-- Pasek eksportu (AC8/6.6 + Story 6.7) -->
+  <div class="export-bar no-print">
+    <app-export-buttons
+      [projectId]="data().projectId"
+      [data]="data()"
+      [reportType]="reportType()"
+    />
+    <button mat-stroked-button class="print-btn" (click)="printReport()">
+      <mat-icon>print</mat-icon>
+      Drukuj
+    </button>
+  </div>
+
+  <!-- Nagłówek raportu -->
+  <header class="report-header">
+    <h2 class="report-title">
+      @switch (reportType()) {
+        @case ("executive") {
+          Raport — podsumowanie wykonawcze
+        }
+        @case ("technical") {
+          Raport — szczegóły techniczne
+        }
+        @default {
+          Raport pełny — podsumowanie i szczegóły techniczne
+        }
+      }
+    </h2>
+    <p class="report-meta">
+      Wygenerowano: {{ data().generatedAt | date: "dd.MM.yyyy HH:mm" }}
+      &nbsp;•&nbsp; TestGEN
+    </p>
+  </header>
+
+  @if (reportType() === "executive" || reportType() === "both") {
+    <app-executive-summary [data]="data()" />
+  }
+
+  @if (reportType() === "technical" || reportType() === "both") {
+    @if (reportType() === "both") {
+      <h2 class="section-divider">Szczegóły techniczne</h2>
+    }
+    <app-technical-details [data]="data()" />
+  }
+</div>

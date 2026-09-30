@@ -1,0 +1,62 @@
+{
+  "category": "real_dense",
+  "description": "Mailpit (MIT) — widok pojedynczej wiadomości. Tabela nagłówków (From/To/Subject/Received) + treść maila. Gęsty OCR z treści — kategoria real_dense.",
+  "expected_component_count": 5,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Mailpit (navbar)",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 56
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Search",
+      "bbox": {
+        "x": 640,
+        "y": 12,
+        "width": 380,
+        "height": 32
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Delete (ikona)",
+      "bbox": {
+        "x": 1180,
+        "y": 70,
+        "width": 32,
+        "height": 32
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "table",
+      "label": "Headers (From/To/Subject/Received)",
+      "bbox": {
+        "x": 20,
+        "y": 110,
+        "width": 1140,
+        "height": 160
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "form",
+      "label": "Body (treść wiadomości)",
+      "bbox": {
+        "x": 20,
+        "y": 290,
+        "width": 1140,
+        "height": 200
+      },
+      "confidence": 0.7
+    }
+  ]
+}

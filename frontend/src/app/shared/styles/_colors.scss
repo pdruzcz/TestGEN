@@ -1,0 +1,68 @@
+// Story 6.9 (AC1) — paleta kolorów ze zweryfikowanym kontrastem WCAG 2.1 AA.
+// Wartości muszą być zsynchronizowane z shared/constants/wcag.constants.ts.
+// Stosunki kontrastu wg WebAIM Contrast Checker (tło #ffffff).
+@use "sass:math";
+@use "sass:color";
+@use "sass:string";
+
+// Tekst — minimum 4.5:1 na białym tle.
+$wcag-text-primary: #1f2933; // 15.9:1
+$wcag-text-secondary: #4b5563; // 7.4:1
+$wcag-text-muted: #6b7280; // 4.6:1
+
+// Akcje i statusy — minimum 4.5:1 (tekst) / 3:1 (elementy UI).
+$wcag-action-primary: #0b57d0; // 5.9:1
+$wcag-error: #b3261e; // 5.9:1
+$wcag-success: #1e6b3a; // 4.8:1
+$wcag-warning: #8a5300; // 4.7:1
+
+// Fokus — minimum 3:1 względem tła (SC 1.4.11).
+$wcag-focus-outline: #0b57d0; // 5.9:1
+
+// Tła.
+$wcag-background: #ffffff;
+$wcag-surface: #f8f9fa;
+
+// --- Weryfikacja kontrastu w czasie kompilacji SCSS ---
+
+@function _relative-luminance-channel($channel) {
+  $c: math.div($channel, 255);
+  @if $c <= 0.03928 {
+    @return math.div($c, 12.92);
+  }
+  @return math.pow(math.div($c + 0.055, 1.055), 2.4);
+}
+
+@function wcag-contrast-ratio($fg, $bg) {
+  $l1: 0.2126 * _relative-luminance-channel(color.channel($fg, "red")) +
+    0.7152 * _relative-luminance-channel(color.channel($fg, "green")) +
+    0.0722 * _relative-luminance-channel(color.channel($fg, "blue"));
+  $l2: 0.2126 * _relative-luminance-channel(color.channel($bg, "red")) +
+    0.7152 * _relative-luminance-channel(color.channel($bg, "green")) +
+    0.0722 * _relative-luminance-channel(color.channel($bg, "blue"));
+  $lighter: math.max($l1, $l2);
+  $darker: math.min($l1, $l2);
+  @return math.div($lighter + 0.05, $darker + 0.05);
+}
+
+/// Mixin weryfikujący kontrast w czasie kompilacji (AC1).
+/// Emituje @error, gdy para kolorów nie spełnia minimalnego stosunku.
+/// Użycie: @include wcag-contrast($wcag-text-primary, $wcag-background);
+@mixin wcag-contrast($fg, $bg, $min-ratio: 4.5) {
+  $ratio: wcag-contrast-ratio($fg, $bg);
+  @if $ratio < $min-ratio {
+    @error "Kontrast #{$fg} na #{$bg} = #{$ratio}, wymagane minimum #{$min-ratio}:1 (WCAG 2.1 AA)";
+  }
+}
+
+// Weryfikacja palety przy każdej kompilacji stylów globalnych.
+@mixin assert-wcag-palette() {
+  @include wcag-contrast($wcag-text-primary, $wcag-background, 4.5);
+  @include wcag-contrast($wcag-text-secondary, $wcag-background, 4.5);
+  @include wcag-contrast($wcag-text-muted, $wcag-background, 4.5);
+  @include wcag-contrast($wcag-action-primary, $wcag-background, 4.5);
+  @include wcag-contrast($wcag-error, $wcag-background, 4.5);
+  @include wcag-contrast($wcag-success, $wcag-background, 4.5);
+  @include wcag-contrast($wcag-warning, $wcag-background, 4.5);
+  @include wcag-contrast($wcag-focus-outline, $wcag-background, 3);
+}

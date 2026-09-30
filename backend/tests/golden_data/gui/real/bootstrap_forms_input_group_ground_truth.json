@@ -1,0 +1,95 @@
+{
+  "category": "real_dense",
+  "description": "Bootstrap 5.3 docs (MIT) — /docs/5.3/forms/input-group/: demo input group (addon @, przyciski w grupach, textarea). Gęsty tekst docs — real_dense. Viewport 1280x800.",
+  "expected_component_count": 8,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar TOC (nawigacja docs)",
+      "bbox": {
+        "x": 0,
+        "y": 100,
+        "width": 280,
+        "height": 700
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "menu",
+      "label": "Navbar docs",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 56
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Search (navbar)",
+      "bbox": {
+        "x": 950,
+        "y": 10,
+        "width": 230,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Input z addonem @ (demo, username)",
+      "bbox": {
+        "x": 330,
+        "y": 330,
+        "width": 300,
+        "height": 38
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Input z addonem https:// (demo)",
+      "bbox": {
+        "x": 330,
+        "y": 400,
+        "width": 340,
+        "height": 38
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Textarea z addonem (demo)",
+      "bbox": {
+        "x": 330,
+        "y": 470,
+        "width": 340,
+        "height": 70
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Button w grupie (demo)",
+      "bbox": {
+        "x": 640,
+        "y": 330,
+        "width": 120,
+        "height": 38
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "form",
+      "label": "Formularz input group (kontener demo)",
+      "bbox": {
+        "x": 320,
+        "y": 300,
+        "width": 640,
+        "height": 300
+      },
+      "confidence": 0.7
+    }
+  ]
+}

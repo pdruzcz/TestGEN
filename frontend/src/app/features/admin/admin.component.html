@@ -1,0 +1,21 @@
+<mat-sidenav-container class="admin-shell">
+  <mat-sidenav mode="side" opened class="admin-shell__sidenav">
+    <h1 class="admin-shell__title">Panel administracyjny</h1>
+    <nav aria-label="Sekcje panelu administracyjnego">
+      @for (item of navItems; track item.path) {
+        <a
+          [routerLink]="[item.path]"
+          routerLinkActive="admin-shell__link--active"
+          class="admin-shell__link"
+        >
+          <mat-icon aria-hidden="true">{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="admin-shell__content">
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>

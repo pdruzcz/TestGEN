@@ -1,0 +1,98 @@
+<figure class="usage-chart">
+  @if (hasLine()) {
+    <svg
+      [attr.viewBox]="'0 0 ' + width + ' ' + height"
+      [attr.width]="width"
+      [attr.height]="height"
+      role="img"
+      [attr.aria-label]="ariaLabel()"
+      class="chart-svg"
+    >
+      <!-- Siatka wartości (oś Y) -->
+      @for (line of gridLines(); track line.value) {
+        <line
+          [attr.x1]="8"
+          [attr.y1]="line.y"
+          [attr.x2]="width - 8"
+          [attr.y2]="line.y"
+          class="gridline"
+        />
+        <text [attr.x]="12" [attr.y]="line.y - 4" class="axis-value">
+          {{ line.value }}{{ valueUnit() }}
+        </text>
+      }
+
+      <!-- Linia limitu — przerywana czerwona (AC3) -->
+      @if (limitLineY() !== null) {
+        <line
+          [attr.x1]="8"
+          [attr.y1]="limitLineY()"
+          [attr.x2]="width - 8"
+          [attr.y2]="limitLineY()"
+          class="limit-line"
+        />
+        <text
+          [attr.x]="width - 12"
+          [attr.y]="(limitLineY() ?? 0) - 4"
+          text-anchor="end"
+          class="limit-label"
+        >
+          Limit
+        </text>
+      }
+
+      <!-- Linia zużycia skumulowanego -->
+      <path [attr.d]="linePath()" class="usage-line" />
+
+      <!-- Etykiety osi X (dni) -->
+      @for (label of xLabels(); track label.x) {
+        <text [attr.x]="label.x" [attr.y]="height - 2" class="axis-label">
+          {{ label.label }}
+        </text>
+      }
+    </svg>
+    <figcaption class="legend">
+      <span class="legend-item">
+        <span class="swatch usage" aria-hidden="true"></span>
+        Zużycie skumulowane
+      </span>
+      @if (limit() !== null) {
+        <span class="legend-item">
+          <span class="swatch limit" aria-hidden="true"></span>
+          Limit ({{ limit() }}{{ valueUnit() }})
+        </span>
+      }
+    </figcaption>
+  } @else {
+    <p class="no-data" role="status">
+      Brak wystarczających danych do wykresu — snapshoty zużycia zbierane są raz
+      dziennie.
+    </p>
+  }
+
+  <!-- Alternatywa tekstowa wykresu (AC6/WCAG 2.1 AA) -->
+  @if (points().length > 0) {
+    <details class="chart-data">
+      <summary>Dane wykresu (alternatywa tekstowa)</summary>
+      <table>
+        <caption>
+          Skumulowane zużycie na dzień
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Dzień</th>
+            <th scope="col">Zużycie</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (point of points(); track point.date) {
+            <tr>
+              <td>{{ point.date }}</td>
+              <td>{{ point.value }}{{ valueUnit() }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </details>
+  }
+</figure>

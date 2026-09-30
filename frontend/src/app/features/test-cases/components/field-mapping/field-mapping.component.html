@@ -1,0 +1,44 @@
+<div class="mapping-panel">
+  <table class="mapping-table" aria-label="Mapowanie pól TestGEN na pola TMS">
+    <caption class="visually-hidden">Mapowanie pól TestGEN na pola TMS</caption>
+    <thead>
+      <tr>
+        <th scope="col">Pole TMS</th>
+        <th scope="col"></th>
+        <th scope="col">Pole TestGEN</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (def of fieldDefs(); track def.key) {
+        <tr>
+          <td class="tms-field">{{ def.label }}</td>
+          <td class="arrow-cell">
+            <mat-icon aria-hidden="true">arrow_back</mat-icon>
+          </td>
+          <td>
+            <select
+              class="field-select"
+              [value]="mapping()[def.key] || def.defaultField"
+              (change)="onFieldChange(def.key, $any($event.target).value)"
+              [attr.aria-label]="'Pole TestGEN dla ' + def.label"
+            >
+              @for (opt of fieldOptions; track opt.value) {
+                <option
+                  [value]="opt.value"
+                  [selected]="(mapping()[def.key] || def.defaultField) === opt.value"
+                >
+                  {{ opt.label }}
+                </option>
+              }
+            </select>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <button mat-button class="reset-btn" (click)="resetToDefaults()">
+    <mat-icon>restart_alt</mat-icon>
+    Przywróć domyślne
+  </button>
+</div>

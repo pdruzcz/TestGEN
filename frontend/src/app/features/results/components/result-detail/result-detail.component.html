@@ -1,0 +1,74 @@
+<div class="result-detail">
+  <div class="detail-header">
+    <span
+      class="severity-badge"
+      [ngClass]="'sev-' + item().severity"
+    >
+      <mat-icon aria-hidden="true">{{ severityIcons[item().severity] }}</mat-icon>
+      {{ severityLabels[item().severity] }}
+    </span>
+    <span class="status-chip">{{ statusLabels[item().status] }}</span>
+    <span class="type-chip">{{ item().type }}</span>
+  </div>
+
+  <h3 class="detail-title">{{ item().title }}</h3>
+  <p class="detail-description">{{ item().description }}</p>
+
+  @if (item().filePath) {
+    <div class="detail-location">
+      <mat-icon aria-hidden="true">description</mat-icon>
+      <span
+        >{{ item().filePath
+        }}@if (item().lineStart) {<span>:{{ item().lineStart }}</span>}</span
+      >
+    </div>
+  }
+
+  <!-- AC5: fragment kodu z podświetlaniem składni -->
+  @if (item().codeSnippet) {
+    <div class="detail-section">
+      <h4 class="section-label">Fragment kodu</h4>
+      <app-code-highlighter
+        [code]="item().codeSnippet!"
+        [language]="item().language ?? 'python'"
+        [startLine]="item().lineStart ?? 1"
+      />
+    </div>
+  }
+
+  <!-- AC6: diff viewer — gap z gotowym skeletonem -->
+  @if (item().source === 'gap' && item().suggestedFix) {
+    <div class="detail-section">
+      <h4 class="section-label">Sugerowana poprawka (diff)</h4>
+      <app-diff-viewer
+        [original]="item().codeSnippet ?? ''"
+        [modified]="item().suggestedFix!"
+        [language]="item().language ?? 'python'"
+      />
+    </div>
+  }
+
+  <!-- AC6: diff viewer — security z patch preview na żądanie -->
+  @if (item().source === 'security') {
+    <div class="detail-section">
+      @if (diffOriginal() !== null && diffFixed() !== null) {
+        <h4 class="section-label">Sugerowana poprawka (diff)</h4>
+        <app-diff-viewer
+          [original]="diffOriginal()!"
+          [modified]="diffFixed()!"
+          [language]="item().language ?? 'python'"
+        />
+      } @else if (isDiffLoading()) {
+        <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+      } @else {
+        <button mat-stroked-button color="primary" (click)="loadPatchPreview()">
+          <mat-icon>difference</mat-icon>
+          Pokaż diff poprawki
+        </button>
+        @if (diffError()) {
+          <p class="diff-error" role="alert">{{ diffError() }}</p>
+        }
+      }
+    </div>
+  }
+</div>

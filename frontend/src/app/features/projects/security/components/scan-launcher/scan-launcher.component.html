@@ -1,0 +1,211 @@
+<app-navbar></app-navbar>
+
+<main class="security" id="main-content" tabindex="-1">
+  <a
+    mat-button
+    class="security__back"
+    [routerLink]="['/projects', projectId()]"
+  >
+    <mat-icon>arrow_back</mat-icon>
+    Wróć do projektu
+  </a>
+
+  <header class="security__header">
+    <h1>Skanowanie bezpieczeństwa</h1>
+  </header>
+
+  @if (errorMessage()) {
+    <div class="security__error">{{ errorMessage() }}</div>
+  }
+
+  <mat-card class="security__launcher">
+    <h2>Uruchom skan bezpieczeństwa</h2>
+    <div class="security__form">
+      <mat-form-field appearance="outline">
+        <mat-label>Typ skanu</mat-label>
+        <mat-select [(ngModel)]="scanType">
+          <mat-option value="sast">Skanowanie statyczne (SAST)</mat-option>
+          <mat-option value="taint"
+            >Taint analysis (przepływ danych)</mat-option
+          >
+          <mat-option value="dependency">Zależności (CVE / SBOM)</mat-option>
+          <mat-option value="config"
+            >Konfiguracja (Docker / K8s / Terraform)</mat-option
+          >
+          <mat-option value="dast">Dynamiczny (DAST / OWASP ZAP)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Silnik analizy</mat-label>
+        <mat-select [ngModel]="engineModeLabel()" disabled>
+          <mat-option [value]="engineModeLabel()">{{
+            engineModeLabel()
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      @if (scanType !== "dast") {
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="launchScan()"
+          [disabled]="isLaunching()"
+        >
+          <mat-icon>security</mat-icon>
+          {{ isLaunching() ? "Uruchamianie…" : "Uruchom skan" }}
+        </button>
+      }
+    </div>
+
+    @if (scanType === "dast") {
+      <app-dast-config (launch)="launchDast($event)" />
+    }
+  </mat-card>
+
+  <section class="security__scans">
+    <div class="security__scans-head">
+      <h2>Historia skanów</h2>
+      <button mat-stroked-button (click)="loadScans()" [disabled]="isLoading()">
+        <mat-icon>refresh</mat-icon>
+        Odśwież
+      </button>
+    </div>
+
+    @if (isLoading()) {
+      <mat-spinner diameter="32" aria-label="Ładowanie"></mat-spinner>
+    } @else if (scans().length === 0) {
+      <p class="security__empty">Brak skanów. Uruchom pierwszy skan powyżej.</p>
+    } @else {
+      <div class="security__scan-list">
+        @for (scan of scans(); track scan.scanId) {
+          <mat-card
+            class="security__scan-item"
+            [class.security__scan-item--active]="
+              scan.scanId === selectedScanId()
+            "
+            (click)="selectScan(scan.scanId)"
+          >
+            <div class="security__scan-row">
+              <span class="security__scan-type">{{
+                scanTypeLabel(scan.scanType)
+              }}</span>
+              <span class="badge badge--{{ scan.status }}">{{
+                statusLabel(scan.status)
+              }}</span>
+            </div>
+            <div class="security__scan-counts">
+              <span class="sev sev--critical"
+                >Krytyczne: {{ scan.severityCounts.critical }}</span
+              >
+              <span class="sev sev--high"
+                >Wysokie: {{ scan.severityCounts.high }}</span
+              >
+              <span class="sev sev--medium"
+                >Średnie: {{ scan.severityCounts.medium }}</span
+              >
+              <span class="sev sev--low"
+                >Niskie: {{ scan.severityCounts.low }}</span
+              >
+              <span class="security__total"
+                >Razem: {{ scan.findingsCount }}</span
+              >
+            </div>
+          </mat-card>
+        }
+      </div>
+    }
+  </section>
+
+  @if (selectedScanId()) {
+    <section class="security__findings">
+      <h2>Podatności</h2>
+      @if (findings().length === 0) {
+        <p class="security__empty">Brak podatności dla wybranego skanu.</p>
+      } @else {
+        <table mat-table [dataSource]="findings()" class="security__table">
+          <caption class="visually-hidden">
+            Wyniki skanowania bezpieczeństwa
+          </caption>
+          <ng-container matColumnDef="severity">
+            <th mat-header-cell *matHeaderCellDef scope="col">Waga</th>
+            <td mat-cell *matCellDef="let f">
+              <span class="badge badge--sev-{{ f.severity }}">{{
+                f.severity
+              }}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="vulnerabilityType">
+            <th mat-header-cell *matHeaderCellDef scope="col">
+              Typ podatności
+            </th>
+            <td mat-cell *matCellDef="let f">
+              {{ f.vulnerabilityType }}
+              @if (f.cweId) {
+                <span class="security__cwe">({{ f.cweId }})</span>
+              }
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="filePath">
+            <th mat-header-cell *matHeaderCellDef scope="col">Plik</th>
+            <td mat-cell *matCellDef="let f">{{ f.filePath || "—" }}</td>
+          </ng-container>
+          <ng-container matColumnDef="line">
+            <th mat-header-cell *matHeaderCellDef scope="col">Linia</th>
+            <td mat-cell *matCellDef="let f">{{ f.lineStart ?? "—" }}</td>
+          </ng-container>
+          <ng-container matColumnDef="confidence">
+            <th mat-header-cell *matHeaderCellDef scope="col">Pewność</th>
+            <td mat-cell *matCellDef="let f">
+              {{ (f.confidence * 100).toFixed(0) }}%
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      }
+
+      @if (dependencyFindings().length > 0) {
+        <div class="security__dependency">
+          <app-dependency-report
+            [projectId]="projectId()"
+            [scanId]="selectedScanId()!"
+            [findings]="dependencyFindings()"
+          />
+        </div>
+      }
+
+      @if (configFindings().length > 0) {
+        <div class="security__config">
+          <app-config-report [findings]="configFindings()" />
+        </div>
+      }
+
+      @if (taintFindings().length > 0) {
+        <div class="security__taint">
+          <h3>Ścieżki podatności (taint analysis)</h3>
+          @for (f of taintFindings(); track f.id) {
+            <mat-card class="security__taint-card">
+              <div class="security__taint-head">
+                <span class="badge badge--sev-{{ f.severity }}">{{
+                  f.severity
+                }}</span>
+                <span>{{ f.vulnerabilityType }}</span>
+                @if (f.cweId) {
+                  <span class="security__cwe">({{ f.cweId }})</span>
+                }
+              </div>
+              <app-taint-path-viewer [taintPath]="f.taintPath!" />
+            </mat-card>
+          }
+        </div>
+      }
+    </section>
+  }
+
+  @if (projectId()) {
+    <app-security-report [projectId]="projectId()" />
+    <app-risk-dashboard [projectId]="projectId()" />
+  }
+  <app-footer />
+</main>

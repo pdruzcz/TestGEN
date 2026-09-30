@@ -1,0 +1,56 @@
+@use "@angular/material" as mat;
+// Story 6.9 (WCAG 2.1 AA) — wspólne style dostępności.
+@use "app/shared/styles/colors" as wcag-colors;
+@use "app/shared/styles/focus" as wcag-focus;
+@use "app/shared/styles/touch-target" as wcag-touch;
+// Story 6.10 (WCAG 2.1 AA) — wysoki kontrast, reduced motion, zoom 200%.
+@use "app/shared/styles/themes/high-contrast" as hc-theme;
+@use "app/shared/styles/motion" as wcag-motion;
+@use "app/shared/styles/responsive" as wcag-responsive;
+// Story 6.11 (WCAG 2.1 AA) — screen reader: sr-only i skip link.
+@use "app/shared/styles/sr-only" as wcag-sr;
+@use "app/shared/styles/skip-link" as wcag-skip;
+
+@include mat.theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  )
+);
+
+// AC1 — weryfikacja kontrastu palety w czasie kompilacji.
+@include wcag-colors.assert-wcag-palette();
+
+// AC3 — widoczny wskaźnik fokusu (outline 2px, kontrast >= 3:1, tylko klawiatura).
+@include wcag-focus.global-focus-styles();
+
+// AC4 — cele dotykowe min. 44x44px (Material overrides).
+@include wcag-touch.global-touch-targets();
+
+// Story 6.10 AC1/AC2/AC5 — motyw wysokiego kontrastu (body.high-contrast).
+@include hc-theme.high-contrast-theme();
+
+// Story 6.10 AC4/AC7 — redukcja animacji (media query + body.reduced-motion).
+@include wcag-motion.global-motion-styles();
+
+// Story 6.10 AC3 — reflow przy zoom 200% (breakpoint 480px).
+@include wcag-responsive.global-responsive-styles();
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  color: wcag-colors.$wcag-text-primary;
+}
+
+// Story 6.9 AC6 / 6.11 — klasy dla treści dostępnych tylko dla czytników
+// ekranu (`.visually-hidden` i synonim `.sr-only`).
+@include wcag-sr.global-sr-only-styles();
+
+// Story 6.11 AC1 — skip link "Przejdź do treści głównej" (widoczny na fokus).
+@include wcag-skip.global-skip-link-styles();

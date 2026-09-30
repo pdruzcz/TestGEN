@@ -1,0 +1,122 @@
+<section class="invoice-data">
+  <header class="page-title">
+    <h1>Dane fakturowe</h1>
+    <p>Dane nabywcy używane przy wystawianiu faktur VAT za subskrypcje.</p>
+  </header>
+
+  <div class="banner banner-info" role="status">
+    <mat-icon aria-hidden="true">info</mat-icon>
+    <p>
+      Zmiana danych dotyczy wyłącznie nowych faktur — już wystawione dokumenty
+      zachowują dane z chwili wystawienia.
+    </p>
+  </div>
+
+  @if (error()) {
+    <mat-card class="card">
+      <p class="error">{{ error() }}</p>
+      <a mat-flat-button color="primary" routerLink="/billing/plans">
+        Wróć do planów
+      </a>
+    </mat-card>
+  } @else {
+    <mat-card class="card form-card">
+      @if (loading()) {
+        <p class="status">Pobieranie danych fakturowych…</p>
+      } @else {
+        <form [formGroup]="form" (ngSubmit)="save()">
+          <div class="form-row form-row-wide">
+            <mat-form-field
+              appearance="outline"
+              subscriptSizing="dynamic"
+              class="field-wide"
+            >
+              <mat-label>Nazwa firmy fakturowej</mat-label>
+              <input
+                matInput
+                formControlName="companyName"
+                aria-label="Nazwa firmy fakturowej"
+                required
+              />
+              @if (
+                form.controls.companyName.touched &&
+                form.controls.companyName.invalid
+              ) {
+                <mat-error>Nazwa firmy jest wymagana.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>NIP</mat-label>
+              <input matInput formControlName="nip" aria-label="NIP" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-row form-row-wide">
+            <mat-form-field
+              appearance="outline"
+              subscriptSizing="dynamic"
+              class="field-wide"
+            >
+              <mat-label>Ulica i numer</mat-label>
+              <input
+                matInput
+                formControlName="street"
+                aria-label="Ulica i numer"
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Miasto</mat-label>
+              <input matInput formControlName="city" aria-label="Miasto" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Kod pocztowy</mat-label>
+              <input
+                matInput
+                formControlName="postalCode"
+                aria-label="Kod pocztowy"
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Kraj</mat-label>
+              <input matInput formControlName="country" aria-label="Kraj" />
+            </mat-form-field>
+          </div>
+        </form>
+      }
+    </mat-card>
+
+    @if (actionError()) {
+      <p class="action-error" role="alert">{{ actionError() }}</p>
+    }
+    @if (saved()) {
+      <p class="saved" role="status">Dane fakturowe zostały zapisane.</p>
+    }
+
+    <div class="actions">
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        [disabled]="loading() || saving()"
+        (click)="save()"
+      >
+        <mat-icon aria-hidden="true">save</mat-icon>
+        {{ saving() ? "Zapisywanie…" : "Zapisz dane fakturowe" }}
+      </button>
+      <a mat-stroked-button routerLink="/billing/invoices">
+        <mat-icon aria-hidden="true">receipt_long</mat-icon>
+        Lista faktur
+      </a>
+      <p class="note">
+        Nazwa firmy jest wymagana — pozostałe pola uzupełnij zgodnie z danymi
+        rejestrowymi firmy.
+      </p>
+    </div>
+  }
+</section>

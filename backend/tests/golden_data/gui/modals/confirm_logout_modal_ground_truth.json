@@ -1,0 +1,12 @@
+{
+  "category": "modals",
+  "description": "Modal potwierdzenia wylogowania z checkboxem zapamietania urzadzenia (dorynkowanie typu modal, Story 3-14c T4).",
+  "expected_component_count": 5,
+  "expected_components": [
+    {"component_type": "modal", "label": "Czy chcesz sie wylogowac", "bbox": {"x": 430, "y": 250, "width": 420, "height": 250}, "confidence": 0.92},
+    {"component_type": "checkbox", "label": "Zapamietaj to urzadzenie", "bbox": {"x": 470, "y": 340, "width": 20, "height": 20}, "confidence": 0.85},
+    {"component_type": "button", "label": "Wyloguj", "bbox": {"x": 660, "y": 430, "width": 150, "height": 44}, "confidence": 0.95},
+    {"component_type": "button", "label": "Anuluj", "bbox": {"x": 480, "y": 430, "width": 150, "height": 44}, "confidence": 0.93},
+    {"component_type": "link", "label": "Zarzaddzaj sesjami", "bbox": {"x": 470, "y": 380, "width": 170, "height": 24}, "confidence": 0.8}
+  ]
+}

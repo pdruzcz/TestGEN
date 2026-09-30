@@ -1,0 +1,140 @@
+{
+  "name": "epic2_expected_glossary_extraction",
+  "data_type": "expected_output",
+  "version": "1.0",
+  "metadata": {
+    "description": "Expected glossary extraction results for Epic 2 sample document",
+    "feature": "glossary_extraction",
+    "story": "2.6"
+  },
+  "tags": ["epic2", "glossary", "expected"],
+  "data": {
+    "total_terms": 5,
+    "terms": [
+      {
+        "term": "SZZ",
+        "definition": "System Zarządzania Zamówieniami - główna aplikacja",
+        "source_section_id": "sec-4",
+        "frequency": 1,
+        "variations": ["System Zarządzania Zamówieniami", "SZZ"],
+        "category": "system",
+        "code_suggestions": [
+          {
+            "entity": "OrderManagementSystem",
+            "confidence": 0.85,
+            "language": "python"
+          },
+          {
+            "entity": "OrderManager",
+            "confidence": 0.75,
+            "language": "typescript"
+          }
+        ]
+      },
+      {
+        "term": "Zamówienie",
+        "definition": "Dokument handlowy określający warunki dostawy towarów",
+        "source_section_id": "sec-4",
+        "frequency": 3,
+        "variations": ["zamówienia", "zamówienie"],
+        "category": "business",
+        "code_suggestions": [
+          {
+            "entity": "Order",
+            "confidence": 0.92,
+            "language": "python"
+          },
+          {
+            "entity": "PurchaseOrder",
+            "confidence": 0.88,
+            "language": "java"
+          },
+          {
+            "entity": "OrderEntity",
+            "confidence": 0.80,
+            "language": "typescript"
+          }
+        ]
+      },
+      {
+        "term": "RBAC",
+        "definition": "Role-Based Access Control - model kontroli dostępu oparty na rolach",
+        "source_section_id": "sec-4",
+        "frequency": 1,
+        "variations": ["Role-Based Access Control", "RBAC"],
+        "category": "security",
+        "code_suggestions": [
+          {
+            "entity": "RoleBasedAccessControl",
+            "confidence": 0.90,
+            "language": "python"
+          },
+          {
+            "entity": "RBACService",
+            "confidence": 0.85,
+            "language": "java"
+          },
+          {
+            "entity": "AccessControl",
+            "confidence": 0.78,
+            "language": "typescript"
+          }
+        ]
+      },
+      {
+        "term": "TLS",
+        "definition": "Transport Layer Security - protokół szyfrowania komunikacji",
+        "source_section_id": "sec-4",
+        "frequency": 1,
+        "variations": ["Transport Layer Security", "TLS"],
+        "category": "security",
+        "code_suggestions": [
+          {
+            "entity": "TLSEncryption",
+            "confidence": 0.82,
+            "language": "python"
+          },
+          {
+            "entity": "TLSConfiguration",
+            "confidence": 0.80,
+            "language": "java"
+          }
+        ]
+      },
+      {
+        "term": "API",
+        "definition": "Application Programming Interface - interfejs programistyczny",
+        "source_section_id": "sec-4",
+        "frequency": 0,
+        "variations": ["Application Programming Interface", "API"],
+        "category": "technical",
+        "code_suggestions": [
+          {
+            "entity": "APIEndpoint",
+            "confidence": 0.88,
+            "language": "python"
+          },
+          {
+            "entity": "ApiController",
+            "confidence": 0.85,
+            "language": "java"
+          },
+          {
+            "entity": "ApiRouter",
+            "confidence": 0.82,
+            "language": "typescript"
+          }
+        ]
+      }
+    ],
+    "statistics": {
+      "by_category": {
+        "system": 1,
+        "business": 1,
+        "security": 2,
+        "technical": 1
+      },
+      "avg_code_suggestion_confidence": 0.84
+    }
+  }
+}

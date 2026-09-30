@@ -1,0 +1,95 @@
+{
+  "category": "real",
+  "description": "Keycloak 26.7.1 admin console (Apache-2.0) — Authentication: zakładki (Required actions/Flows/...), tabela flowów (browser, direct grant, ...) z kebab-menu. Viewport 1280x800.",
+  "expected_component_count": 8,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar (Clients/Users/Sessions/...)",
+      "bbox": {
+        "x": 0,
+        "y": 80,
+        "width": 256,
+        "height": 720
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Masthead: user toggle (golden-admin)",
+      "bbox": {
+        "x": 1150,
+        "y": 22,
+        "width": 122,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "tab",
+      "label": "Zakładki (Required actions / Flows / Bindings)",
+      "bbox": {
+        "x": 276,
+        "y": 188,
+        "width": 420,
+        "height": 32
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "table",
+      "label": "Authentication flows (browser, direct grant, registration, ...)",
+      "bbox": {
+        "x": 276,
+        "y": 246,
+        "width": 992,
+        "height": 420
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Kebab (wiersz 1)",
+      "bbox": {
+        "x": 1224,
+        "y": 290,
+        "width": 28,
+        "height": 30
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Kebab (wiersz 2)",
+      "bbox": {
+        "x": 1224,
+        "y": 334,
+        "width": 28,
+        "height": 30
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Kebab (wiersz 3)",
+      "bbox": {
+        "x": 1224,
+        "y": 378,
+        "width": 28,
+        "height": 30
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Kebab (wiersz 4)",
+      "bbox": {
+        "x": 1224,
+        "y": 422,
+        "width": 28,
+        "height": 30
+      },
+      "confidence": 0.75
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+<app-navbar></app-navbar>
+
+<main class="traceability" id="main-content" tabindex="-1">
+  <a
+    mat-button
+    class="traceability__back"
+    [routerLink]="['/projects', projectId()]"
+  >
+    <mat-icon>arrow_back</mat-icon>
+    Wróć do projektu
+  </a>
+  <header class="traceability__header">
+    <h1>Macierz śledzenia</h1>
+    <div class="traceability__actions">
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="rebuild()"
+        [disabled]="isBuilding()"
+      >
+        <mat-icon>autorenew</mat-icon>
+        {{ isBuilding() ? "Przebudowa…" : "Przebuduj macierz" }}
+      </button>
+      <button mat-stroked-button [matMenuTriggerFor]="exportMenu">
+        <mat-icon>download</mat-icon>
+        Eksportuj
+      </button>
+      <mat-menu #exportMenu="matMenu">
+        <button mat-menu-item (click)="exportAs('csv')">CSV</button>
+        <button mat-menu-item (click)="exportAs('json')">JSON</button>
+        <button mat-menu-item (click)="exportAs('xlsx')">XLSX</button>
+        <button mat-menu-item (click)="exportAs('pdf')">PDF</button>
+      </mat-menu>
+    </div>
+  </header>
+
+  @if (errorMessage()) {
+    <div class="traceability__error">{{ errorMessage() }}</div>
+  }
+
+  @if (summary(); as s) {
+    <section class="traceability__summary">
+      <mat-card class="summary-card">
+        <span class="summary-card__label">Elementy UML</span>
+        <span class="summary-card__value">{{ s.umlTotal }}</span>
+        <span class="summary-card__pct">{{ s.umlCoveragePct }}% pokrycia</span>
+      </mat-card>
+      <mat-card class="summary-card">
+        <span class="summary-card__label">Elementy GUI</span>
+        <span class="summary-card__value">{{ s.guiTotal }}</span>
+        <span class="summary-card__pct">{{ s.guiCoveragePct }}% pokrycia</span>
+      </mat-card>
+      <mat-card class="summary-card">
+        <span class="summary-card__label">Pokrycie kodem</span>
+        <span class="summary-card__value">{{ s.codeCoveragePct }}%</span>
+        <span class="summary-card__pct">zatwierdzone scenariusze</span>
+      </mat-card>
+    </section>
+  }
+
+  <section class="traceability__filters">
+    <mat-form-field appearance="outline">
+      <mat-label>Źródło</mat-label>
+      <mat-select
+        [(ngModel)]="sourceTypeFilterValue"
+        (selectionChange)="onFilterChange()"
+      >
+        <mat-option value="">Wszystkie</mat-option>
+        <mat-option value="uml">UML</mat-option>
+        <mat-option value="gui">GUI</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Pokrycie</mat-label>
+      <mat-select
+        [(ngModel)]="coverageFilterValue"
+        (selectionChange)="onFilterChange()"
+      >
+        <mat-option value="">Wszystkie</mat-option>
+        <mat-option value="covered">Pokryty</mat-option>
+        <mat-option value="partial">Częściowo</mat-option>
+        <mat-option value="uncovered">Niepokryty</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+
+  @if (isLoading()) {
+    <div class="traceability__loading">
+      <mat-spinner diameter="40" aria-label="Ładowanie"></mat-spinner>
+    </div>
+  } @else {
+    <table mat-table [dataSource]="elements()" class="traceability__table">
+      <caption class="visually-hidden">Macierz śledzenia elementów projektu</caption>
+      <ng-container matColumnDef="sourceType">
+        <th mat-header-cell *matHeaderCellDef scope="col">Źródło</th>
+        <td mat-cell *matCellDef="let el">{{ el.sourceType | uppercase }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="sourceElementType">
+        <th mat-header-cell *matHeaderCellDef scope="col">Typ elementu</th>
+        <td mat-cell *matCellDef="let el">{{ el.sourceElementType }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="sourceElementName">
+        <th mat-header-cell *matHeaderCellDef scope="col">Element</th>
+        <td mat-cell *matCellDef="let el">{{ el.sourceElementName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="linkedGherkinId">
+        <th mat-header-cell *matHeaderCellDef scope="col">Test (Gherkin)</th>
+        <td mat-cell *matCellDef="let el">
+          {{ el.linkedGherkinId ? "Tak" : "—" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="codeReference">
+        <th mat-header-cell *matHeaderCellDef scope="col">Kod / scenariusz</th>
+        <td mat-cell *matCellDef="let el">{{ el.codeReference ?? "—" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="coverageStatus">
+        <th mat-header-cell *matHeaderCellDef scope="col">Status</th>
+        <td mat-cell *matCellDef="let el">
+          <span class="badge badge--{{ el.coverageStatus }}">
+            {{ coverageLabel(el.coverageStatus) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    @if (!elements().length) {
+      <p class="traceability__empty">
+        Brak danych — uruchom „Przebuduj macierz”, aby wygenerować powiązania.
+      </p>
+    }
+
+    <mat-paginator
+      [length]="total()"
+      [pageSize]="pageSize()"
+      [pageIndex]="pageIndex()"
+      [pageSizeOptions]="[20, 50, 100]"
+      (page)="onPageChange($event)"
+    ></mat-paginator>
+  }
+</main>
+
+<app-footer></app-footer>

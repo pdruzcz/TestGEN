@@ -1,0 +1,39 @@
+// Story 6.10 (AC4/AC7) — redukcja animacji.
+// Dwa źródła aktywacji:
+// 1. systemowe `prefers-reduced-motion: reduce` (media query),
+// 2. klasa `reduced-motion` na <body> (toolbar dostępności, localStorage).
+
+/// Reguły wyłączające animacje — wspólne dla obu źródeł.
+@mixin motion-off-rules {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  // Material spinner (indeterminate): zamrożona klatka animacji obrotu
+  // pokazuje przypadkowy łuk — „fragment kawałka koła" — zamiast koła.
+  // Przy wyłączonych animacjach spinner rysuje STATYCZNY PEŁNY okrąg:
+  // czytelny sygnał „ładowanie w toku" bez ruchu. Bezpieczne, bo w
+  // aplikacji wszystkie 105 użyć `mat-spinner` jest indeterminate
+  // (determinate `[value]` nie występuje — dasharray nie niesie informacji).
+  .mat-mdc-progress-spinner circle,
+  svg.mat-progress-spinner circle {
+    animation: none !important;
+    stroke-dasharray: none !important;
+  }
+}
+
+/// Mixin do włączenia raz w styles.scss.
+@mixin global-motion-styles {
+  @media (prefers-reduced-motion: reduce) {
+    @include motion-off-rules;
+  }
+
+  body.reduced-motion {
+    @include motion-off-rules;
+  }
+}

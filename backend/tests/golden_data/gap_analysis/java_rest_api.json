@@ -1,0 +1,23 @@
+{
+  "language": "java",
+  "name": "java_rest_api",
+  "requirements": [
+    {"req_id": "REQ-API-001", "text": "System must expose a REST endpoint to create resources", "category": "api", "priority": "high"},
+    {"req_id": "REQ-API-002", "text": "System must validate the JSON input schema", "category": "validation", "priority": "critical"},
+    {"req_id": "REQ-API-003", "text": "System must authorize requests using a Bearer token", "category": "security", "priority": "critical"},
+    {"req_id": "REQ-API-004", "text": "System must build a standardized HTTP error response", "category": "api", "priority": "medium"},
+    {"req_id": "REQ-API-005", "text": "System must rate-limit requests per user", "category": "security", "priority": "high"}
+  ],
+  "code_entities": [
+    {"entity_id": "api-1", "name": "createResource", "type": "method", "file_path": "src/main/java/com/example/ResourceController.java", "line_number": 22, "language": "java", "docstring": "REST endpoint to create a new resource"},
+    {"entity_id": "api-2", "name": "validateJsonInput", "type": "method", "file_path": "src/main/java/com/example/Validators.java", "line_number": 14, "language": "java", "docstring": "Validate JSON input schema"},
+    {"entity_id": "api-3", "name": "authorizeBearerToken", "type": "method", "file_path": "src/main/java/com/example/AuthFilter.java", "line_number": 20, "language": "java", "docstring": "Authorize the request using Bearer token"},
+    {"entity_id": "api-4", "name": "buildErrorResponse", "type": "method", "file_path": "src/main/java/com/example/ErrorHandler.java", "line_number": 12, "language": "java", "docstring": "Build standardized HTTP error response"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-API-001", "REQ-API-002", "REQ-API-003", "REQ-API-004"],
+    "missing_req_ids": ["REQ-API-005"],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 70.0
+  }
+}

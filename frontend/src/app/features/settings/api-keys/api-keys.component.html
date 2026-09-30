@@ -1,0 +1,231 @@
+<div class="settings-page">
+  <app-navbar activeLink="profile" />
+  <div class="settings-content">
+    <aside class="sidebar">
+      <h3 class="sidebar-title">Ustawienia</h3>
+      <a mat-button routerLink="/settings/profile" class="sidebar-link"> <mat-icon>person</mat-icon> Profil </a>
+      <a mat-button routerLink="/settings/mfa" class="sidebar-link">
+        <mat-icon>shield</mat-icon> Uwierzytelnianie MFA
+      </a>
+      <a mat-button routerLink="/settings/users" class="sidebar-link"> <mat-icon>group</mat-icon> Użytkownicy </a>
+      <a mat-button routerLink="/settings/api-keys" class="sidebar-link sidebar-active" aria-current="page">
+        <mat-icon>vpn_key</mat-icon> Klucze API
+      </a>
+      <a mat-button routerLink="/settings/integrations/github" class="sidebar-link">
+        <mat-icon>hub</mat-icon> Integracja GitHub
+      </a>
+      <a mat-button routerLink="/settings/integrations/gitlab" class="sidebar-link">
+        <mat-icon>merge</mat-icon> Integracja GitLab
+      </a>
+      <a mat-button routerLink="/settings/integrations/webhooks" class="sidebar-link">
+        <mat-icon>webhook</mat-icon> Webhooki
+      </a>
+    </aside>
+
+    <main class="main-content" id="main-content" tabindex="-1">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Klucze API</h1>
+          <p class="page-subtitle">Uwierzytelniaj pipeline'y CI/CD i skrypty bez podawania hasła.</p>
+        </div>
+        <button mat-raised-button color="primary" (click)="openDialog()">
+          <mat-icon>add</mat-icon>
+          Utwórz klucz API
+        </button>
+      </div>
+
+      @if (errorMessage() && !isDialogOpen()) {
+        <p class="form-error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      @if (createdKey()) {
+        <section class="new-key" role="alert">
+          <h2 class="new-key-title">
+            <mat-icon aria-hidden="true">warning</mat-icon>
+            Skopiuj klucz teraz
+          </h2>
+          <p class="new-key-warning">
+            Nie będzie możliwe jego ponowne wyświetlenie. Po zamknięciu tego okna zobaczysz już tylko pierwsze znaki
+            klucza.
+          </p>
+          <div class="new-key-row">
+            <code class="new-key-value">{{ createdKey() }}</code>
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="copyKey()"
+              [attr.aria-label]="'Kopiuj klucz API do schowka'"
+            >
+              <mat-icon aria-hidden="true">content_copy</mat-icon>
+              {{ isKeyCopied() ? 'Skopiowano' : 'Kopiuj' }}
+            </button>
+          </div>
+          <button mat-button type="button" class="new-key-dismiss" (click)="dismissCreatedKey()">
+            Zapisałem klucz — zamknij
+          </button>
+        </section>
+      }
+
+      @if (isLoading()) {
+        <div class="loading">
+          <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+          Ładowanie...
+        </div>
+      } @else if (keys().length === 0) {
+        <p class="empty-state">
+          Nie masz jeszcze żadnych kluczy API. Utwórz pierwszy, aby zintegrować TestGEN z pipeline'em CI/CD.
+        </p>
+      } @else {
+        <table class="keys-table">
+          <caption class="visually-hidden">
+            Lista kluczy API
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Nazwa</th>
+              <th scope="col">Klucz</th>
+              <th scope="col">Zakres</th>
+              <th scope="col">Utworzony</th>
+              <th scope="col">Wygasa</th>
+              <th scope="col">Ostatnie użycie</th>
+              <th scope="col">Status</th>
+              <th scope="col">Akcje</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (key of keys(); track key.id) {
+              <tr>
+                <td class="key-name">{{ key.name }}</td>
+                <td>
+                  <code>{{ key.keyPrefix }}…</code>
+                </td>
+                <td>
+                  <span class="badge" [class]="'badge-' + key.scope">
+                    {{ scopeLabel(key.scope) }}
+                  </span>
+                </td>
+                <td>{{ key.createdAt | date: 'dd.MM.yyyy' }}</td>
+                <td>
+                  {{ key.expiresAt ? (key.expiresAt | date: 'dd.MM.yyyy') : 'Bezterminowy' }}
+                </td>
+                <td>
+                  {{ key.lastUsedAt ? (key.lastUsedAt | date: 'dd.MM.yyyy HH:mm') : 'Nigdy' }}
+                </td>
+                <td>
+                  <span class="badge" [class]="'status-' + key.status">
+                    {{ statusLabel(key) }}
+                  </span>
+                </td>
+                <td class="actions">
+                  @if (key.status !== 'revoked') {
+                    <button
+                      class="icon-btn"
+                      type="button"
+                      (click)="askRevoke(key.id)"
+                      [attr.aria-label]="'Odwołaj klucz ' + key.name"
+                    >
+                      <mat-icon aria-hidden="true">block</mat-icon>
+                    </button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </main>
+  </div>
+
+  @if (isDialogOpen()) {
+    <div class="dialog-backdrop">
+      <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="create-key-title">
+        <h2 id="create-key-title" class="dialog-title">Utwórz klucz API</h2>
+
+        <label class="field">
+          <span class="field-label">Nazwa klucza</span>
+          <input
+            type="text"
+            maxlength="100"
+            required
+            [ngModel]="formName()"
+            (ngModelChange)="formName.set($event)"
+            name="name"
+            placeholder="np. Jenkins — produkcja"
+          />
+        </label>
+
+        <fieldset class="field">
+          <legend class="field-label">Zakres uprawnień</legend>
+          <label class="radio">
+            <input
+              type="radio"
+              name="scope"
+              value="read_only"
+              [checked]="formScope() === 'read_only'"
+              (change)="formScope.set('read_only')"
+            />
+            <span> <strong>Tylko odczyt</strong> — pobieranie wyników i raportów </span>
+          </label>
+          <label class="radio">
+            <input
+              type="radio"
+              name="scope"
+              value="full_access"
+              [checked]="formScope() === 'full_access'"
+              (change)="formScope.set('full_access')"
+            />
+            <span> <strong>Pełny dostęp</strong> — uruchamianie analiz i zapis danych </span>
+          </label>
+        </fieldset>
+
+        <label class="field">
+          <span class="field-label">Data wygaśnięcia (opcjonalnie)</span>
+          <input
+            type="date"
+            [min]="minExpiryDate()"
+            [max]="maxExpiryDate()"
+            [ngModel]="formExpiresAt()"
+            (ngModelChange)="formExpiresAt.set($event)"
+            name="expiresAt"
+          />
+          <span class="field-hint">Maksymalnie 2 lata. Puste = bezterminowy.</span>
+        </label>
+
+        @if (errorMessage()) {
+          <p class="form-error" role="alert">{{ errorMessage() }}</p>
+        }
+
+        <div class="dialog-actions">
+          <button mat-button type="button" (click)="closeDialog()">Anuluj</button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            [disabled]="!isFormValid() || isSubmitting()"
+            (click)="submit()"
+          >
+            {{ isSubmitting() ? 'Tworzenie...' : 'Utwórz klucz' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (pendingRevokeId()) {
+    <div class="dialog-backdrop">
+      <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="revoke-key-title">
+        <h2 id="revoke-key-title" class="dialog-title">Odwołać klucz API?</h2>
+        <p class="dialog-text">
+          Klucz przestanie działać natychmiast. Pipeline'y, które go używają, zaczną zwracać błąd 401. Operacji nie da
+          się cofnąć.
+        </p>
+        <div class="dialog-actions">
+          <button mat-button type="button" (click)="cancelRevoke()">Anuluj</button>
+          <button mat-raised-button color="warn" type="button" (click)="confirmRevoke()">Odwołaj klucz</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <app-footer />
+</div>

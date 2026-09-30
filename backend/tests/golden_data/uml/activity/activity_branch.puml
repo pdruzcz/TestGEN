@@ -1,0 +1,9 @@
+@startuml
+start
+if (Stock available?) then (yes)
+  :ShipOrder;
+else (no)
+  :Backorder;
+endif
+stop
+@enduml

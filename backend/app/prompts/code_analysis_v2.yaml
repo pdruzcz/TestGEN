@@ -1,0 +1,53 @@
+name: code_analysis.extract_functions
+version: v2
+description: Extract function definitions with improved accuracy
+model: claude-sonnet-4-20250514
+max_tokens: 4096
+temperature: 0.3
+ab_test_percentage: 10  # 10% of traffic gets this version
+template: |
+  You are an expert code analyst. Analyze the following source code and extract all function definitions.
+
+  File: {{ filename }}
+  Language: {{ language }}
+  Framework: {{ framework | default('unknown') }}
+
+  ```{{ language }}
+  {{ content }}
+  ```
+
+  Return a JSON array with the following structure:
+  [
+    {
+      "name": "function_name",
+      "line_start": 10,
+      "line_end": 25,
+      "parameters": [{"name": "param1", "type": "str", "default": null, "is_required": true}],
+      "return_type": "void",
+      "decorators": ["@staticmethod"],
+      "docstring": "Function description...",
+      "complexity": 5,
+      "side_effects": ["database_query"],
+      "calls": ["other_function"]
+    }
+  ]
+
+  v2 Improvements:
+  - Enhanced parameter detection with is_required flag
+  - Side effect detection (IO, database, network)
+  - Function call graph extraction
+  - Better complexity calculation
+
+variables:
+  - name: filename
+    type: string
+    required: true
+  - name: language
+    type: string
+    required: true
+  - name: framework
+    type: string
+    required: false
+  - name: content
+    type: string
+    required: true

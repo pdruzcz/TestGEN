@@ -1,0 +1,27 @@
+@startuml
+interface PaymentStrategy {
+  +pay(amount: double): bool
+}
+class CreditCardStrategy {
+  -cardNumber: String
+  +pay(amount: double): bool
+}
+class PayPalStrategy {
+  -email: String
+  +pay(amount: double): bool
+}
+abstract class PaymentFactory {
+  +{abstract} createStrategy(): PaymentStrategy
+}
+class CreditCardFactory {
+  +createStrategy(): PaymentStrategy
+}
+class PaymentContext {
+  -strategy: PaymentStrategy
+  +execute(amount: double): bool
+}
+PaymentStrategy <|.. CreditCardStrategy
+PaymentStrategy <|.. PayPalStrategy
+PaymentFactory <|-- CreditCardFactory
+PaymentContext o-- PaymentStrategy
+@enduml

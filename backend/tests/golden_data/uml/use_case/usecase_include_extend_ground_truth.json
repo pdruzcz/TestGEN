@@ -1,0 +1,9 @@
+{
+  "diagram_type": "use_case",
+  "description": "Use case z relacjami include i extend.",
+  "expected_participants_count": 1,
+  "expected_elements_count": 4,
+  "expected_relationships_count": 4,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 5
+}

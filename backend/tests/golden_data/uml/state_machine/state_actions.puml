@@ -1,0 +1,10 @@
+@startuml
+[*] --> Active
+state Active {
+  entry / startTimer
+  exit / stopTimer
+}
+Active --> Paused : pause
+Paused --> Active : resume
+Active --> [*] : stop
+@enduml

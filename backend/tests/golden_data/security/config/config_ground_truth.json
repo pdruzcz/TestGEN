@@ -1,0 +1,20 @@
+{
+  "description": "Frozen insecure infrastructure-config samples with expected misconfiguration rules (Story 4.5).",
+  "samples": [
+    {
+      "file": "Dockerfile",
+      "config_type": "docker",
+      "expected_rules": ["LATEST_TAG", "SUDO_IN_DOCKER", "HARDCODED_SECRET", "EXPOSED_PORT", "ROOT_USER", "NO_HEALTHCHECK"]
+    },
+    {
+      "file": "deployment.yaml",
+      "config_type": "kubernetes",
+      "expected_rules": ["HOST_NETWORK", "PRIVILEGED_CONTAINER", "RUN_AS_ROOT", "NO_RESOURCE_LIMITS", "DEFAULT_NAMESPACE"]
+    },
+    {
+      "file": "main.tf",
+      "config_type": "terraform",
+      "expected_rules": ["PUBLIC_S3_BUCKET", "NO_ENCRYPTION", "OPEN_SECURITY_GROUP", "PLAINTEXT_SECRET"]
+    }
+  ]
+}

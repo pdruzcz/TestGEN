@@ -1,0 +1,13 @@
+{
+  "category": "dashboards",
+  "description": "Dashboard analityczny: menu boczne, naglowek, karty metryk i przycisk eksportu.",
+  "expected_component_count": 6,
+  "expected_components": [
+    {"component_type": "menu", "label": "Nawigacja", "bbox": {"x": 0, "y": 0, "width": 220, "height": 800}, "confidence": 0.9},
+    {"component_type": "table", "label": "Ostatnie zdarzenia", "bbox": {"x": 260, "y": 360, "width": 900, "height": 360}, "confidence": 0.88},
+    {"component_type": "button", "label": "Eksportuj raport", "bbox": {"x": 1000, "y": 40, "width": 160, "height": 40}, "confidence": 0.95},
+    {"component_type": "dropdown", "label": "Zakres dat", "bbox": {"x": 820, "y": 40, "width": 160, "height": 40}, "confidence": 0.87},
+    {"component_type": "link", "label": "Szczegoly", "bbox": {"x": 260, "y": 120, "width": 100, "height": 24}, "confidence": 0.82},
+    {"component_type": "tab", "label": "Przeglad", "bbox": {"x": 260, "y": 90, "width": 120, "height": 36}, "confidence": 0.85}
+  ]
+}

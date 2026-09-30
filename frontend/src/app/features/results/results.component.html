@@ -1,0 +1,428 @@
+<div class="results-page">
+  <app-navbar activeLink="projects" />
+  <main class="results-content" id="main-content" tabindex="-1">
+    <a mat-button [routerLink]="['/projects', projectId()]" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      Wróć do szczegółów projektu
+    </a>
+    <h1 class="page-title">Wyniki analizy</h1>
+    <p class="page-subtitle">
+      Przeglądaj wyniki analizy z filtrami, podświetlaniem kodu i widokiem diff.
+    </p>
+
+    @if (resultsService.isLoadingSignal()) {
+      <div class="loading-row">
+        <mat-spinner diameter="28" aria-label="Ładowanie"></mat-spinner>
+        <span>Ładowanie wyników...</span>
+      </div>
+    }
+
+    <!-- AC1: zakładki -->
+    <mat-tab-group
+      [selectedIndex]="resultsService.activeTabSignal()"
+      (selectedIndexChange)="onTabChange($event)"
+      animationDuration="150ms"
+    >
+      <!-- ═══ Przegląd ═══ -->
+      <mat-tab label="Przegląd">
+        <div class="tab-content">
+          <div class="overview-grid">
+            <div class="overview-card">
+              <span class="card-label">Compliance</span>
+              @if (resultsService.complianceSignal(); as compliance) {
+                <span
+                  class="card-value"
+                  [ngClass]="complianceScoreClass(compliance.score)"
+                >
+                  {{ compliance.score | number: "1.0-1" }}%
+                </span>
+                <span class="card-sub"
+                  >{{ compliance.totalFindings }} znalezisk</span
+                >
+              } @else {
+                <span class="card-value muted">—</span>
+              }
+            </div>
+            <div class="overview-card">
+              <span class="card-label">Pokrycie wymagań</span>
+              @if (resultsService.gapSummarySignal(); as summary) {
+                <span class="card-value"
+                  >{{ summary.coveragePercentage | number: "1.0-1" }}%</span
+                >
+                <span class="card-sub">
+                  {{ summary.totalRequirements }} wymagań /
+                  {{ summary.totalCodeEntities }} encji
+                </span>
+              } @else {
+                <span class="card-value muted">—</span>
+              }
+            </div>
+            <div class="overview-card">
+              <span class="card-label">Bezpieczeństwo</span>
+              @if (resultsService.securityReportSignal(); as report) {
+                <span class="card-value">{{
+                  report.summary.totalFindings
+                }}</span>
+                <span class="card-sub">znalezisk (po deduplikacji)</span>
+              } @else {
+                <span class="card-value muted">—</span>
+              }
+            </div>
+            <div class="overview-card">
+              <span class="card-label">Przypadki testowe</span>
+              <span class="card-value">{{
+                resultsService.testCaseService.totalSignal()
+              }}</span>
+              <span class="card-sub">
+                {{
+                  resultsService.testCaseService.statusCountsSignal().passed
+                }}
+                passed /
+                {{
+                  resultsService.testCaseService.statusCountsSignal().failed
+                }}
+                failed
+              </span>
+            </div>
+          </div>
+
+          <!-- AC7: severity — kolor + ikona + tekst -->
+          <div class="severity-summary">
+            @for (sev of severityOrder; track sev) {
+              <span class="severity-badge" [ngClass]="'sev-' + sev">
+                <mat-icon aria-hidden="true">{{ severityIcons[sev] }}</mat-icon>
+                {{ severityLabels[sev] }}: {{ severityCounts()[sev] }}
+              </span>
+            }
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- ═══ Przypadki testowe ═══ -->
+      <mat-tab label="Przypadki testowe">
+        <div class="tab-content">
+          <input
+            type="text"
+            class="tc-search"
+            placeholder="Szukaj w tytule i opisie..."
+            aria-label="Wyszukiwanie przypadków testowych"
+            (input)="onTestCaseSearch($any($event.target).value)"
+          />
+          @if (filteredTestCases().length === 0) {
+            <p class="empty-state">
+              Brak przypadków testowych do wyświetlenia.
+            </p>
+          } @else {
+            <div
+              class="results-table"
+              role="table"
+              aria-label="Przypadki testowe"
+            >
+              <div class="results-table-header" role="row">
+                <span role="columnheader" class="col-title">Tytuł</span>
+                <span role="columnheader" class="col-type">Typ</span>
+                <span role="columnheader" class="col-sev">Priorytet</span>
+                <span role="columnheader" class="col-status">Status</span>
+              </div>
+              <div class="results-table-body" (keydown)="onListKeydown($event)">
+                @for (tc of filteredTestCases(); track tc.id) {
+                  <a
+                    class="result-row"
+                    role="row"
+                    tabindex="0"
+                    [routerLink]="[
+                      '/projects',
+                      projectId(),
+                      'test-cases',
+                      tc.id,
+                    ]"
+                  >
+                    <span class="col-title" role="cell">{{ tc.title }}</span>
+                    <span class="col-type" role="cell">{{ tc.type }}</span>
+                    <span class="col-sev" role="cell">{{ tc.priority }}</span>
+                    <span class="col-status" role="cell">{{ tc.status }}</span>
+                  </a>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- ═══ Bezpieczeństwo (gated: security/premium, Story 7.13) ═══ -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <app-locked-feature-tab
+            [locked]="locks.isLocked('security')"
+            [requiredPlan]="locks.requiredPlanOf('security')"
+          >
+            Bezpieczeństwo
+          </app-locked-feature-tab>
+        </ng-template>
+        <div class="tab-content">
+          @if (locks.isLocked("security")) {
+            <app-locked-module
+              moduleKey="security"
+              title="Skanowanie bezpieczeństwa"
+              description="Analiza luk bezpieczeństwa (SAST/DAST, taint analysis, CVE) i rekomendacje naprawcze z kodem. Zakładka pozostaje widoczna — po ulepszeniu planu odblokuje się bez przeładowania strony."
+            />
+          } @else {
+            <app-filter-panel
+              [availableTypes]="resultsService.availableTypesComputed()"
+              [availableModules]="resultsService.availableModulesComputed()"
+              [availableFiles]="resultsService.availableFilesComputed()"
+              (filtersChange)="resultsService.setFilters($event)"
+              (searchChange)="resultsService.setSearchQuery($event)"
+            />
+            <ng-container
+              *ngTemplateOutlet="
+                resultsTable;
+                context: { items: securityResults() }
+              "
+            />
+          }
+        </div>
+      </mat-tab>
+
+      <!-- ═══ Luki (gated: functional_gaps/premium, Story 7.13) ═══ -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <app-locked-feature-tab
+            [locked]="locks.isLocked('functional_gaps')"
+            [requiredPlan]="locks.requiredPlanOf('functional_gaps')"
+          >
+            Luki
+          </app-locked-feature-tab>
+        </ng-template>
+        <div class="tab-content">
+          @if (locks.isLocked("functional_gaps")) {
+            <app-locked-module
+              moduleKey="functional_gaps"
+              title="Analiza luk funkcjonalnych"
+              description="Luki funkcjonalne, niespójności kod↔dokumentacja, compliance scoring i rekomendacje rozszerzeń. Zakładka pozostaje widoczna — po ulepszeniu planu odblokuje się bez przeładowania strony."
+            />
+          } @else {
+            <app-filter-panel
+              [availableTypes]="resultsService.availableTypesComputed()"
+              [availableModules]="resultsService.availableModulesComputed()"
+              [availableFiles]="resultsService.availableFilesComputed()"
+              (filtersChange)="resultsService.setFilters($event)"
+              (searchChange)="resultsService.setSearchQuery($event)"
+            />
+            <ng-container
+              *ngTemplateOutlet="resultsTable; context: { items: gapResults() }"
+            />
+          }
+        </div>
+      </mat-tab>
+
+      <!-- ═══ Pokrycie ═══ -->
+      <mat-tab label="Pokrycie">
+        <div class="tab-content">
+          @if (resultsService.gapSummarySignal(); as summary) {
+            <div class="overview-grid">
+              <div class="overview-card">
+                <span class="card-label">Pokrycie</span>
+                <span class="card-value"
+                  >{{ summary.coveragePercentage | number: "1.0-1" }}%</span
+                >
+              </div>
+              <div class="overview-card">
+                <span class="card-label">Brakujące</span>
+                <span class="card-value">{{ summary.missingCount }}</span>
+              </div>
+              <div class="overview-card">
+                <span class="card-label">Rozbieżne</span>
+                <span class="card-value">{{ summary.differentCount }}</span>
+              </div>
+              <div class="overview-card">
+                <span class="card-label">Niespójne</span>
+                <span class="card-value">{{ summary.inconsistentCount }}</span>
+              </div>
+            </div>
+          }
+          @if (resultsService.moduleScoresSignal().length > 0) {
+            <div
+              class="results-table"
+              role="table"
+              aria-label="Pokrycie per moduł"
+            >
+              <div class="results-table-header" role="row">
+                <span role="columnheader" class="col-title">Plik / moduł</span>
+                <span role="columnheader" class="col-sev">Wynik</span>
+                <span role="columnheader" class="col-status">Znaleziska</span>
+              </div>
+              <div class="results-table-body">
+                @for (
+                  mod of resultsService.moduleScoresSignal();
+                  track mod.filePath
+                ) {
+                  <div class="result-row static" role="row">
+                    <span class="col-title mono" role="cell">{{
+                      mod.filePath
+                    }}</span>
+                    <span
+                      class="col-sev"
+                      role="cell"
+                      [ngClass]="complianceScoreClass(mod.score)"
+                    >
+                      {{ mod.score | number: "1.0-1" }}%
+                    </span>
+                    <span class="col-status" role="cell">{{
+                      mod.totalFindings
+                    }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          } @else {
+            <p class="empty-state">
+              Brak danych o pokryciu. Uruchom analizę luk.
+            </p>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- ═══ Raport ═══ -->
+      <mat-tab label="Raport">
+        <div class="tab-content">
+          @if (resultsService.securityReportSignal(); as report) {
+            <div class="overview-grid">
+              <div class="overview-card">
+                <span class="card-label">Znaleziska łącznie</span>
+                <span class="card-value">{{
+                  report.summary.totalFindings
+                }}</span>
+              </div>
+              <div class="overview-card">
+                <span class="card-label">Deduplikacja</span>
+                <span class="card-value">{{ report.dedupCount }}</span>
+              </div>
+              <div class="overview-card">
+                <span class="card-label">Korelacje</span>
+                <span class="card-value">{{ report.correlationCount }}</span>
+              </div>
+            </div>
+            <div class="severity-summary">
+              @for (
+                entry of report.summary.severityCounts | keyvalue;
+                track entry.key
+              ) {
+                <span class="severity-chip"
+                  >{{ entry.key }}: {{ entry.value }}</span
+                >
+              }
+            </div>
+          } @else {
+            <p class="empty-state">
+              Brak raportu bezpieczeństwa. Uruchom skanowanie w module
+              bezpieczeństwa.
+            </p>
+          }
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </main>
+  <app-footer />
+</div>
+
+<!-- AC3: tabela z sortowaniem po kolumnach; AC8: nawigacja strzałkami -->
+<ng-template #resultsTable let-items="items">
+  @if (items.length === 0) {
+    <p class="empty-state">Brak wyników spełniających kryteria.</p>
+  } @else {
+    <div class="results-table" role="table" aria-label="Lista wyników">
+      <div class="results-table-header" role="row">
+        <button
+          class="col-title sortable"
+          role="columnheader"
+          [attr.aria-sort]="ariaSort('title')"
+          (click)="onSort('title')"
+        >
+          Tytuł
+          @if (sortIndicator("title")) {
+            <mat-icon>{{ sortIndicator("title") }}</mat-icon>
+          }
+        </button>
+        <button
+          class="col-sev sortable"
+          role="columnheader"
+          [attr.aria-sort]="ariaSort('severity')"
+          (click)="onSort('severity')"
+        >
+          Severity
+          @if (sortIndicator("severity")) {
+            <mat-icon>{{ sortIndicator("severity") }}</mat-icon>
+          }
+        </button>
+        <button
+          class="col-type sortable"
+          role="columnheader"
+          [attr.aria-sort]="ariaSort('type')"
+          (click)="onSort('type')"
+        >
+          Typ
+          @if (sortIndicator("type")) {
+            <mat-icon>{{ sortIndicator("type") }}</mat-icon>
+          }
+        </button>
+        <button
+          class="col-file sortable"
+          role="columnheader"
+          [attr.aria-sort]="ariaSort('filePath')"
+          (click)="onSort('filePath')"
+        >
+          Plik
+          @if (sortIndicator("filePath")) {
+            <mat-icon>{{ sortIndicator("filePath") }}</mat-icon>
+          }
+        </button>
+        <button
+          class="col-status sortable"
+          role="columnheader"
+          [attr.aria-sort]="ariaSort('status')"
+          (click)="onSort('status')"
+        >
+          Status
+          @if (sortIndicator("status")) {
+            <mat-icon>{{ sortIndicator("status") }}</mat-icon>
+          }
+        </button>
+      </div>
+      <div class="results-table-body" (keydown)="onListKeydown($event)">
+        @for (item of items; track item.id) {
+          <div
+            class="result-row"
+            role="row"
+            tabindex="0"
+            [class.selected]="selectedResult()?.id === item.id"
+            (click)="selectResult(item)"
+          >
+            <span class="col-title" role="cell">{{ item.title }}</span>
+            <span class="col-sev" role="cell">
+              <!-- AC7: kolor + ikona + tekst -->
+              <span class="severity-badge" [ngClass]="'sev-' + item.severity">
+                <mat-icon aria-hidden="true">{{
+                  severityIcon(item.severity)
+                }}</mat-icon>
+                {{ severityLabel(item.severity) }}
+              </span>
+            </span>
+            <span class="col-type" role="cell">{{ item.type }}</span>
+            <span class="col-file mono" role="cell">{{
+              item.filePath ?? "—"
+            }}</span>
+            <span class="col-status" role="cell">{{
+              statusLabel(item.status)
+            }}</span>
+          </div>
+          @if (selectedResult()?.id === item.id) {
+            <div class="detail-wrapper">
+              <app-result-detail [item]="item" [projectId]="projectId()" />
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+</ng-template>

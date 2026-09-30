@@ -1,0 +1,104 @@
+<header class="tenant-management__header">
+  <h2>Tenanci</h2>
+  <form class="tenant-management__search" (ngSubmit)="applySearch()">
+    <mat-form-field appearance="outline">
+      <mat-label>Szukaj (nazwa lub slug)</mat-label>
+      <input matInput type="search" [formControl]="searchControl" />
+    </mat-form-field>
+    <button type="submit" mat-stroked-button>
+      <mat-icon aria-hidden="true">search</mat-icon>
+      Szukaj
+    </button>
+  </form>
+</header>
+
+@if (errorMessage()) {
+  <p class="tenant-management__error" role="alert">{{ errorMessage() }}</p>
+}
+
+@if (isLoading()) {
+  <mat-spinner diameter="32" aria-label="Ładowanie tenantów" />
+}
+
+<table
+  mat-table
+  [dataSource]="tenants()"
+  class="tenant-management__table"
+>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Nazwa</th>
+    <td mat-cell *matCellDef="let tenant">{{ tenant.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="plan">
+    <th mat-header-cell *matHeaderCellDef>Plan</th>
+    <td mat-cell *matCellDef="let tenant">{{ tenant.plan }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="userCount">
+    <th mat-header-cell *matHeaderCellDef>Użytkownicy</th>
+    <td mat-cell *matCellDef="let tenant">{{ tenant.userCount }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="storage">
+    <th mat-header-cell *matHeaderCellDef>Zajętość storage</th>
+    <td mat-cell *matCellDef="let tenant">
+      {{ formatStorage(tenant.storageBytes) }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="projectCount">
+    <th mat-header-cell *matHeaderCellDef>Projekty</th>
+    <td mat-cell *matCellDef="let tenant">{{ tenant.projectCount }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef>Status</th>
+    <td mat-cell *matCellDef="let tenant">{{ statusLabel(tenant) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdAt">
+    <th mat-header-cell *matHeaderCellDef>Data utworzenia</th>
+    <td mat-cell *matCellDef="let tenant">
+      {{ tenant.createdAt ? (tenant.createdAt | date: "short") : "—" }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr
+    mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    class="tenant-management__row"
+    (click)="selectTenant(row.id)"
+  ></tr>
+</table>
+
+@if (!isLoading() && tenants().length === 0) {
+  <p class="tenant-management__empty">Brak tenantów.</p>
+}
+
+<mat-paginator
+  [length]="total()"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex()"
+  [pageSizeOptions]="[10, 25, 50, 100]"
+  (page)="onPageChange($event)"
+/>
+
+@if (selectedTenant(); as tenant) {
+  <section class="tenant-management__details" aria-label="Projekty wybranego tenanta">
+    <h3>Projekty tenanta: {{ tenant.name }}</h3>
+    @if (projects().length === 0) {
+      <p class="tenant-management__empty">Ten tenant nie ma jeszcze projektów.</p>
+    } @else {
+      <ul class="tenant-management__projects">
+        @for (project of projects(); track project.id) {
+          <li>
+            <a [routerLink]="['/projects', project.id]">{{ project.name }}</a>
+            <span class="tenant-management__project-status">{{ project.status }}</span>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+}

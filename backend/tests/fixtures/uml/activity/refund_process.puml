@@ -1,0 +1,21 @@
+@startuml
+start
+:Przyjmij wniosek o zwrot;
+:Zweryfikuj zamówienie;
+fork
+  :Sprawdź stan towaru;
+fork again
+  :Sprawdź historię płatności;
+fork again
+  :Sprawdź politykę zwrotów;
+end fork
+:Podejmij decyzję;
+if (Zwrot zatwierdzony?) then (tak)
+  :Wykonaj zwrot środków;
+  :Zaktualizuj magazyn;
+else (nie)
+  :Odrzuć wniosek;
+endif
+:Powiadom klienta;
+stop
+@enduml

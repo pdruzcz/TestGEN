@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1"
+         xmlns:uml="http://schema.omg.org/spec/UML/2.1">
+  <uml:Model xmi:type="uml:Model" xmi:id="model_1" name="OrderLifecycle">
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="sm_1" name="Order">
+      <region xmi:type="uml:Region" xmi:id="r_1" name="main">
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="s_init" name="start" kind="initial"/>
+        <subvertex xmi:type="uml:State" xmi:id="s_new" name="Nowe"/>
+        <subvertex xmi:type="uml:State" xmi:id="s_paid" name="Oplacone"/>
+        <subvertex xmi:type="uml:State" xmi:id="s_shipped" name="Wyslane"/>
+        <subvertex xmi:type="uml:State" xmi:id="s_delivered" name="Dostarczone"/>
+        <subvertex xmi:type="uml:State" xmi:id="s_cancelled" name="Anulowane"/>
+        <subvertex xmi:type="uml:FinalState" xmi:id="s_final" name="final"/>
+        <transition xmi:type="uml:Transition" xmi:id="tr_1" source="s_init" target="s_new"/>
+        <transition xmi:type="uml:Transition" xmi:id="tr_2" source="s_new" target="s_paid">
+          <trigger xmi:type="uml:Trigger" xmi:id="trg_1" name="oplac"/>
+          <guard xmi:type="uml:Constraint" xmi:id="g_1" name="srodki_dostepne"/>
+          <effect xmi:type="uml:Activity" xmi:id="ef_1" name="zarezerwuj"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="tr_3" source="s_paid" target="s_shipped">
+          <trigger xmi:type="uml:Trigger" xmi:id="trg_2" name="wyslij"/>
+          <effect xmi:type="uml:Activity" xmi:id="ef_2" name="utworz_przesylke"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="tr_4" source="s_shipped" target="s_delivered">
+          <trigger xmi:type="uml:Trigger" xmi:id="trg_3" name="dostarcz"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="tr_5" source="s_delivered" target="s_final"/>
+        <transition xmi:type="uml:Transition" xmi:id="tr_6" source="s_paid" target="s_cancelled">
+          <trigger xmi:type="uml:Trigger" xmi:id="trg_4" name="anuluj"/>
+          <effect xmi:type="uml:Activity" xmi:id="ef_3" name="zwrot"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="tr_7" source="s_new" target="s_cancelled">
+          <trigger xmi:type="uml:Trigger" xmi:id="trg_5" name="anuluj"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="tr_8" source="s_cancelled" target="s_final"/>
+      </region>
+    </packagedElement>
+  </uml:Model>
+</xmi:XMI>

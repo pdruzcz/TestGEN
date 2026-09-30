@@ -1,0 +1,43 @@
+<div class="config-report">
+  <h3>Skan konfiguracji — misconfiguracje</h3>
+
+  @if (rows().length === 0) {
+    <p class="config-report__empty">Brak misconfiguracji w tym skanie.</p>
+  } @else {
+    @for (row of rows(); track row.ruleId + row.filePath + row.line) {
+      <div class="config-report__item">
+        <div class="config-report__head">
+          <mat-icon class="config-report__tech-icon">{{ row.icon }}</mat-icon>
+          <span class="config-report__tech">{{
+            configLabel(row.configType)
+          }}</span>
+          <span class="badge badge--sev-{{ row.severity }}">{{
+            row.severity
+          }}</span>
+          <span class="config-report__rule">{{ row.ruleId }}</span>
+        </div>
+
+        <p class="config-report__desc">{{ row.description }}</p>
+
+        @if (row.filePath) {
+          <p class="config-report__file">
+            {{ row.filePath }}@if (row.line) {<span>:{{ row.line }}</span>}
+          </p>
+        }
+
+        @if (row.recommendation) {
+          <p class="config-report__rec">
+            <strong>Rekomendacja:</strong> {{ row.recommendation }}
+          </p>
+        }
+
+        @if (row.fixExample) {
+          <div class="config-report__fix">
+            <span class="config-report__fix-label">Poprawna konfiguracja:</span>
+            <pre>{{ row.fixExample }}</pre>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

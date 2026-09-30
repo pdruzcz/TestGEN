@@ -1,0 +1,40 @@
+{
+  "category": "real",
+  "description": "the-internet (Sauce Labs, MIT) — /hovers. Trzy figury z avatarami; hover na pierwszej odsłania link View profile (stan interakcji).",
+  "expected_component_count": 3,
+  "expected_components": [
+    {
+      "component_type": "link",
+      "label": "The Internet",
+      "bbox": {
+        "x": 30,
+        "y": 26,
+        "width": 120,
+        "height": 24
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Elemental Selenium",
+      "bbox": {
+        "x": 1010,
+        "y": 26,
+        "width": 240,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "link",
+      "label": "View profile (odsłonięty hoverem na figurze 1)",
+      "bbox": {
+        "x": 470,
+        "y": 430,
+        "width": 110,
+        "height": 22
+      },
+      "confidence": 0.8
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+@startuml
+actor Customer as C
+participant "Cart Service" as Cart
+participant "Payment Gateway" as Pay
+database "Order DB" as DB
+
+C -> Cart: checkout
+loop for each item
+    Cart -> DB: reserve stock
+    DB --> Cart: reserved
+end
+alt payment approved
+    Cart -> Pay: charge card
+    Pay --> Cart: approved
+    Cart -> DB: create order
+    Cart --> C: order confirmed
+else payment declined
+    Cart -> Pay: charge card
+    Pay --> Cart: declined
+    Cart --> C: payment failed
+end
+@enduml

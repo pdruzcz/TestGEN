@@ -1,0 +1,80 @@
+<div class="dast-config">
+  <h3>Skanowanie dynamiczne (DAST)</h3>
+  <p class="dast-config__hint">Czas trwania: do 30 minut</p>
+
+  <mat-form-field appearance="outline" class="dast-config__field">
+    <mat-label>URL aplikacji docelowej</mat-label>
+    <input
+      matInput
+      type="url"
+      placeholder="https://app.example.com"
+      [ngModel]="targetUrl()"
+      (ngModelChange)="targetUrl.set($event)"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="dast-config__field">
+    <mat-label>Autentykacja</mat-label>
+    <mat-select [ngModel]="authType()" (ngModelChange)="authType.set($event)">
+      <mat-option value="none">Bez autentykacji</mat-option>
+      <mat-option value="form">Formularz (login)</mat-option>
+      <mat-option value="token">Token (Bearer / JWT)</mat-option>
+      <mat-option value="basic">Basic auth</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  @if (authType() === "token") {
+    <mat-form-field appearance="outline" class="dast-config__field">
+      <mat-label>Token</mat-label>
+      <input
+        matInput
+        type="password"
+        [ngModel]="token()"
+        (ngModelChange)="token.set($event)"
+      />
+    </mat-form-field>
+  }
+
+  @if (authType() === "form") {
+    <mat-form-field appearance="outline" class="dast-config__field">
+      <mat-label>URL logowania</mat-label>
+      <input
+        matInput
+        type="url"
+        [ngModel]="loginUrl()"
+        (ngModelChange)="loginUrl.set($event)"
+      />
+    </mat-form-field>
+  }
+
+  @if (authType() === "form" || authType() === "basic") {
+    <mat-form-field appearance="outline" class="dast-config__field">
+      <mat-label>Nazwa użytkownika</mat-label>
+      <input
+        matInput
+        [ngModel]="username()"
+        (ngModelChange)="username.set($event)"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="dast-config__field">
+      <mat-label>Hasło</mat-label>
+      <input
+        matInput
+        type="password"
+        [ngModel]="password()"
+        (ngModelChange)="password.set($event)"
+      />
+    </mat-form-field>
+  }
+
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!canLaunch()"
+    (click)="onLaunch()"
+  >
+    <mat-icon>travel_explore</mat-icon>
+    Uruchom skan DAST
+  </button>
+</div>

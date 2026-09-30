@@ -1,0 +1,23 @@
+@startuml
+|Klient|
+start
+:Złóż zamówienie;
+|System|
+:Zweryfikuj dostępność;
+if (Towar dostępny?) then (tak)
+  :Zarezerwuj towar;
+  |Płatności|
+  :Przetwórz płatność;
+  if (Płatność OK?) then (tak)
+    :Potwierdź zamówienie;
+  else (nie)
+    :Anuluj rezerwację;
+  endif
+else (nie)
+  |System|
+  :Powiadom o braku;
+endif
+|Klient|
+:Otrzymaj potwierdzenie;
+stop
+@enduml

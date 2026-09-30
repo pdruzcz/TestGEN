@@ -1,0 +1,60 @@
+{
+  "description": "CVE golden manifests per ecosystem with intentionally vulnerable versions (Story 4.14). expected_cves documents known advisories; offline regression asserts package+version parsing.",
+  "samples": [
+    {
+      "file": "python/requirements.txt",
+      "ecosystem": "pypi",
+      "expected_packages": ["Django", "requests", "PyYAML"],
+      "expected_versions": { "Django": "2.2.0", "requests": "2.19.0", "PyYAML": "5.1" },
+      "expected_cves": {
+        "Django": ["CVE-2019-19844"],
+        "requests": ["CVE-2018-18074"],
+        "PyYAML": ["CVE-2020-1747"]
+      }
+    },
+    {
+      "file": "javascript/package.json",
+      "ecosystem": "npm",
+      "expected_packages": ["lodash", "minimist", "express"],
+      "expected_versions": { "lodash": "4.17.15", "minimist": "1.2.0", "express": "4.16.0" },
+      "expected_cves": {
+        "lodash": ["CVE-2019-10744"],
+        "minimist": ["CVE-2020-7598"],
+        "express": ["CVE-2022-24999"]
+      }
+    },
+    {
+      "file": "java/pom.xml",
+      "ecosystem": "maven",
+      "expected_packages": ["org.apache.logging.log4j:log4j-core", "org.springframework:spring-core"],
+      "expected_versions": {
+        "org.apache.logging.log4j:log4j-core": "2.14.1",
+        "org.springframework:spring-core": "5.2.0"
+      },
+      "expected_cves": {
+        "org.apache.logging.log4j:log4j-core": ["CVE-2021-44228"],
+        "org.springframework:spring-core": ["CVE-2022-22965"]
+      }
+    },
+    {
+      "file": "dotnet/sample.csproj",
+      "ecosystem": "nuget",
+      "expected_packages": ["Newtonsoft.Json", "System.Net.Http"],
+      "expected_versions": { "Newtonsoft.Json": "12.0.1", "System.Net.Http": "4.3.0" },
+      "expected_cves": {
+        "Newtonsoft.Json": ["CVE-2024-21907"],
+        "System.Net.Http": ["CVE-2017-0247"]
+      }
+    },
+    {
+      "file": "php/composer.json",
+      "ecosystem": "composer",
+      "expected_packages": ["laravel/framework", "guzzlehttp/guzzle"],
+      "expected_versions": { "laravel/framework": "8.0.0", "guzzlehttp/guzzle": "6.5.0" },
+      "expected_cves": {
+        "laravel/framework": ["CVE-2021-43617"],
+        "guzzlehttp/guzzle": ["CVE-2022-29248"]
+      }
+    }
+  ]
+}

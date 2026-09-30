@@ -1,0 +1,117 @@
+{
+  "category": "real_dense",
+  "description": "Bootstrap 5.3 (MIT) — strona /examples/: navbar (Docs dropdown, search, Download) + siatka kart przykładów. Gęsty tekst — real_dense. Viewport 1280x800.",
+  "expected_component_count": 10,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Navbar (Bootstrap/Docs/Examples/Icons/Themes/Blog)",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 760,
+        "height": 64
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Docs (dropdown w navbarze)",
+      "bbox": {
+        "x": 240,
+        "y": 12,
+        "width": 80,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Search (navbar)",
+      "bbox": {
+        "x": 950,
+        "y": 12,
+        "width": 230,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Download (navbar)",
+      "bbox": {
+        "x": 1196,
+        "y": 12,
+        "width": 80,
+        "height": 36
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Karta przykładu 1 (Home)",
+      "bbox": {
+        "x": 130,
+        "y": 220,
+        "width": 340,
+        "height": 200
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "link",
+      "label": "Karta przykładu 2 (Starter)",
+      "bbox": {
+        "x": 490,
+        "y": 220,
+        "width": 340,
+        "height": 200
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "link",
+      "label": "Karta przykładu 3 (Blog)",
+      "bbox": {
+        "x": 850,
+        "y": 220,
+        "width": 340,
+        "height": 200
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "link",
+      "label": "Karta przykładu 4 (Dashboard)",
+      "bbox": {
+        "x": 130,
+        "y": 440,
+        "width": 340,
+        "height": 200
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "link",
+      "label": "Karta przykładu 5 (Pricing)",
+      "bbox": {
+        "x": 490,
+        "y": 440,
+        "width": 340,
+        "height": 200
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "link",
+      "label": "Karta przykładu 6 (Checkout)",
+      "bbox": {
+        "x": 850,
+        "y": 440,
+        "width": 340,
+        "height": 200
+      },
+      "confidence": 0.75
+    }
+  ]
+}

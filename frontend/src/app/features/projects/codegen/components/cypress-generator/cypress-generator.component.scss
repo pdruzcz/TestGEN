@@ -1,0 +1,172 @@
+.cg-page {
+  min-height: 100vh;
+  background: #f7f8fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.cg-content {
+  flex: 1;
+  padding: 32px 48px;
+  max-width: 1040px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.cg-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.back-link {
+  align-self: flex-start;
+  margin-bottom: 8px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: #6b7280;
+  margin: 4px 0 0;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.tc-list {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.tc-item {
+  padding: 6px 0;
+}
+
+.tc-meta {
+  color: #6b7280;
+  font-size: 0.85rem;
+  margin-left: 6px;
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .field-label {
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  input {
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+  }
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.meta-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.chip {
+  background: #e3f2fd;
+  color: #1565c0;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.code-block {
+  background: #1e1e1e;
+  color: #e6e6e6;
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.empty {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.error-banner,
+.info-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 14px;
+}
+
+.error-banner {
+  background: #fdecea;
+  color: #611a15;
+}
+
+.info-banner {
+  background: #e3f2fd;
+  color: #0d47a1;
+}
+
+@media (max-width: 768px) {
+  .cg-content {
+    padding: 16px;
+  }
+}

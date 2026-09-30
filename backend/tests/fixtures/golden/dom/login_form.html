@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <title>Logowanie — wersja A (przed refaktoryzacją)</title>
+</head>
+<body>
+  <main>
+    <!-- Formularz logowania — wersja "przed": przycisk oznaczony legacy id="login-btn". -->
+    <form id="login-form" aria-label="Formularz logowania">
+      <h1>Logowanie</h1>
+
+      <label for="email">Adres e-mail</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        aria-label="Adres e-mail"
+        data-testid="email-input"
+        required
+      />
+
+      <label for="password">Hasło</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        aria-label="Hasło"
+        data-testid="password-input"
+        required
+      />
+
+      <label>
+        <input type="checkbox" name="remember" data-testid="remember-me" />
+        Zapamiętaj mnie
+      </label>
+
+      <button type="submit" id="login-btn">Zaloguj</button>
+
+      <a href="/reset" data-testid="reset-password">Nie pamiętam hasła</a>
+    </form>
+  </main>
+</body>
+</html>

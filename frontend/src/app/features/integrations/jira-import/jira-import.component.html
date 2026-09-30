@@ -1,0 +1,133 @@
+<div class="import-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="import-content" id="main-content" tabindex="-1">
+    <a class="back-link" mat-button [routerLink]="['/projects', projectId()]">
+      <mat-icon aria-hidden="true">arrow_back</mat-icon>
+      Wróć do projektu
+    </a>
+
+    <header>
+      <h1 class="page-title">Import wymagań z Jiry</h1>
+      <p class="page-subtitle">
+        Historyjki, epiki, błędy i podzadania trafiają do TestGEN jako wymagania, a ich załączniki — jako pliki
+        projektu. Kolejny import pobiera wyłącznie to, co zmieniło się od poprzedniego.
+      </p>
+    </header>
+
+    @if (errorMessage()) {
+      <div class="banner banner--error" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    @if (infoMessage()) {
+      <div class="banner banner--info" role="status">
+        <mat-icon aria-hidden="true">check_circle_outline</mat-icon>
+        <span>{{ infoMessage() }}</span>
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="loading">
+        <mat-spinner diameter="32" />
+        <span>Pobieram listę projektów Jiry…</span>
+      </div>
+    } @else {
+      <section class="card">
+        <h2 class="card-title">Co zaimportować</h2>
+
+        <label class="field">
+          <span class="field-label">Projekt Jiry</span>
+          @if (jiraProjects().length) {
+            <select [(ngModel)]="selectedProjectKey" name="jiraProject">
+              <option value="">— wybierz —</option>
+              @for (option of jiraProjects(); track option.key) {
+                <option [value]="option.key">{{ option.key }} — {{ option.name }}</option>
+              }
+            </select>
+          } @else {
+            <span class="empty">Konto z konfiguracji integracji nie widzi żadnego projektu.</span>
+          }
+        </label>
+
+        <fieldset class="types">
+          <legend class="field-label">Typy zgłoszeń</legend>
+          @for (type of issueTypes; track type.value) {
+            <label class="type-option">
+              <input type="checkbox" [checked]="isTypeSelected(type.value)" (change)="toggleType(type.value)" />
+              <span>
+                <strong>{{ type.label }}</strong>
+                <span class="type-hint">{{ type.hint }}</span>
+              </span>
+            </label>
+          }
+        </fieldset>
+
+        <fieldset class="scope">
+          <legend class="field-label">Zakres</legend>
+          <label class="scope-option">
+            <input type="radio" name="scope" value="incremental" [(ngModel)]="scope" />
+            <span>
+              <strong>Tylko zmiany</strong>
+              <span class="type-hint">zgłoszenia zmienione od ostatniego importu</span>
+            </span>
+          </label>
+          <label class="scope-option">
+            <input type="radio" name="scope" value="full" [(ngModel)]="scope" />
+            <span>
+              <strong>Wszystko</strong>
+              <span class="type-hint">pełny import — przy dużym projekcie trwa dłużej</span>
+            </span>
+          </label>
+          <label class="scope-option">
+            <input type="radio" name="scope" value="since" [(ngModel)]="scope" />
+            <span>
+              <strong>Od daty</strong>
+              <span class="type-hint">zgłoszenia zmienione po wskazanym dniu</span>
+            </span>
+          </label>
+          @if (scope === 'since') {
+            <input class="date-input" type="date" [(ngModel)]="sinceDate" name="sinceDate" />
+          }
+        </fieldset>
+
+        <button mat-flat-button color="primary" type="button" [disabled]="!canImport()" (click)="startImport()">
+          <mat-icon aria-hidden="true">download</mat-icon>
+          Importuj
+        </button>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">Historia importów</h2>
+
+        @if (!imports().length) {
+          <p class="empty">Z tego projektu nie importowano jeszcze niczego.</p>
+        } @else {
+          <ul class="import-list">
+            @for (item of imports(); track item.id) {
+              <li class="import-row">
+                <div class="import-head">
+                  <span class="import-key">{{ item.jiraProjectKey }}</span>
+                  <span class="pill" [class.pill--failed]="item.status === 'failed'">
+                    {{ statusLabel(item.status) }}
+                  </span>
+                  <span class="muted">
+                    {{ item.lastImportAt ? (item.lastImportAt | date: 'dd.MM.yyyy HH:mm') : 'brak udanego importu' }}
+                  </span>
+                </div>
+                <p class="import-summary">{{ summaryOf(item) }}</p>
+                @if (item.lastError) {
+                  <p class="import-error">{{ item.lastError }}</p>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    }
+  </main>
+
+  <app-footer />
+</div>

@@ -1,0 +1,62 @@
+{
+  "category": "real_dense",
+  "description": "Mailpit (MIT, docker/binarny) — lista wiadomości. Tabela 5 maili testowych + navbar z wyszukiwarką. Gęsty OCR (fragmenty wierszy jako menu/checkbox) — kategoria real_dense, patrz README.",
+  "expected_component_count": 5,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Mailpit (navbar)",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 56
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Search",
+      "bbox": {
+        "x": 640,
+        "y": 12,
+        "width": 380,
+        "height": 32
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Refresh (ikona)",
+      "bbox": {
+        "x": 1040,
+        "y": 12,
+        "width": 32,
+        "height": 32
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Delete all (ikona)",
+      "bbox": {
+        "x": 1084,
+        "y": 12,
+        "width": 32,
+        "height": 32
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "table",
+      "label": "Messages (5 wierszy)",
+      "bbox": {
+        "x": 20,
+        "y": 70,
+        "width": 1240,
+        "height": 330
+      },
+      "confidence": 0.9
+    }
+  ]
+}

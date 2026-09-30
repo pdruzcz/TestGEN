@@ -1,0 +1,147 @@
+<section class="transaction-list">
+  <header class="page-title">
+    <h1>Historia transakcji</h1>
+    <p>
+      Wszystkie płatności konta, malejąco po dacie — z filtrami i paginacją.
+    </p>
+  </header>
+
+  <form class="filters" (ngSubmit)="applyFilters()">
+    <mat-form-field appearance="outline" class="filter-status">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="statusFilter" name="status">
+        @for (option of statusOptions; track option.value) {
+          <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-date">
+      <mat-label>Od</mat-label>
+      <input matInput type="date" name="dateFrom" [(ngModel)]="dateFrom" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-date">
+      <mat-label>Do</mat-label>
+      <input matInput type="date" name="dateTo" [(ngModel)]="dateTo" />
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" type="submit">Filtruj</button>
+    <button mat-stroked-button type="button" (click)="clearFilters()">
+      Wyczyść
+    </button>
+  </form>
+
+  @if (error()) {
+    <mat-card class="card">
+      <p class="error" role="alert">{{ error() }}</p>
+    </mat-card>
+  } @else {
+    <mat-card class="card table-card">
+      @if (loading()) {
+        <p class="status" role="status" aria-live="polite">
+          Pobieranie transakcji…
+        </p>
+      } @else if (transactions().length === 0) {
+        <p class="status">Brak transakcji dla wybranych filtrów.</p>
+      } @else {
+        <div class="table-wrap">
+          <table class="transactions-table" aria-label="Historia transakcji">
+            <caption class="visually-hidden">
+              Lista transakcji posortowana malejąco po dacie
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Data</th>
+                <th scope="col" class="amount-col">Kwota</th>
+                <th scope="col">Metoda</th>
+                <th scope="col">Status</th>
+                <th scope="col">Faktura</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (transaction of transactions(); track transaction.id) {
+                <tr>
+                  <th scope="row" class="date-cell">
+                    {{ dateLabel(transaction.createdAt) }}
+                  </th>
+                  <td class="amount-col">{{ amountLabel(transaction) }}</td>
+                  <td>{{ methodLabel(transaction.method) }}</td>
+                  <td>
+                    <span
+                      class="chip"
+                      [class.chip-paid]="transaction.status === 'paid'"
+                      [class.chip-pending]="transaction.status === 'pending'"
+                      [class.chip-failed]="
+                        transaction.status === 'charged_back' ||
+                        transaction.status === 'refunded'
+                      "
+                    >
+                      {{ statusLabel(transaction.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    @if (transaction.invoiceId) {
+                      <a
+                        class="invoice-link"
+                        routerLink="/billing/invoices"
+                        aria-label="Przejdź do faktur"
+                      >
+                        {{ transaction.invoiceNumber }}
+                      </a>
+                    } @else {
+                      <span aria-label="Brak faktury">—</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <nav class="pagination" aria-label="Stronicowanie transakcji">
+          <p class="counter">
+            Strona {{ page() }} z {{ totalPages() }} — {{ total() }}
+            {{ total() === 1 ? "transakcja" : "transakcji" }}
+          </p>
+          <div class="pager-nav">
+            <button
+              mat-icon-button
+              type="button"
+              aria-label="Poprzednia strona"
+              [disabled]="page() <= 1"
+              (click)="prevPage()"
+            >
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              type="button"
+              aria-label="Następna strona"
+              [disabled]="!hasNextPage()"
+              (click)="nextPage()"
+            >
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </nav>
+      }
+    </mat-card>
+
+    <div class="actions">
+      <a
+        mat-flat-button
+        color="primary"
+        routerLink="/billing/invoices"
+        class="invoices-link"
+      >
+        <mat-icon aria-hidden="true">receipt_long</mat-icon>
+        Przejdź do faktur
+      </a>
+      <p class="note">
+        Metodę płatności odczytujemy z powiązanej faktury; transakcje bez
+        faktury (np. odrzucone) oznaczamy myślnikiem.
+      </p>
+    </div>
+  }
+</section>

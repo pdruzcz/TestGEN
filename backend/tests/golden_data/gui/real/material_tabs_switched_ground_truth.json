@@ -1,0 +1,62 @@
+{
+  "category": "real",
+  "description": "Angular Material docs (MIT) — komponent Tabs z PRZEŁĄCZONĄ zakładką (stan interakcji: druga zakładka aktywna, treść Content 2). Viewport 1280x800.",
+  "expected_component_count": 5,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidenav (lista komponentów)",
+      "bbox": {
+        "x": 0,
+        "y": 64,
+        "width": 290,
+        "height": 736
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Search (toolbar)",
+      "bbox": {
+        "x": 900,
+        "y": 12,
+        "width": 340,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "tab",
+      "label": "First (nieaktywna)",
+      "bbox": {
+        "x": 360,
+        "y": 175,
+        "width": 110,
+        "height": 48
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "tab",
+      "label": "Second (aktywna — przełączona zakładka)",
+      "bbox": {
+        "x": 470,
+        "y": 175,
+        "width": 120,
+        "height": 48
+      },
+      "confidence": 0.95
+    },
+    {
+      "component_type": "tab",
+      "label": "Third (nieaktywna)",
+      "bbox": {
+        "x": 590,
+        "y": 175,
+        "width": 100,
+        "height": 48
+      },
+      "confidence": 0.9
+    }
+  ]
+}

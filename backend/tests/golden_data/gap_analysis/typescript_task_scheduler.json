@@ -1,0 +1,24 @@
+{
+  "language": "typescript",
+  "name": "typescript_task_scheduler",
+  "requirements": [
+    {"req_id": "REQ-TSK-001", "text": "System must schedule recurring tasks", "category": "scheduling", "priority": "high"},
+    {"req_id": "REQ-TSK-002", "text": "System must cancel scheduled tasks", "category": "scheduling", "priority": "high"},
+    {"req_id": "REQ-TSK-003", "text": "System must retry failed tasks", "category": "reliability", "priority": "medium"},
+    {"req_id": "REQ-TSK-004", "text": "System must log task execution", "category": "logging", "priority": "medium"},
+    {"req_id": "REQ-TSK-005", "text": "System must notify on task failures", "category": "notification", "priority": "medium"},
+    {"req_id": "REQ-TSK-006", "text": "System must prioritize tasks", "category": "scheduling", "priority": "low"}
+  ],
+  "code_entities": [
+    {"entity_id": "tsk-1", "name": "scheduleRecurringTask", "type": "function", "file_path": "src/scheduler/scheduler.ts", "line_number": 18, "language": "typescript", "docstring": "Schedule a recurring task"},
+    {"entity_id": "tsk-2", "name": "cancelScheduledTask", "type": "function", "file_path": "src/scheduler/scheduler.ts", "line_number": 42, "language": "typescript", "docstring": "Cancel a previously scheduled task"},
+    {"entity_id": "tsk-3", "name": "retryFailedTask", "type": "function", "file_path": "src/scheduler/retry.ts", "line_number": 12, "language": "typescript", "docstring": "Retry a failed task"},
+    {"entity_id": "tsk-4", "name": "logTaskExecution", "type": "function", "file_path": "src/scheduler/logger.ts", "line_number": 8, "language": "typescript", "docstring": "Log task execution outcome"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-TSK-001", "REQ-TSK-002", "REQ-TSK-003", "REQ-TSK-004"],
+    "missing_req_ids": ["REQ-TSK-005", "REQ-TSK-006"],
+    "extra_code_entity_ids": [],
+    "expected_coverage_min_pct": 60.0
+  }
+}

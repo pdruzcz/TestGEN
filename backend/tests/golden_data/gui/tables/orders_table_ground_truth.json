@@ -1,0 +1,11 @@
+{
+  "category": "tables",
+  "description": "Tabela zamowien z filtrem statusu i akcjami zbiorczymi.",
+  "expected_component_count": 4,
+  "expected_components": [
+    {"component_type": "table", "label": "Zamowienia", "bbox": {"x": 60, "y": 120, "width": 1040, "height": 600}, "confidence": 0.92},
+    {"component_type": "dropdown", "label": "Status", "bbox": {"x": 60, "y": 60, "width": 200, "height": 40}, "confidence": 0.87},
+    {"component_type": "checkbox", "label": "Zaznacz wszystkie", "bbox": {"x": 70, "y": 130, "width": 24, "height": 24}, "confidence": 0.85},
+    {"component_type": "button", "label": "Eksportuj CSV", "bbox": {"x": 940, "y": 60, "width": 160, "height": 40}, "confidence": 0.94}
+  ]
+}

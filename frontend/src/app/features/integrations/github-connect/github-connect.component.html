@@ -1,0 +1,257 @@
+<div class="integrations-page">
+  <app-navbar activeLink="profile" />
+  <div class="integrations-content">
+    <aside class="sidebar">
+      <h3 class="sidebar-title">Ustawienia</h3>
+      <a mat-button routerLink="/settings/profile" class="sidebar-link"> <mat-icon>person</mat-icon> Profil </a>
+      <a mat-button routerLink="/settings/users" class="sidebar-link"> <mat-icon>group</mat-icon> Użytkownicy </a>
+      <a mat-button routerLink="/settings/api-keys" class="sidebar-link"> <mat-icon>vpn_key</mat-icon> Klucze API </a>
+      <a mat-button routerLink="/settings/integrations/github" class="sidebar-link sidebar-active" aria-current="page">
+        <mat-icon>hub</mat-icon> Integracja GitHub
+      </a>
+      <a mat-button routerLink="/settings/integrations/gitlab" class="sidebar-link">
+        <mat-icon>merge</mat-icon> Integracja GitLab
+      </a>
+      <a mat-button routerLink="/settings/integrations/webhooks" class="sidebar-link">
+        <mat-icon>webhook</mat-icon> Webhooki
+      </a>
+    </aside>
+
+    <main class="main-content" id="main-content" tabindex="-1">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Integracja z GitHub</h1>
+          <p class="page-subtitle">
+            Podłącz repozytorium, a TestGEN przeanalizuje kod przy każdym pushu na gałąź główną i przy każdym pull
+            requeście.
+          </p>
+        </div>
+        @if (providerConfigured()) {
+          <button mat-raised-button color="primary" (click)="connectGitHub()">
+            <mat-icon>link</mat-icon>
+            Połącz z GitHub
+          </button>
+        }
+      </div>
+
+      @if (!providerConfigured()) {
+        <p class="banner banner-warning" role="status">
+          Integracja z GitHub nie jest skonfigurowana na tym serwerze. Skontaktuj się z administratorem platformy.
+        </p>
+      }
+
+      @if (errorMessage()) {
+        <p class="banner banner-error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      @if (infoMessage()) {
+        <p class="banner banner-info" role="status">
+          {{ infoMessage() }}
+          <button mat-button type="button" (click)="dismissInfo()">Zamknij</button>
+        </p>
+      }
+
+      <section class="panel">
+        <h2 class="panel-title">Podłączone repozytoria</h2>
+
+        @if (isLoading()) {
+          <div class="loading">
+            <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+            Ładowanie...
+          </div>
+        } @else if (integrations().length === 0) {
+          <p class="empty-state">
+            Nie masz jeszcze podłączonych repozytoriów. Kliknij „Połącz z GitHub”, aby autoryzować dostęp i wybrać
+            repozytorium.
+          </p>
+        } @else {
+          <table class="data-table">
+            <caption class="visually-hidden">
+              Lista podłączonych repozytoriów GitHub
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Repozytorium</th>
+                <th scope="col">Gałąź główna</th>
+                <th scope="col">Webhook</th>
+                <th scope="col">Podłączono</th>
+                <th scope="col">Akcje</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (integration of integrations(); track integration.id) {
+                <tr>
+                  <td class="repo-name">
+                    <a [href]="integration.repoUrl" target="_blank" rel="noopener noreferrer">{{
+                      integration.repoFullName
+                    }}</a>
+                  </td>
+                  <td>
+                    <code>{{ integration.defaultBranch }}</code>
+                  </td>
+                  <td>
+                    <span
+                      class="badge"
+                      [class.badge-ok]="integration.webhookActive"
+                      [class.badge-off]="!integration.webhookActive"
+                    >
+                      {{ webhookLabel(integration) }}
+                    </span>
+                  </td>
+                  <td>{{ integration.createdAt | date: 'dd.MM.yyyy' }}</td>
+                  <td class="actions">
+                    <a
+                      class="icon-btn"
+                      [routerLink]="['/settings/integrations', integration.id, 'history']"
+                      [queryParams]="{ provider: 'github' }"
+                      [attr.aria-label]="'Historia status checków dla ' + integration.repoFullName"
+                    >
+                      <mat-icon aria-hidden="true">history</mat-icon>
+                    </a>
+                    <button
+                      class="icon-btn"
+                      type="button"
+                      (click)="openStatusConfig(integration.id, integration.repoFullName)"
+                      [attr.aria-label]="'Ustawienia status checka dla ' + integration.repoFullName"
+                    >
+                      <mat-icon aria-hidden="true">tune</mat-icon>
+                    </button>
+                    <button
+                      class="icon-btn"
+                      type="button"
+                      (click)="askRemove(integration.id)"
+                      [attr.aria-label]="'Odłącz repozytorium ' + integration.repoFullName"
+                    >
+                      <mat-icon aria-hidden="true">link_off</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Ostatnie zdarzenia</h2>
+
+        @if (events().length === 0) {
+          <p class="empty-state">
+            Brak zdarzeń. Pojawią się tu po pierwszym pushu lub pull requeście w podłączonym repozytorium.
+          </p>
+        } @else {
+          <table class="data-table">
+            <caption class="visually-hidden">
+              Ostatnie zdarzenia z webhooków
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Zdarzenie</th>
+                <th scope="col">Repozytorium</th>
+                <th scope="col">Commit</th>
+                <th scope="col">Status</th>
+                <th scope="col">Kiedy</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (event of events(); track event.id) {
+                <tr>
+                  <td>{{ eventLabel(event) }}</td>
+                  <td>{{ event.repoFullName }}</td>
+                  <td>
+                    <code>{{ shortSha(event.commitSha) }}</code>
+                  </td>
+                  <td>
+                    <span class="badge" [class]="'status-' + event.status">
+                      {{ statusLabel(event.status) }}
+                    </span>
+                    @if (event.errorMessage) {
+                      <span class="event-detail">{{ event.errorMessage }}</span>
+                    }
+                  </td>
+                  <td>{{ event.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </section>
+    </main>
+  </div>
+
+  @if (isRepoPickerOpen()) {
+    <div class="dialog-backdrop">
+      <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="repo-picker-title">
+        <h2 id="repo-picker-title" class="dialog-title">Wybierz repozytorium</h2>
+
+        @if (isLoadingRepos()) {
+          <div class="loading">
+            <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+            Pobieram repozytoria z GitHuba...
+          </div>
+        } @else if (availableRepos().length === 0) {
+          <p class="empty-state">
+            Autoryzacja nie obejmuje żadnego repozytorium. Sprawdź uprawnienia aplikacji TestGEN na GitHubie.
+          </p>
+        } @else {
+          <ul class="repo-list">
+            @for (repo of availableRepos(); track repo.fullName) {
+              <li class="repo-item">
+                <div class="repo-info">
+                  <span class="repo-item-name">{{ repo.fullName }}</span>
+                  <span class="repo-item-meta">
+                    {{ repo.private ? 'prywatne' : 'publiczne' }} ·
+                    {{ repo.defaultBranch }}
+                  </span>
+                </div>
+                @if (repo.connected) {
+                  <span class="badge badge-ok">Podłączone</span>
+                } @else {
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    [disabled]="connectingRepo() !== null"
+                    (click)="connectRepo(repo)"
+                  >
+                    {{ connectingRepo() === repo.fullName ? 'Podłączam...' : 'Podłącz' }}
+                  </button>
+                }
+              </li>
+            }
+          </ul>
+        }
+
+        <div class="dialog-actions">
+          <button mat-button type="button" (click)="closeRepoPicker()">Zamknij</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (pendingRemovalId()) {
+    <div class="dialog-backdrop">
+      <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="remove-repo-title">
+        <h2 id="remove-repo-title" class="dialog-title">Odłączyć repozytorium?</h2>
+        <p class="dialog-text">
+          TestGEN usunie webhook z repozytorium i przestanie analizować nowe pushe oraz pull requesty. Dotychczasowe
+          wyniki analiz zostaną zachowane.
+        </p>
+        <div class="dialog-actions">
+          <button mat-button type="button" (click)="cancelRemove()">Anuluj</button>
+          <button mat-raised-button color="warn" type="button" (click)="confirmRemove()">Odłącz</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (configuringId()) {
+    <app-status-check-config
+      [integrationId]="configuringId()!"
+      [repoName]="configuringName()"
+      (closed)="closeStatusConfig()"
+      (saved)="onStatusConfigSaved()"
+    />
+  }
+
+  <app-footer />
+</div>

@@ -1,0 +1,9 @@
+{
+  "diagram_type": "activity",
+  "description": "Diagram czynnosci z decyzja if/else (Stock available).",
+  "expected_participants_count": 0,
+  "expected_elements_count": 6,
+  "expected_relationships_count": 6,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 2
+}

@@ -1,0 +1,12 @@
+@startuml
+class User {
+  - login: String
+  - haslo: String
+  + zaloguj(): bool
+  + wyloguj(): void
+}
+class System {
+  + autoryzuj(login: String): bool
+}
+User --> System
+@enduml

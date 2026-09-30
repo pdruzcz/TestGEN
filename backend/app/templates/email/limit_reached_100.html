@@ -1,0 +1,12 @@
+<h2 style="color:#c62828; margin:0 0 12px;">Limit {{ resource_display }} osiągnięty — TestGEN</h2>
+<p>Limit zasobu <b>{{ resource_display }}</b> w planie <b>{{ plan_display }}</b> został wyczerpany:</p>
+<ul>
+  <li>Aktualne zużycie: <b>{{ current_display }}</b></li>
+  <li>Limit planu: <b>{{ limit_display }}</b></li>
+  <li>Wykorzystanie: <b>{{ percentage }}%</b></li>
+</ul>
+<p>Dalsze operacje na tym zasobie są blokowane do końca bieżącego okresu rozliczeniowego. Uaktualnij plan, aby przywrócić pełną pojemność — nowy limit zacznie obowiązywać natychmiast.</p>
+<p style="margin:24px 0;">
+  <a href="{{ cta_url }}" style="background:#1976d2; color:#ffffff; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:600; display:inline-block;">Uaktualnij plan</a>
+</p>
+<p style="color:#6b7280; font-size:13px;">Szczegółowe zużycie znajdziesz w panelu TestGEN (Billing → Zużycie zasobów).</p>

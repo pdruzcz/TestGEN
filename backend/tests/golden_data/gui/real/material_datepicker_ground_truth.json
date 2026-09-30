@@ -1,0 +1,84 @@
+{
+  "category": "real",
+  "description": "Angular Material docs (MIT) — komponent Datepicker, przykłady live: pola daty z przyciskami kalendarza (Pick a date, Completely disabled, date range). Viewport 1280x800.",
+  "expected_component_count": 7,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidenav (lista komponentów)",
+      "bbox": {
+        "x": 0,
+        "y": 64,
+        "width": 290,
+        "height": 736
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Search (toolbar)",
+      "bbox": {
+        "x": 900,
+        "y": 12,
+        "width": 340,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Choose a date (demo)",
+      "bbox": {
+        "x": 370,
+        "y": 195,
+        "width": 260,
+        "height": 50
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Toggle kalendarza (demo, ikona)",
+      "bbox": {
+        "x": 640,
+        "y": 195,
+        "width": 48,
+        "height": 48
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Completely disabled (demo)",
+      "bbox": {
+        "x": 720,
+        "y": 195,
+        "width": 260,
+        "height": 50
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Date range: od (demo)",
+      "bbox": {
+        "x": 370,
+        "y": 370,
+        "width": 180,
+        "height": 50
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Date range: do (demo)",
+      "bbox": {
+        "x": 560,
+        "y": 370,
+        "width": 180,
+        "height": 50
+      },
+      "confidence": 0.8
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+# Golden misconfig fixture (Story 4.14) — missing HEALTHCHECK (CWE-754).
+FROM python:3.13-slim
+RUN useradd -m app
+COPY app /app
+USER app
+CMD ["python", "/app/main.py"]

@@ -1,0 +1,89 @@
+<div class="filter-panel">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Szukaj w tytule i opisie</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      type="text"
+      [formControl]="searchControl"
+      placeholder="np. SQL injection"
+      aria-label="Wyszukiwanie wyników"
+    />
+  </mat-form-field>
+
+  <div class="filter-row">
+    <div class="filter-group">
+      <span class="filter-label">Severity</span>
+      <mat-button-toggle-group
+        multiple
+        aria-label="Filtr severity"
+        (change)="onSeveritiesChange($any($event.value))"
+      >
+        @for (opt of severityOptions; track opt[0]) {
+          <mat-button-toggle [value]="opt[0]">{{ opt[1] }}</mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Status</span>
+      <mat-button-toggle-group
+        aria-label="Filtr statusu"
+        (change)="onStatusChange($any($event.value))"
+      >
+        @for (opt of statusOptions; track opt[0]) {
+          <mat-button-toggle [value]="opt[0]">{{ opt[1] }}</mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Typ</mat-label>
+      <mat-select (selectionChange)="onTypeChange($event.value)">
+        <mat-option [value]="null">Wszystkie</mat-option>
+        @for (t of availableTypes(); track t) {
+          <mat-option [value]="t">{{ t }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Moduł</mat-label>
+      <mat-select (selectionChange)="onModuleChange($event.value)">
+        <mat-option [value]="null">Wszystkie</mat-option>
+        @for (m of availableModules(); track m) {
+          <mat-option [value]="m">{{ m }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field file-field">
+      <mat-label>Plik</mat-label>
+      <input
+        matInput
+        type="text"
+        [formControl]="fileControl"
+        [matAutocomplete]="fileAuto"
+        placeholder="ścieżka pliku"
+        aria-label="Filtr pliku"
+      />
+      <mat-autocomplete #fileAuto="matAutocomplete">
+        @for (f of availableFiles(); track f) {
+          <mat-option [value]="f">{{ f }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <button
+      type="button"
+      class="clear-btn"
+      (click)="clearFilters()"
+      aria-label="Wyczyść filtry"
+    >
+      <mat-icon>filter_alt_off</mat-icon>
+      Wyczyść
+    </button>
+  </div>
+</div>

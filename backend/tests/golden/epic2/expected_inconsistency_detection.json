@@ -1,0 +1,62 @@
+{
+  "name": "epic2_expected_inconsistency_detection",
+  "data_type": "expected_output",
+  "version": "1.0",
+  "metadata": {
+    "description": "Expected inconsistency detection results for Epic 2 sample document",
+    "feature": "inconsistency_detection",
+    "story": "2.7"
+  },
+  "tags": ["epic2", "inconsistency", "expected"],
+  "data": {
+    "total_inconsistencies": 2,
+    "by_severity": {
+      "critical": 0,
+      "high": 1,
+      "medium": 1,
+      "low": 0
+    },
+    "by_type": {
+      "contradiction": 0,
+      "terminology": 1,
+      "missing_reference": 1,
+      "duplicate": 0
+    },
+    "inconsistencies": [
+      {
+        "inconsistency_id": "INC-001",
+        "type": "terminology",
+        "severity": "medium",
+        "description": "Niespójna terminologia: 'Zamówienie' ma 3 wariantów nazw",
+        "affected_requirements": [],
+        "suggestion": "Ustandaryzuj nazwę na jedną formę: 'Zamówienie'",
+        "source_section_id": "sec-4",
+        "details": {
+          "entity": "Zamówienie",
+          "variants": ["zamówienia", "zamówienie", "Zamówienie"],
+          "sections": ["sec-2-2", "sec-2-2-1", "sec-2-2-2"]
+        }
+      },
+      {
+        "inconsistency_id": "INC-002",
+        "type": "missing_reference",
+        "severity": "high",
+        "description": "Brakująca referencja: Sekcja 2.2.2 odnosi się do statusu 'W trakcie realizacji' który nie jest zdefiniowany w dokumencie",
+        "affected_requirements": ["FR-004"],
+        "suggestion": "Dodaj definicję statusów zamówienia w sekcji słownika lub wymagań",
+        "source_section_id": "sec-2-2-2",
+        "details": {
+          "requirement_id": "FR-004",
+          "requirement_text": "Użytkownik może edytować zamówienie tylko jeśli znajduje się w statusie 'W trakcie realizacji'.",
+          "referenced_id": "STATUS-001",
+          "reference_context": "status 'W trakcie realizacji'"
+        }
+      }
+    ],
+    "recommendations": [
+      "Ustandaryzuj terminologię dotyczącą zamówień w całym dokumencie",
+      "Zdefiniuj wszystkie statusy zamówień w sekcji słownika lub osobnej sekcji",
+      "Rozważ dodanie tabeli statusów z opisami przejść"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "description": "Identyczne ekrany — brak roznic semantycznych (status MATCH).",
+  "pixel_pct": 0.0,
+  "baseline_components": [
+    {"component_type": "form", "label": "Logowanie", "bbox": {"x": 120, "y": 80, "width": 360, "height": 320}, "confidence": 0.92},
+    {"component_type": "input", "label": "Email", "bbox": {"x": 150, "y": 140, "width": 300, "height": 40}, "confidence": 0.9},
+    {"component_type": "button", "label": "Zaloguj", "bbox": {"x": 150, "y": 270, "width": 300, "height": 44}, "confidence": 0.95}
+  ],
+  "comparison_components": [
+    {"component_type": "form", "label": "Logowanie", "bbox": {"x": 120, "y": 80, "width": 360, "height": 320}, "confidence": 0.92},
+    {"component_type": "input", "label": "Email", "bbox": {"x": 150, "y": 140, "width": 300, "height": 40}, "confidence": 0.9},
+    {"component_type": "button", "label": "Zaloguj", "bbox": {"x": 150, "y": 270, "width": 300, "height": 44}, "confidence": 0.95}
+  ],
+  "expected_status": "match",
+  "expected_change_types": []
+}

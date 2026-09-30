@@ -1,0 +1,106 @@
+{
+  "category": "real",
+  "description": "Keycloak 26.7.1 admin console (Apache-2.0) — Realm roles: tabela ról (admin, offline_access, uma_authorization, ...) z kebab-menu, wyszukiwarka, przycisk Create role. Viewport 1280x800.",
+  "expected_component_count": 9,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar (Clients/Users/Sessions/...)",
+      "bbox": {
+        "x": 0,
+        "y": 80,
+        "width": 256,
+        "height": 720
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Masthead: user toggle (golden-admin)",
+      "bbox": {
+        "x": 1150,
+        "y": 22,
+        "width": 122,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Search roles",
+      "bbox": {
+        "x": 276,
+        "y": 186,
+        "width": 480,
+        "height": 36
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Create role",
+      "bbox": {
+        "x": 1148,
+        "y": 184,
+        "width": 120,
+        "height": 40
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "table",
+      "label": "Realm roles (admin, offline_access, uma_authorization, ...)",
+      "bbox": {
+        "x": 276,
+        "y": 246,
+        "width": 992,
+        "height": 290
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Kebab (wiersz 1)",
+      "bbox": {
+        "x": 1224,
+        "y": 286,
+        "width": 28,
+        "height": 30
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Kebab (wiersz 2)",
+      "bbox": {
+        "x": 1224,
+        "y": 330,
+        "width": 28,
+        "height": 30
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Kebab (wiersz 3)",
+      "bbox": {
+        "x": 1224,
+        "y": 374,
+        "width": 28,
+        "height": 30
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Kebab (wiersz 4)",
+      "bbox": {
+        "x": 1224,
+        "y": 418,
+        "width": 28,
+        "height": 30
+      },
+      "confidence": 0.75
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "category": "real",
+  "description": "Keycloak 26.7.1 admin console (Apache-2.0) — formularz Add user (wypełniony username golden-preview, bez submitu): inputy, przełącznik Email verified, dropdown Select action, przyciski Create/Cancel. Viewport 1280x800.",
+  "expected_component_count": 11,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar (Clients/Users/Sessions/...)",
+      "bbox": {
+        "x": 0,
+        "y": 80,
+        "width": 256,
+        "height": 720
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Masthead: user toggle (golden-admin)",
+      "bbox": {
+        "x": 1150,
+        "y": 22,
+        "width": 122,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "form",
+      "label": "Add user",
+      "bbox": {
+        "x": 276,
+        "y": 240,
+        "width": 992,
+        "height": 460
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Username (golden-preview)",
+      "bbox": {
+        "x": 300,
+        "y": 284,
+        "width": 400,
+        "height": 32
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Email",
+      "bbox": {
+        "x": 300,
+        "y": 336,
+        "width": 400,
+        "height": 32
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "First name",
+      "bbox": {
+        "x": 300,
+        "y": 388,
+        "width": 195,
+        "height": 32
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Last name",
+      "bbox": {
+        "x": 505,
+        "y": 388,
+        "width": 195,
+        "height": 32
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "checkbox",
+      "label": "Email verified (przełącznik)",
+      "bbox": {
+        "x": 1190,
+        "y": 284,
+        "width": 46,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Select action",
+      "bbox": {
+        "x": 300,
+        "y": 460,
+        "width": 400,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Join Groups",
+      "bbox": {
+        "x": 870,
+        "y": 636,
+        "width": 130,
+        "height": 40
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Create",
+      "bbox": {
+        "x": 1148,
+        "y": 636,
+        "width": 120,
+        "height": 40
+      },
+      "confidence": 0.9
+    }
+  ]
+}

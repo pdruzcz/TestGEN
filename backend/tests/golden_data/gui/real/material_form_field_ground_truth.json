@@ -1,0 +1,106 @@
+{
+  "category": "real",
+  "description": "Angular Material docs (MIT) — komponent Form field, przykłady live: pola tekstowe z etykietami, textarea, select, hinty. Viewport 1280x800.",
+  "expected_component_count": 9,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidenav (lista komponentów)",
+      "bbox": {
+        "x": 0,
+        "y": 64,
+        "width": 290,
+        "height": 736
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Search (toolbar)",
+      "bbox": {
+        "x": 900,
+        "y": 12,
+        "width": 340,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Company (demo, form field)",
+      "bbox": {
+        "x": 370,
+        "y": 195,
+        "width": 280,
+        "height": 50
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Clearable input (demo)",
+      "bbox": {
+        "x": 680,
+        "y": 195,
+        "width": 280,
+        "height": 50
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Textarea (demo)",
+      "bbox": {
+        "x": 990,
+        "y": 195,
+        "width": 260,
+        "height": 60
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Enter delivery address (demo)",
+      "bbox": {
+        "x": 370,
+        "y": 360,
+        "width": 340,
+        "height": 50
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "input",
+      "label": "Pole z prefixem (demo)",
+      "bbox": {
+        "x": 740,
+        "y": 360,
+        "width": 260,
+        "height": 50
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Select (demo, form field ze strzałką)",
+      "bbox": {
+        "x": 370,
+        "y": 520,
+        "width": 300,
+        "height": 50
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "form",
+      "label": "Formularz przykładu (kontener)",
+      "bbox": {
+        "x": 340,
+        "y": 160,
+        "width": 920,
+        "height": 460
+      },
+      "confidence": 0.7
+    }
+  ]
+}

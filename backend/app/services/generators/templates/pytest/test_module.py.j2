@@ -1,0 +1,159 @@
+{# ── Makro: render_assertion ── Mapuje comparison_type na asercje pytest ── #}
+{% macro render_assertion(assertion) -%}
+{%- if assertion.comparison_type == "equals" %}
+    assert {{ assertion.actual }} == {{ assertion.expected }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "not_equals" %}
+    assert {{ assertion.actual }} != {{ assertion.expected }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "contains" %}
+    assert {{ assertion.expected }} in {{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "not_contains" %}
+    assert {{ assertion.expected }} not in {{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "throws" %}
+    with pytest.raises({{ assertion.expected }}{% if assertion.message %}, match="{{ assertion.message }}"{% endif %}):
+        {{ assertion.actual }}
+
+{%- elif assertion.comparison_type == "approx" %}
+    assert {{ assertion.actual }} == pytest.approx({{ assertion.expected }})
+
+{%- elif assertion.comparison_type == "is_none" %}
+    assert {{ assertion.actual }} is None{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "is_not_none" %}
+    assert {{ assertion.actual }} is not None{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "is_instance" %}
+    assert isinstance({{ assertion.actual }}, {{ assertion.expected }}){% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "is_true" %}
+    assert {{ assertion.actual }} is True{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "is_false" %}
+    assert {{ assertion.actual }} is False{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "greater_than" %}
+    assert {{ assertion.actual }} > {{ assertion.expected }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "less_than" %}
+    assert {{ assertion.actual }} < {{ assertion.expected }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- elif assertion.comparison_type == "has_length" %}
+    assert len({{ assertion.actual }}) == {{ assertion.expected }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %}
+
+{%- else %}
+    assert {{ assertion.actual }} == {{ assertion.expected }}  # nieznany comparison_type: {{ assertion.comparison_type }}
+
+{%- endif %}
+{%- endmacro %}
+
+
+{# ── Makro: render_fixture ── Generuje @pytest.fixture ── #}
+{% macro render_fixture(fixture) -%}
+@pytest.fixture{{ '(scope="' + fixture.scope + '")' if fixture.scope and fixture.scope != 'function' else '' }}
+def {{ fixture.name }}({% if fixture.params %}{% for p in fixture.params %}{{ p }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}):
+    """Fixture: {{ fixture.name }}."""
+{% if fixture.setup_code %}
+{{ fixture.setup_code | indent(4, first=True) }}
+{% endif -%}
+{% if fixture.yield_value %}
+    yield {{ fixture.yield_value }}
+{% if fixture.teardown_code %}
+{{ fixture.teardown_code | indent(4, first=True) }}
+{% endif -%}
+{%- else %}
+    pass
+{%- endif %}
+
+
+{% endmacro %}
+
+
+{# ── Makro: render_parametrize ── Generuje @pytest.mark.parametrize ── #}
+{% macro render_parametrize(parametrize) -%}
+@pytest.mark.parametrize(
+    "{{ parametrize.args }}",
+    [
+{% for value_set in parametrize["values"] %}
+        ({{ value_set | join(", ") }}){% if not loop.last %},{% endif %}
+
+{% endfor %}
+    ],
+)
+{%- endmacro %}
+
+
+{# ── Makro: render_test_function ── Generuje kompletna funkcje testowa ── #}
+{% macro render_test_function(test_func) -%}
+{% if test_func.parametrize %}
+{{ render_parametrize(test_func.parametrize) }}
+{% endif -%}
+{% if test_func.markers %}
+{% for marker in test_func.markers %}
+{{ marker }}
+{% endfor %}
+{% endif -%}
+{% if test_func.mocks %}
+{% for mock in test_func.mocks %}
+@unittest.mock.patch("{{ mock.target }}")
+{% endfor %}
+{% endif -%}
+def {{ test_func.name }}({% for p in test_func.parameters %}{{ p }}{% if not loop.last %}, {% endif %}{% endfor %}):
+    """{{ test_func.description }}"""
+{% if test_func.mocks %}
+{% for mock in test_func.mocks %}
+    {{ mock.name }}.return_value{% if mock.return_value %} = {{ mock.return_value }}{% else %} = None{% endif %}
+
+{% endfor %}
+{% endif -%}
+{% if test_func.steps %}
+{% for step in test_func.steps %}
+    {{ step.code }}
+{% endfor %}
+{% endif -%}
+{% if test_func.assertions %}
+{% for assertion in test_func.assertions %}
+{{ render_assertion(assertion) }}
+{% endfor %}
+{% endif -%}
+{% if not test_func.steps and not test_func.assertions %}
+    pass  # TODO: dodaj kroki testowe i asercje
+{% endif %}
+
+
+{% endmacro %}
+# -*- coding: utf-8 -*-
+"""Testy modulu {{ module_name }}.
+
+Wygenerowano automatycznie przez TestGEN - silnik natywny (pytest).
+Nie modyfikuj recznie; zmiany zostana nadpisane przy kolejnej generacji.
+"""
+
+import pytest
+{% if test_functions | selectattr("mocks", "defined") | selectattr("mocks", "ne", none) | list | length > 0 %}
+import unittest.mock
+{% endif -%}
+{% if imports %}
+{% for imp in imports %}
+{{ imp }}
+{% endfor %}
+{% endif -%}
+
+
+{% if fixtures %}
+# ── Fixtures ──
+
+{% for fixture in fixtures %}
+{{ render_fixture(fixture) }}
+{% endfor %}
+{% endif -%}
+
+{% if test_functions %}
+{% for test_func in test_functions %}
+{{ render_test_function(test_func) }}
+{% endfor %}
+{% else %}
+# Brak funkcji testowych do wygenerowania
+{% endif -%}

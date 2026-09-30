@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="black"/>
+    </marker>
+  </defs>
+  <ellipse cx="320" cy="100" rx="80" ry="40" fill="none" stroke="black"/>
+  <text x="320" y="105" text-anchor="middle">Login</text>
+  <ellipse cx="320" cy="260" rx="80" ry="40" fill="none" stroke="black"/>
+  <text x="320" y="265" text-anchor="middle">Register</text>
+  <rect x="80" y="150" width="90" height="50" fill="none" stroke="black"/>
+  <text x="125" y="180" text-anchor="middle">User</text>
+  <line x1="170" y1="170" x2="240" y2="115" stroke="black" marker-end="url(#arrow)"/>
+  <line x1="170" y1="185" x2="240" y2="245" stroke="black" marker-end="url(#arrow)"/>
+</svg>

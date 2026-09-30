@@ -1,0 +1,24 @@
+{
+  "language": "python",
+  "name": "python_auth_service",
+  "requirements": [
+    {"req_id": "REQ-AUTH-001", "text": "System must verify user login credentials", "category": "security", "priority": "critical"},
+    {"req_id": "REQ-AUTH-002", "text": "System must generate a JWT token after successful login", "category": "security", "priority": "high"},
+    {"req_id": "REQ-AUTH-003", "text": "System must verify JWT token expiry", "category": "security", "priority": "high"},
+    {"req_id": "REQ-AUTH-004", "text": "System must lock account after five failed login attempts", "category": "security", "priority": "critical"},
+    {"req_id": "REQ-AUTH-005", "text": "System must log all login attempts to the audit log", "category": "audit", "priority": "medium"},
+    {"req_id": "REQ-AUTH-006", "text": "System must support password reset via email", "category": "feature", "priority": "medium"}
+  ],
+  "code_entities": [
+    {"entity_id": "auth-1", "name": "verify_credentials", "type": "function", "file_path": "src/auth/service.py", "line_number": 12, "language": "python", "docstring": "Verify user login credentials against stored hash"},
+    {"entity_id": "auth-2", "name": "generate_jwt_token", "type": "function", "file_path": "src/auth/tokens.py", "line_number": 34, "language": "python", "docstring": "Generate a JWT token after successful login"},
+    {"entity_id": "auth-3", "name": "check_token_expiry", "type": "function", "file_path": "src/auth/tokens.py", "line_number": 58, "language": "python", "docstring": "Check whether JWT token has expired"},
+    {"entity_id": "auth-4", "name": "format_login_response", "type": "function", "file_path": "src/auth/service.py", "line_number": 92, "language": "python", "docstring": "Format the login response payload"}
+  ],
+  "expected": {
+    "implemented_req_ids": ["REQ-AUTH-001", "REQ-AUTH-002", "REQ-AUTH-003"],
+    "missing_req_ids": ["REQ-AUTH-004", "REQ-AUTH-005", "REQ-AUTH-006"],
+    "extra_code_entity_ids": ["auth-4"],
+    "expected_coverage_min_pct": 45.0
+  }
+}

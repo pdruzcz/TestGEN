@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+  <packagedElement xmi:type="uml:Interaction" xmi:id="i1" name="LoginFlow">
+    <lifeline xmi:id="l1" name="User"/>
+    <lifeline xmi:id="l2" name="Browser"/>
+    <lifeline xmi:id="l3" name="AuthService"/>
+    <message xmi:id="msg1" name="enterCredentials"/>
+    <message xmi:id="msg2" name="verify"/>
+    <message xmi:id="msg3" name="token"/>
+  </packagedElement>
+</xmi:XMI>

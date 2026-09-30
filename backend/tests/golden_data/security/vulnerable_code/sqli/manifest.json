@@ -1,0 +1,41 @@
+{
+  "category": "sqli",
+  "description": "SQL injection golden samples across five languages (Story 4.14).",
+  "samples": [
+    {
+      "file": "sqli_python.py",
+      "language": "python",
+      "vulnerability_type": "sql_injection",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "sql_injection", "cwe_id": "CWE-89", "severity": "critical" }]
+    },
+    {
+      "file": "sqli_java.java",
+      "language": "java",
+      "vulnerability_type": "sql_injection",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "sql_injection", "cwe_id": "CWE-89", "severity": "critical" }]
+    },
+    {
+      "file": "sqli_javascript.js",
+      "language": "javascript",
+      "vulnerability_type": "sql_injection",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "sql_injection", "cwe_id": "CWE-89", "severity": "critical" }]
+    },
+    {
+      "file": "sqli_csharp.cs",
+      "language": "csharp",
+      "vulnerability_type": "sql_injection",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "sql_injection", "cwe_id": "CWE-89", "severity": "critical" }]
+    },
+    {
+      "file": "sqli_php.php",
+      "language": "php",
+      "vulnerability_type": "sql_injection",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "sql_injection", "cwe_id": "CWE-89", "severity": "critical" }]
+    }
+  ]
+}

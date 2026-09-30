@@ -1,0 +1,99 @@
+<div class="reports-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="reports-content" id="main-content" tabindex="-1">
+    <div class="reports-header no-print">
+      <a
+        mat-button
+        [routerLink]="['/projects', projectId()]"
+        class="back-link"
+      >
+        <mat-icon>arrow_back</mat-icon>
+        Wróć do szczegółów projektu
+      </a>
+
+      <h1 class="page-title">Generator raportów</h1>
+      <p class="page-subtitle">
+        Wygeneruj raport z wyników analiz — podsumowanie dla kadry
+        zarządzającej lub szczegóły techniczne dla zespołu.
+      </p>
+    </div>
+
+    <!-- AC1 — wybór typu raportu -->
+    <div class="config-card no-print">
+      <h3 class="card-title">Typ raportu</h3>
+      <mat-radio-group
+        [(ngModel)]="selectedType"
+        [disabled]="status() === 'generating'"
+        class="type-group"
+        aria-label="Typ raportu"
+      >
+        <mat-radio-button value="executive">
+          <span class="type-name">Podsumowanie wykonawcze</span>
+          <span class="type-hint">
+            Wykresy, wskaźniki i wnioski prostym językiem — dla kadry
+            zarządzającej.
+          </span>
+        </mat-radio-button>
+        <mat-radio-button value="technical">
+          <span class="type-name">Szczegóły techniczne</span>
+          <span class="type-hint">
+            Pełna lista ustaleń z kodem, severity, CWE/CVSS i rekomendacjami.
+          </span>
+        </mat-radio-button>
+        <mat-radio-button value="both">
+          <span class="type-name">Oba raporty</span>
+          <span class="type-hint">
+            Podsumowanie wykonawcze wraz z pełnymi szczegółami technicznymi.
+          </span>
+        </mat-radio-button>
+      </mat-radio-group>
+
+      <button
+        mat-flat-button
+        color="primary"
+        class="generate-btn"
+        [disabled]="status() === 'generating'"
+        (click)="generate()"
+      >
+        <mat-icon>summarize</mat-icon>
+        Generuj raport
+      </button>
+    </div>
+
+    <!-- AC7 — pasek postępu z etapami -->
+    @if (status() === "generating") {
+      <div class="progress-card" role="status" aria-live="polite">
+        <div class="progress-stage">
+          Etap {{ stage() + 1 }}/{{ stages.length }}:
+          <strong>{{ stages[stage()] }}</strong>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="progressValue()" aria-label="Postęp generowania raportu" />
+        <ol class="stage-list">
+          @for (s of stages; track s; let i = $index) {
+            <li
+              [class.stage-done]="i < stage()"
+              [class.stage-active]="i === stage()"
+            >
+              {{ s }}
+            </li>
+          }
+        </ol>
+      </div>
+    }
+
+    @if (status() === "error") {
+      <div class="error-card" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        Nie udało się wygenerować raportu. Spróbuj ponownie.
+      </div>
+    }
+
+    <!-- AC8 — podgląd HTML -->
+    @if (status() === "done" && reportData(); as data) {
+      <app-report-preview [data]="data" [reportType]="reportType()" />
+    }
+  </main>
+
+  <app-footer />
+</div>

@@ -1,0 +1,124 @@
+<section class="plan-comparison" aria-labelledby="plans-title">
+  <header class="page-header">
+    <h1 id="plans-title">Plany subskrypcji</h1>
+    <p class="subtitle">
+      Porównaj plany i wybierz odpowiedni dla swojego zespołu. Plan możesz
+      zmienić w każdej chwili.
+    </p>
+  </header>
+
+  @if (loading()) {
+    <div class="state" role="status" aria-live="polite">
+      <mat-spinner [diameter]="40" />
+      <p>Ładowanie planów…</p>
+    </div>
+  } @else if (error()) {
+    <div class="state error" role="alert">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <!-- Karty planów -->
+    <ul class="plan-cards" aria-label="Plany subskrypcji">
+      @for (plan of plans(); track plan.id) {
+        <li>
+          <mat-card
+            class="plan-card"
+            [class.current]="isCurrent(plan.name)"
+            [attr.aria-label]="
+              isCurrent(plan.name)
+                ? plan.displayName + ' — Twój aktualny plan'
+                : 'Plan ' + plan.displayName
+            "
+          >
+            <mat-card-header>
+              <mat-card-title>{{ plan.displayName }}</mat-card-title>
+              @if (isCurrent(plan.name)) {
+                <span class="current-badge">Twój aktualny plan</span>
+              }
+            </mat-card-header>
+            <mat-card-content>
+              <p class="price" aria-label="Cena">
+                <span class="amount">{{ plan.priceMonthly }}</span>
+                <span class="unit">{{ plan.currency }} / mies.</span>
+              </p>
+              <ul class="highlights">
+                @for (highlight of cardHighlights(plan); track highlight) {
+                  <li>{{ highlight }}</li>
+                }
+              </ul>
+            </mat-card-content>
+            <mat-card-actions>
+              @if (isCurrent(plan.name)) {
+                <span class="current-note">Plan aktywny</span>
+              } @else if (isPlanChange(plan.name)) {
+                <!-- 7.5 AC7: tenant na planie płatnym — upgrade/downgrade przez dialog -->
+                <button
+                  mat-flat-button
+                  color="primary"
+                  type="button"
+                  (click)="openChangeDialog(plan)"
+                >
+                  {{ changeCtaLabel(plan) }}
+                </button>
+              } @else if (isPaid(plan.name)) {
+                <a
+                  mat-flat-button
+                  color="primary"
+                  [routerLink]="ctaRouterLink(plan.name)"
+                  [queryParams]="ctaQueryParams(plan.name)"
+                >
+                  Wybierz {{ plan.displayName }}
+                </a>
+              } @else {
+                <span class="current-note"
+                  >Plan startowy — bez karty płatniczej</span
+                >
+              }
+            </mat-card-actions>
+          </mat-card>
+        </li>
+      }
+    </ul>
+
+    <!-- Tabela porównawcza -->
+    <mat-card class="table-card">
+      <mat-card-content>
+        <table class="comparison-table">
+          <caption>
+            Porównanie funkcji planów subskrypcji
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Wymiar</th>
+              <th scope="col">Freemium</th>
+              <th scope="col">Basic</th>
+              <th scope="col">Premium</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of comparisonRows(); track row.label) {
+              <tr>
+                <th scope="row">{{ row.label }}</th>
+                @for (value of row.values; track $index) {
+                  <td>{{ value }}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Linki prawne — wymóg tpay dla stron związanych z zakupami (URL z konfiguracji) -->
+    <p class="legal-links">
+      Zakupując produkt akceptujesz:
+      <a [href]="termsUrl()" target="_blank" rel="noopener noreferrer"
+        >Regulamin</a
+      >
+      <span aria-hidden="true">·</span>
+      <a [href]="privacyPolicyUrl()" target="_blank" rel="noopener noreferrer">
+        Polityka prywatności
+      </a>
+    </p>
+  }
+</section>

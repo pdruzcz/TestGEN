@@ -1,0 +1,61 @@
+<section class="payment-methods-return">
+  <header class="page-title">
+    <h1>Powrót z rejestracji karty</h1>
+  </header>
+
+  @switch (state()) {
+    @case ("polling") {
+      <mat-card class="card">
+        <mat-progress-spinner mode="indeterminate" [diameter]="48" />
+        <p class="status">
+          Sprawdzamy potwierdzenie rejestracji karty od tpay…
+        </p>
+        <p class="hint">
+          To może potrwać kilka sekund — nie zamykaj tego okna.
+        </p>
+      </mat-card>
+    }
+    @case ("confirmed") {
+      <mat-card class="card">
+        <p class="success">Karta została zapisana i jest gotowa do odnowień.</p>
+        <a
+          mat-flat-button
+          color="primary"
+          routerLink="/billing/payment-methods"
+        >
+          Przejdź do metod płatności
+        </a>
+      </mat-card>
+    }
+    @case ("pending") {
+      <mat-card class="card">
+        <p class="status">
+          Rejestracja jeszcze trwa — karta pojawi się na liście po potwierdzeniu
+          przez tpay.
+        </p>
+        <a
+          mat-flat-button
+          color="primary"
+          routerLink="/billing/payment-methods"
+        >
+          Przejdź do metod płatności
+        </a>
+      </mat-card>
+    }
+    @default {
+      <mat-card class="card">
+        <p class="status">
+          Nie znaleziono informacji o rejestracji. Dodaj kartę ponownie na
+          liście metod płatności.
+        </p>
+        <a
+          mat-flat-button
+          color="primary"
+          routerLink="/billing/payment-methods"
+        >
+          Przejdź do metod płatności
+        </a>
+      </mat-card>
+    }
+  }
+</section>

@@ -1,0 +1,65 @@
+// Story 6.10 AC6/AC7 — pasek dostępności: stały, prawy dolny róg,
+// cele dotykowe min. 44x44px (Story 6.9 AC4).
+@use "../../styles/colors" as colors;
+
+.a11y-toolbar {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.a11y-toggle {
+  min-width: 44px;
+  min-height: 44px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid colors.$wcag-action-primary;
+  background: colors.$wcag-background;
+  color: colors.$wcag-action-primary;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.a11y-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: colors.$wcag-background;
+  border: 2px solid colors.$wcag-text-primary;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.a11y-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 16px;
+  border: 2px solid colors.$wcag-text-primary;
+  border-radius: 6px;
+  background: colors.$wcag-background;
+  color: colors.$wcag-text-primary;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+
+  &.active {
+    background: colors.$wcag-text-primary;
+    color: colors.$wcag-background;
+  }
+}
+
+// W trybie wysokiego kontrastu pasek dziedziczy globalne nadpisania
+// z _high-contrast.scss (czarno-białe przyciski).

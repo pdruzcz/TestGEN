@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>Eksportuj do TMS</h2>
+
+<mat-dialog-content>
+  <!-- AC1 — wybór formatu -->
+  <p class="section-label">Format eksportu</p>
+  <mat-radio-group
+    class="radio-column"
+    [value]="format()"
+    (change)="onFormatChange($event.value)"
+    aria-label="Format eksportu do TMS"
+  >
+    @for (fmt of formats; track fmt) {
+      <mat-radio-button [value]="fmt">
+        {{ formatLabels[fmt] }}
+      </mat-radio-button>
+    }
+  </mat-radio-group>
+
+  <!-- AC6 — zakres eksportu -->
+  <p class="section-label">Zakres</p>
+  <mat-radio-group
+    class="radio-column"
+    [value]="scope()"
+    (change)="onScopeChange($event.value)"
+    aria-label="Zakres eksportu"
+  >
+    <mat-radio-button
+      value="selected"
+      [disabled]="data.selectedIds.length === 0"
+    >
+      Zaznaczone ({{ data.selectedIds.length }})
+    </mat-radio-button>
+    <mat-radio-button value="filtered">
+      Przefiltrowane ({{ data.filteredIds.length }})
+    </mat-radio-button>
+    <mat-radio-button value="all">
+      Wszystkie ({{ data.totalCount }})
+    </mat-radio-button>
+  </mat-radio-group>
+
+  <p class="export-count" aria-live="polite">
+    Do eksportu: <strong>{{ exportCount() }}</strong> przypadków testowych
+  </p>
+
+  <!-- AC5 — mapowanie pól -->
+  <button mat-button class="mapping-toggle" (click)="toggleMapping()">
+    <mat-icon>{{ showMapping() ? "expand_less" : "expand_more" }}</mat-icon>
+    Mapowanie pól
+  </button>
+  @if (showMapping()) {
+    <app-field-mapping
+      [format]="format()"
+      [mapping]="mapping()"
+      (mappingChange)="onMappingChange($event)"
+    />
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="isExporting()">
+    Anuluj
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="export()"
+    [disabled]="isExporting() || exportCount() === 0"
+  >
+    @if (isExporting()) {
+      <mat-spinner class="btn-spinner" diameter="16" aria-label="Ładowanie" />
+    } @else {
+      <mat-icon>download</mat-icon>
+    }
+    Eksportuj
+  </button>
+</mat-dialog-actions>

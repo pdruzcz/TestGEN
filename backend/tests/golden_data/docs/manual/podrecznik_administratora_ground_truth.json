@@ -1,0 +1,26 @@
+{
+  "name": "podrecznik_administratora",
+  "doc_category": "manual",
+  "format": "docx",
+  "language": "pl",
+  "has_intentional_discrepancies": false,
+  "expected_classification": {
+    "doc_type": "podręcznik_użytkownika",
+    "min_confidence": 10.0
+  },
+  "expected_requirements": {
+    "min_count": 0,
+    "expected_texts": []
+  },
+  "expected_inconsistencies": {
+    "detectable_types": [],
+    "min_detectable_count": 0
+  },
+  "expected_glossary": {
+    "min_terms": 2,
+    "expected_terms": [
+      "Administrator",
+      "Interfejs"
+    ]
+  }
+}

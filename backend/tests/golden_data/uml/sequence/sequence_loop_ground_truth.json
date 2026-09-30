@@ -1,0 +1,9 @@
+{
+  "diagram_type": "sequence",
+  "description": "Sekwencja z fragmentem loop (placeOrder -> checkStock).",
+  "expected_participants_count": 3,
+  "expected_elements_count": 0,
+  "expected_relationships_count": 4,
+  "expected_fragments_count": 1,
+  "expected_flows_count": 2
+}

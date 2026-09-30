@@ -1,0 +1,131 @@
+.usage-chart {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chart-svg {
+  width: 100%;
+  height: auto;
+  max-width: 560px;
+}
+
+.gridline {
+  stroke: #e5e7eb;
+  stroke-width: 1;
+}
+
+.usage-line {
+  fill: none;
+  stroke: #1976d2;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.limit-line {
+  stroke: #d32f2f;
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+.limit-label {
+  fill: #d32f2f;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.axis-label,
+.axis-value {
+  fill: #5a6270;
+  font-size: 11px;
+}
+
+.axis-label {
+  text-anchor: middle;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  width: 16px;
+  height: 2px;
+  display: inline-block;
+
+  &.usage {
+    background: #1976d2;
+  }
+
+  &.limit {
+    background: repeating-linear-gradient(
+      to right,
+      #d32f2f 0 6px,
+      transparent 6px 10px
+    );
+  }
+}
+
+.no-data {
+  margin: 0;
+  font-size: 13px;
+  color: #5a6270;
+  padding: 16px 0;
+}
+
+.chart-data {
+  font-size: 12px;
+  color: #4b5563;
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #1976d2;
+    padding: 4px 0;
+  }
+
+  table {
+    width: 100%;
+    max-width: 360px;
+    border-collapse: collapse;
+    margin-top: 4px;
+  }
+
+  caption {
+    text-align: left;
+    color: #5a6270;
+    padding-bottom: 4px;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 4px 8px 4px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+}
+
+// Tryb wysokiego kontrastu (6-10) — pogrubienie linii wykresu.
+:host-context(.high-contrast) {
+  .usage-line {
+    stroke-width: 3;
+  }
+
+  .limit-line {
+    stroke-width: 3;
+    stroke-dasharray: 8 4;
+  }
+}

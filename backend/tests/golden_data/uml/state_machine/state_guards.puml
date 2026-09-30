@@ -1,0 +1,8 @@
+@startuml
+[*] --> Idle
+Idle --> Processing : start [kolejka niepusta]
+Processing --> Done : finish [sukces]
+Processing --> Failed : finish [blad]
+Failed --> Idle : retry [proby < 3]
+Done --> [*]
+@enduml

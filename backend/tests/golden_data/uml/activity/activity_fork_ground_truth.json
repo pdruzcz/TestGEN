@@ -1,0 +1,9 @@
+{
+  "diagram_type": "activity",
+  "description": "Diagram czynnosci z fork/join (rownolegle ChargeCard i ReserveStock).",
+  "expected_participants_count": 0,
+  "expected_elements_count": 8,
+  "expected_relationships_count": 8,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 2
+}

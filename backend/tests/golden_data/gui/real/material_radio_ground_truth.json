@@ -1,0 +1,117 @@
+{
+  "category": "real",
+  "description": "Angular Material docs (MIT) — komponent Radio, przykłady live: grupy radio (Pick an option, lista z podpisami, wyłączone). Viewport 1280x800.",
+  "expected_component_count": 10,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidenav (lista komponentów)",
+      "bbox": {
+        "x": 0,
+        "y": 64,
+        "width": 290,
+        "height": 736
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "input",
+      "label": "Search (toolbar)",
+      "bbox": {
+        "x": 900,
+        "y": 12,
+        "width": 340,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "radio",
+      "label": "Option 1 (demo)",
+      "bbox": {
+        "x": 370,
+        "y": 185,
+        "width": 20,
+        "height": 20
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "radio",
+      "label": "Option 2 (zaznaczony, demo)",
+      "bbox": {
+        "x": 370,
+        "y": 225,
+        "width": 20,
+        "height": 20
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "radio",
+      "label": "Option 3 (demo)",
+      "bbox": {
+        "x": 370,
+        "y": 265,
+        "width": 20,
+        "height": 20
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "radio",
+      "label": "Radio z podpisem 1 (demo)",
+      "bbox": {
+        "x": 640,
+        "y": 185,
+        "width": 20,
+        "height": 20
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "radio",
+      "label": "Radio z podpisem 2 (zaznaczony, demo)",
+      "bbox": {
+        "x": 640,
+        "y": 240,
+        "width": 20,
+        "height": 20
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "radio",
+      "label": "Radio z podpisem 3 (demo)",
+      "bbox": {
+        "x": 640,
+        "y": 295,
+        "width": 20,
+        "height": 20
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "radio",
+      "label": "Disabled (zaznaczony, demo)",
+      "bbox": {
+        "x": 940,
+        "y": 185,
+        "width": 20,
+        "height": 20
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "radio",
+      "label": "Disabled 2 (demo)",
+      "bbox": {
+        "x": 940,
+        "y": 225,
+        "width": 20,
+        "height": 20
+      },
+      "confidence": 0.85
+    }
+  ]
+}

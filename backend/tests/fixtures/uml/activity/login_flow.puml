@@ -1,0 +1,13 @@
+@startuml
+start
+:Wprowadź dane logowania;
+:Wyślij formularz;
+if (Dane poprawne?) then (tak)
+  :Utwórz sesję;
+  :Przekieruj do panelu;
+else (nie)
+  :Pokaż komunikat błędu;
+endif
+:Zapisz log zdarzenia;
+stop
+@enduml

@@ -1,0 +1,95 @@
+{
+  "category": "real_dense",
+  "description": "Bootstrap 5.3 docs (MIT) — /docs/5.3/components/navbar/: demo navbara (brand, linki, dropdown, formularz search z przyciskiem). Gęsty tekst docs — real_dense. Viewport 1280x800.",
+  "expected_component_count": 8,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar TOC (nawigacja docs)",
+      "bbox": {
+        "x": 0,
+        "y": 100,
+        "width": 280,
+        "height": 700
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "menu",
+      "label": "Navbar docs",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 56
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Search (navbar)",
+      "bbox": {
+        "x": 950,
+        "y": 10,
+        "width": 230,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "menu",
+      "label": "Demo navbar (Home/Features/Pricing + dropdown)",
+      "bbox": {
+        "x": 320,
+        "y": 330,
+        "width": 640,
+        "height": 60
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Brand (demo navbar)",
+      "bbox": {
+        "x": 335,
+        "y": 344,
+        "width": 100,
+        "height": 30
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Dropdown link (demo navbar)",
+      "bbox": {
+        "x": 590,
+        "y": 344,
+        "width": 120,
+        "height": 32
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "input",
+      "label": "Search (formularz w demo navbarze)",
+      "bbox": {
+        "x": 760,
+        "y": 340,
+        "width": 150,
+        "height": 36
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Search (przycisk w demo navbarze)",
+      "bbox": {
+        "x": 915,
+        "y": 340,
+        "width": 90,
+        "height": 36
+      },
+      "confidence": 0.85
+    }
+  ]
+}

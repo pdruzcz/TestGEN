@@ -1,0 +1,57 @@
+@startuml seq-generowanie-testow
+title Diagram sekwencji — Generowanie testów
+
+actor "Użytkownik" as user
+participant "Frontend\n(Angular)" as fe
+participant "Backend API\n(FastAPI)" as api
+queue "RabbitMQ" as rmq
+participant "Celery Worker" as worker
+database "PostgreSQL" as db
+participant "API LLM" as llm
+
+user -> fe : Wybiera analizę jako źródło\ni uruchamia generowanie testów
+fe -> api : POST /api/v1/projects/{id}/test-cases/generate\n{analysis_id, framework, engine_mode}
+
+api -> api : Walidacja (analiza istnieje,\nstatus=completed)
+api -> api : FeatureGatingService.enforce_feature()\n(sprawdzenie dostępu per plan)
+api -> rmq : generate_tests_task.delay()
+api -> fe : 202 Accepted {task_id}
+
+fe -> user : "Generowanie testów w toku..."
+
+rmq -> worker : Dostarczenie zadania
+
+worker -> db : Pobranie wyników analizy\nSELECT FROM analysis_results
+
+alt engine_mode = native
+    worker -> worker : Jinja2: renderowanie\nszablonów testów
+    worker -> worker : Generowanie przypadków\nna podstawie reguł
+else engine_mode = llm
+    worker -> llm : POST (wyniki analizy + prompt)
+    llm -> worker : Wygenerowane przypadki testowe
+else engine_mode = hybrid
+    worker -> worker : Jinja2: szablony podstawowe
+    worker -> llm : POST (szablony + kontekst)
+    llm -> worker : Wzbogacone przypadki
+    worker -> worker : Scalenie i deduplikacja
+end
+
+worker -> worker : Priorytetyzacja testów\n(critical/high/medium/low)
+worker -> db : INSERT INTO test_cases\n(status='draft', priority, steps)
+
+group Generowanie kodu testowego
+    worker -> worker : Wybór generatora\nper framework (strategy)
+    worker -> worker : Renderowanie kodu\n(Jinja2 templates)
+    worker -> db : INSERT INTO test_code\n(framework, code, test_case_id)
+end
+
+worker -> db : INSERT INTO audit_logs\n(action='test_generation.complete')
+
+fe -> api : GET /api/v1/tasks/{task_id}\n(polling)
+api -> fe : 200 OK {status: "completed"}
+
+fe -> user : Wyświetlenie wygenerowanych\nprzypadków testowych i kodu
+
+user -> fe : Przegląd, edycja, zatwierdzenie\n(draft → review → approved)
+
+@enduml

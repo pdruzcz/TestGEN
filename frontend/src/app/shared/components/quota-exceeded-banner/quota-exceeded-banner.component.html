@@ -1,0 +1,24 @@
+@if (alerts.alert(); as alert) {
+  <div class="quota-banner" role="alert" data-testid="quota-banner">
+    <mat-icon aria-hidden="true">warning</mat-icon>
+    <span class="quota-banner__message">{{ message() }}</span>
+    <a
+      mat-flat-button
+      color="primary"
+      routerLink="/billing/plans"
+      data-testid="quota-upgrade-cta"
+      (click)="dismiss()"
+    >
+      Uaktualnij plan
+    </a>
+    <button
+      mat-icon-button
+      class="quota-banner__close"
+      type="button"
+      aria-label="Zamknij komunikat o limicie"
+      (click)="dismiss()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+}

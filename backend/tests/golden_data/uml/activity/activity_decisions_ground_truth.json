@@ -1,0 +1,9 @@
+{
+  "diagram_type": "activity",
+  "description": "Przepływ z węzłem decyzyjnym (if/else) — dwie ścieżki.",
+  "expected_participants_count": 0,
+  "expected_elements_count": 8,
+  "expected_relationships_count": 8,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 2
+}

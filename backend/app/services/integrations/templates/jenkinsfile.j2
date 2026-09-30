@@ -1,0 +1,108 @@
+// Analiza TestGEN w Jenkinsie
+//
+// Wymagania:
+//   1. Poświadczenie typu „Secret text” o identyfikatorze {{ api_key_variable | lower }}
+//      — klucz API z TestGEN (Ustawienia → Klucze API), zakres „pełny dostęp”.
+//   2. Projekt o identyfikatorze {{ project_id }} musi istnieć w TestGEN.
+//   3. Agent musi mieć curl, jq i zip.
+//
+// Wygenerowane przez TestGEN — dostosuj do swojego repozytorium.
+
+pipeline {
+    agent any
+
+    options {
+        timeout(time: {{ timeout_minutes }}, unit: 'MINUTES')
+    }
+
+    environment {
+        TESTGEN_API_URL    = '{{ api_url }}'
+        TESTGEN_PROJECT_ID = '{{ project_id }}'
+        // Klucz nie trafia do logów — Jenkins maskuje wartość poświadczenia.
+        {{ api_key_variable }} = credentials('{{ api_key_variable | lower }}')
+    }
+
+    stages {
+        stage('Pobranie kodu') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Wysłanie kodu do TestGEN') {
+            steps {
+                // Upload przyjmuje archiwum i rozpakowuje je po stronie TestGEN,
+                // więc wysyłamy jedno żądanie zamiast pliku po pliku.
+                sh '''
+                    zip -qr testgen-source.zip . -x ".git/*" -x "node_modules/*" -x "*.zip"
+                    curl --fail-with-body --silent --show-error \
+                        -X POST "$TESTGEN_API_URL/api/v1/projects/$TESTGEN_PROJECT_ID/upload" \
+                        -H "Authorization: Bearer ${{ api_key_variable }}" \
+                        -F "files=@testgen-source.zip"
+                '''
+            }
+        }
+
+        stage('Uruchomienie analizy') {
+            steps {
+                sh '''
+                    TASK_ID=$(curl --fail-with-body --silent --show-error \
+                        -X POST "$TESTGEN_API_URL/api/v1/projects/$TESTGEN_PROJECT_ID/analyze" \
+                        -H "Authorization: Bearer ${{ api_key_variable }}" \
+                        -H "Content-Type: application/json" \
+                        -d '{"engine_mode": "{{ engine_mode }}", "modules": [{{ modules | map("tojson") | join(", ") }}]}' \
+                        | jq -r '.task_id')
+                    echo "Zadanie analizy: $TASK_ID"
+                    echo "$TASK_ID" > .testgen-task-id
+                '''
+            }
+        }
+
+        stage('Oczekiwanie na wynik') {
+            steps {
+                // Odpytujemy co 10 s; {{ poll_attempts }} prób ≈ {{ timeout_minutes }} min.
+                sh '''
+                    TASK_ID=$(cat .testgen-task-id)
+                    for i in $(seq 1 {{ poll_attempts }}); do
+                        STATUS=$(curl --fail-with-body --silent --show-error \
+                            "$TESTGEN_API_URL/api/v1/tasks/$TASK_ID" \
+                            -H "Authorization: Bearer ${{ api_key_variable }}" | jq -r '.status')
+                        echo "Status analizy: $STATUS"
+                        case "$STATUS" in
+                            completed|success) exit 0 ;;
+                            failed|error) echo "Analiza TestGEN zakonczona bledem"; exit 1 ;;
+                        esac
+                        sleep 10
+                    done
+                    echo "Analiza nie zakonczyla sie w ciagu {{ timeout_minutes }} min"
+                    exit 1
+                '''
+            }
+        }
+
+        stage('Sprawdzenie progu znalezisk') {
+            steps {
+                // Próg liczony po stronie TestGEN — spójnie ze status checkami na PR.
+                sh '''
+                    curl --fail-with-body --silent --show-error \
+                        "$TESTGEN_API_URL/api/v1/projects/$TESTGEN_PROJECT_ID/ci-cd/summary?threshold={{ severity_threshold }}" \
+                        -H "Authorization: Bearer ${{ api_key_variable }}" > testgen-summary.json
+                    jq '.' testgen-summary.json
+                    if [ "$(jq -r '.should_fail' testgen-summary.json)" = "true" ]; then
+                        jq -r '.description' testgen-summary.json
+                        exit 1
+                    fi
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'testgen-summary.json', allowEmptyArchive: true
+        }
+        failure {
+            echo 'Analiza TestGEN wykryła problemy powyżej progu {{ severity_threshold }} albo nie zakończyła się poprawnie.'
+        }
+    }
+}

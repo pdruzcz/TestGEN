@@ -1,0 +1,26 @@
+<article
+  class="chat-message"
+  [class.chat-message--user]="isUser()"
+  [class.chat-message--assistant]="!isUser()"
+  [class.chat-message--error]="message().isError"
+>
+  <span class="chat-message__avatar" role="img" [attr.aria-label]="avatarLabel()">
+    <mat-icon aria-hidden="true">{{ avatarIcon() }}</mat-icon>
+  </span>
+
+  <div class="chat-message__body">
+    <p class="chat-message__text">
+      @for (segment of segments(); track $index) {
+        @if (segment.kind === "ref") {
+          <a class="chat-ref" [routerLink]="segment.link">{{ segment.label }}</a>
+        } @else {
+          <span>{{ segment.text }}</span>
+        }
+      }
+      @if (message().streaming) {
+        <span class="chat-message__cursor" aria-hidden="true"></span>
+      }
+    </p>
+    <time class="chat-message__time" [attr.datetime]="message().timestamp">{{ time() }}</time>
+  </div>
+</article>

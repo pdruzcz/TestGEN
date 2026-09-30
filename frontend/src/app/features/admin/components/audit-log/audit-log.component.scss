@@ -1,0 +1,47 @@
+.audit-log {
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin: 1rem 0 0.5rem;
+
+    mat-form-field {
+      min-width: 200px;
+    }
+  }
+
+  &__filter-actions {
+    display: flex;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+  }
+
+  &__error {
+    background: #fef2f2;
+    color: #991b1b;
+    padding: 0.625rem 0.875rem;
+    border-radius: 6px;
+  }
+
+  &__table {
+    width: 100%;
+  }
+
+  &__details {
+    max-width: 320px;
+    overflow-wrap: anywhere;
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.75rem;
+  }
+
+  &__empty {
+    color: #64748b;
+    padding: 1rem 0;
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "category": "forms",
+  "description": "Formularz rejestracji: imie, email, haslo, zgoda (checkbox), rola (dropdown), submit.",
+  "expected_component_count": 7,
+  "expected_components": [
+    {"component_type": "form", "label": "Rejestracja", "bbox": {"x": 100, "y": 60, "width": 400, "height": 460}, "confidence": 0.92},
+    {"component_type": "input", "label": "Imie", "bbox": {"x": 130, "y": 120, "width": 340, "height": 40}, "confidence": 0.9},
+    {"component_type": "input", "label": "Email", "bbox": {"x": 130, "y": 180, "width": 340, "height": 40}, "confidence": 0.9},
+    {"component_type": "input", "label": "Haslo", "bbox": {"x": 130, "y": 240, "width": 340, "height": 40}, "confidence": 0.9},
+    {"component_type": "dropdown", "label": "Rola", "bbox": {"x": 130, "y": 300, "width": 340, "height": 40}, "confidence": 0.88},
+    {"component_type": "checkbox", "label": "Akceptuje regulamin", "bbox": {"x": 130, "y": 360, "width": 24, "height": 24}, "confidence": 0.85},
+    {"component_type": "button", "label": "Zarejestruj", "bbox": {"x": 130, "y": 420, "width": 340, "height": 44}, "confidence": 0.95}
+  ]
+}

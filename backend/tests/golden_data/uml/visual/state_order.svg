@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="black"/>
+    </marker>
+  </defs>
+  <rect x="60" y="60" width="140" height="60" rx="26" ry="26" fill="none" stroke="black"/>
+  <text x="130" y="95" text-anchor="middle">Idle</text>
+  <rect x="360" y="60" width="140" height="60" rx="26" ry="26" fill="none" stroke="black"/>
+  <text x="430" y="95" text-anchor="middle">Processing</text>
+  <rect x="210" y="240" width="140" height="60" rx="26" ry="26" fill="none" stroke="black"/>
+  <text x="280" y="275" text-anchor="middle">Done</text>
+  <line x1="200" y1="90" x2="360" y2="90" stroke="black" marker-end="url(#arrow)"/>
+  <line x1="430" y1="120" x2="280" y2="240" stroke="black" marker-end="url(#arrow)"/>
+  <line x1="210" y1="270" x2="130" y2="120" stroke="black" marker-end="url(#arrow)"/>
+</svg>

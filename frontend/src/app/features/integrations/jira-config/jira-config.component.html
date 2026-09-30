@@ -1,0 +1,240 @@
+<div class="testrail-page">
+  <app-navbar activeLink="projects" />
+  <main class="testrail-content" id="main-content" tabindex="-1">
+    <div class="page-header">
+      <div>
+        <a mat-button [routerLink]="['/projects', projectId()]" class="back-link">
+          <mat-icon aria-hidden="true">arrow_back</mat-icon>
+          Wróć do projektu
+        </a>
+        <h1 class="page-title">Integracja z Jira</h1>
+        <p class="page-subtitle">
+          Eksportuj przypadki testowe do Jiry przez wtyczkę Xray albo Zephyr Scale. Ponowny eksport aktualizuje
+          istniejące testy, zamiast tworzyć duplikaty.
+        </p>
+      </div>
+    </div>
+
+    @if (integrationId(); as syncIntegrationId) {
+      <p class="sync-link">
+        <a mat-button [routerLink]="['/settings/integrations', syncIntegrationId, 'sync']">
+          <mat-icon aria-hidden="true">sync_alt</mat-icon>
+          Synchronizacja dwukierunkowa
+        </a>
+        <span class="sync-hint">
+          Zmiany wykonane po stronie Jiry mogą wracać do TestGEN — ustaw kierunek i odstęp.
+        </span>
+      </p>
+    }
+
+    @if (errorMessage()) {
+      <p class="banner banner-error" role="alert">{{ errorMessage() }}</p>
+    }
+
+    @if (infoMessage()) {
+      <p class="banner banner-info" role="status">
+        {{ infoMessage() }}
+        <button mat-button type="button" (click)="dismissInfo()">Zamknij</button>
+      </p>
+    }
+
+    @if (testResult(); as result) {
+      <p class="banner" [class.banner-info]="result.connected" [class.banner-error]="!result.connected" role="status">
+        {{ result.message }}
+      </p>
+    }
+
+    @if (isLoading()) {
+      <div class="loading">
+        <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+        Ładowanie...
+      </div>
+    } @else {
+      <section class="panel">
+        <h2 class="panel-title">Wtyczka testowa</h2>
+        <p class="panel-hint">
+          Projekt korzysta z jednej wtyczki naraz — wybranie drugiej dezaktywuje poprzednią konfigurację.
+        </p>
+
+        <fieldset class="field">
+          <legend class="field-label">Wtyczka</legend>
+          @for (option of plugins; track option) {
+            <label class="radio">
+              <input
+                type="radio"
+                name="plugin"
+                [value]="option"
+                [checked]="plugin() === option"
+                (change)="selectPlugin(option)"
+              />
+              <span>
+                <strong>{{ pluginLabel(option) }}</strong>
+                <span class="radio-hint">{{ pluginHint(option) }}</span>
+              </span>
+            </label>
+          }
+        </fieldset>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Połączenie</h2>
+
+        <label class="field">
+          <span class="field-label">Adres instancji Jira</span>
+          <input
+            type="url"
+            name="baseUrl"
+            placeholder="https://twojafirma.atlassian.net"
+            [ngModel]="baseUrl()"
+            (ngModelChange)="baseUrl.set($event)"
+          />
+          <span class="field-hint">Wymagany HTTPS — tym kanałem leci token API.</span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">E-mail konta Atlassian</span>
+          <input
+            type="email"
+            name="email"
+            placeholder="qa@twojafirma.pl"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+          />
+        </label>
+
+        <label class="field">
+          <span class="field-label"> Token API {{ isConfigured() ? '(zostaw puste, aby nie zmieniać)' : '' }} </span>
+          <input
+            type="password"
+            name="apiToken"
+            autocomplete="new-password"
+            [ngModel]="apiToken()"
+            (ngModelChange)="apiToken.set($event)"
+          />
+          <span class="field-hint"> Wygenerujesz go na id.atlassian.com → Security → API tokens. </span>
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">Klucz projektu Jira</span>
+            <input
+              type="text"
+              name="projectKey"
+              placeholder="QA"
+              [ngModel]="projectKey()"
+              (ngModelChange)="projectKey.set($event)"
+            />
+            <span class="field-hint">Prefiks zgłoszeń, np. QA w QA-123.</span>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Powiązane zgłoszenie (opcjonalnie)</span>
+            <input
+              type="text"
+              name="linkedIssue"
+              placeholder="QA-42"
+              [ngModel]="linkedIssue()"
+              (ngModelChange)="linkedIssue.set($event)"
+            />
+            <span class="field-hint"> Historyjka lub wymaganie, z którym zwiążemy eksportowane testy. </span>
+          </label>
+        </div>
+
+        <div class="panel-actions">
+          <button
+            mat-stroked-button
+            type="button"
+            [disabled]="!isConfigured() || isTesting()"
+            (click)="testConnection()"
+          >
+            <mat-icon aria-hidden="true">network_ping</mat-icon>
+            {{ isTesting() ? 'Sprawdzam...' : 'Testuj połączenie' }}
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            [disabled]="!isFormValid() || isSaving()"
+            (click)="save()"
+          >
+            {{ isSaving() ? 'Zapisuję...' : 'Zapisz konfigurację' }}
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Mapowanie pól</h2>
+        <p class="panel-hint">
+          Jira adresuje priorytety nazwą, nie liczbą. Sprawdź nazwy używane w Twojej instancji — domyślne odpowiadają
+          standardowemu schematowi.
+        </p>
+
+        <table class="mapping-table">
+          <caption class="visually-hidden">
+            Mapowanie priorytetów TestGEN na priorytety Jiry
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Priorytet TestGEN</th>
+              <th scope="col">Priorytet w Jirze</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (priority of priorities; track priority) {
+              <tr>
+                <td>{{ priorityLabel(priority) }}</td>
+                <td>
+                  <input
+                    type="text"
+                    [attr.aria-label]="'Priorytet Jiry dla ' + priorityLabel(priority)"
+                    [ngModel]="priorityValue(priority)"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="setPriorityValue(priority, $event)"
+                  />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <table class="mapping-table">
+          <caption class="visually-hidden">
+            Mapowanie typów testów TestGEN na etykiety Jiry
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Typ testu TestGEN</th>
+              <th scope="col">Etykieta w Jirze</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (type of types; track type) {
+              <tr>
+                <td>{{ typeLabel(type) }}</td>
+                <td>
+                  <input
+                    type="text"
+                    [attr.aria-label]="'Etykieta Jiry dla ' + typeLabel(type)"
+                    [ngModel]="typeLabelValue(type)"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="setTypeLabelValue(type, $event)"
+                  />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <p class="panel-hint">
+          Typ testu trafia do etykiety, a nie do komponentu Jiry: komponenty trzeba wcześniej założyć w projekcie, a
+          etykiety powstają same.
+          @if (plugin() === 'zephyr') {
+            Zephyr wymaga pola własnego <code>testgen_id</code> — bez niego każdy eksport utworzy nowe przypadki zamiast
+            aktualizować istniejące.
+          }
+        </p>
+      </section>
+    }
+  </main>
+  <app-footer />
+</div>

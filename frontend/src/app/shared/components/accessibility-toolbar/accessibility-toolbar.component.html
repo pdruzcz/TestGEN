@@ -1,0 +1,39 @@
+<div class="a11y-toolbar" role="group" aria-label="Narzędzia dostępności">
+  <button
+    type="button"
+    class="a11y-toggle"
+    (click)="toggleExpanded()"
+    [attr.aria-expanded]="expanded()"
+    aria-controls="a11y-toolbar-panel"
+    aria-label="Narzędzia dostępności"
+    title="Narzędzia dostępności"
+  >
+    <mat-icon aria-hidden="true">accessibility_new</mat-icon>
+  </button>
+
+  @if (expanded()) {
+    <div class="a11y-panel" id="a11y-toolbar-panel">
+      <button
+        type="button"
+        class="a11y-btn"
+        (click)="toggleHighContrast()"
+        [attr.aria-pressed]="isHighContrast()"
+        [class.active]="isHighContrast()"
+      >
+        <mat-icon aria-hidden="true">contrast</mat-icon>
+        <span>Wysoki kontrast</span>
+      </button>
+
+      <button
+        type="button"
+        class="a11y-btn"
+        (click)="toggleReducedMotion()"
+        [attr.aria-pressed]="isReducedMotion()"
+        [class.active]="isReducedMotion()"
+      >
+        <mat-icon aria-hidden="true">motion_photos_off</mat-icon>
+        <span>Wyłącz animacje</span>
+      </button>
+    </div>
+  }
+</div>

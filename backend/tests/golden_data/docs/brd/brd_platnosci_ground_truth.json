@@ -1,0 +1,37 @@
+{
+  "name": "brd_platnosci",
+  "doc_category": "brd",
+  "format": "docx",
+  "language": "pl",
+  "has_intentional_discrepancies": true,
+  "expected_classification": {
+    "doc_type": "specyfikacja_wymagań",
+    "min_confidence": 50.0
+  },
+  "expected_requirements": {
+    "min_count": 7,
+    "expected_texts": [
+      "WYM-001: System musi obsługiwać płatności jednorazowe kartą.",
+      "WYM-002: System musi realizować zwroty środków na żądanie klienta.",
+      "WYM-003: System musi walidować status płatności przed wydaniem produktu.",
+      "WYM-004: System musi generować fakturę po zaksięgowaniu płatności zgodnie ze standardem UC-666.",
+      "WYM-005: System musi konsolidować salda konta klienta po każdej zakończonej transakcji płatniczej w danym dniu.",
+      "WYM-006: System musi konsolidować salda konta klienta po każdej zakończonej transakcji płatniczej w danym dniu.",
+      "WYM-010: System musi zapewniać dostępność usługi płatności przez całą dobę."
+    ]
+  },
+  "expected_inconsistencies": {
+    "detectable_types": [
+      "duplicate",
+      "missing_reference"
+    ],
+    "min_detectable_count": 2
+  },
+  "expected_glossary": {
+    "min_terms": 2,
+    "expected_terms": [
+      "Faktura",
+      "Transakcja"
+    ]
+  }
+}

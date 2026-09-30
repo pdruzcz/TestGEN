@@ -1,0 +1,106 @@
+{
+  "category": "real_dense",
+  "description": "Bootstrap 5.3 docs (MIT) — /docs/5.3/components/modal/ z OTWARTYM modalem live demo (stan interakcji: otwarty modal nad backdropem; Modal title, Close/Save changes). Gęsty tekst docs — real_dense. Viewport 1280x800.",
+  "expected_component_count": 9,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar TOC (nawigacja docs)",
+      "bbox": {
+        "x": 0,
+        "y": 100,
+        "width": 280,
+        "height": 700
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "menu",
+      "label": "Navbar docs",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 56
+      },
+      "confidence": 0.75
+    },
+    {
+      "component_type": "input",
+      "label": "Search (navbar)",
+      "bbox": {
+        "x": 950,
+        "y": 10,
+        "width": 230,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Live demo (trigger)",
+      "bbox": {
+        "x": 330,
+        "y": 640,
+        "width": 130,
+        "height": 38
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "modal",
+      "label": "Modal title (otwarty modal live demo, nad backdropem)",
+      "bbox": {
+        "x": 390,
+        "y": 290,
+        "width": 500,
+        "height": 230
+      },
+      "confidence": 0.95
+    },
+    {
+      "component_type": "button",
+      "label": "X (zamknięcie, w modalu)",
+      "bbox": {
+        "x": 840,
+        "y": 300,
+        "width": 30,
+        "height": 30
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Close (w modalu)",
+      "bbox": {
+        "x": 700,
+        "y": 465,
+        "width": 90,
+        "height": 38
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Save changes (w modalu)",
+      "bbox": {
+        "x": 795,
+        "y": 465,
+        "width": 90,
+        "height": 38
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "form",
+      "label": "Modal body (treść formularza w modalu)",
+      "bbox": {
+        "x": 405,
+        "y": 345,
+        "width": 470,
+        "height": 110
+      },
+      "confidence": 0.7
+    }
+  ]
+}

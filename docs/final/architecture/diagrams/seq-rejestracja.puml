@@ -1,0 +1,45 @@
+@startuml seq-rejestracja
+title Diagram sekwencji — Rejestracja użytkownika
+
+actor "Użytkownik" as user
+participant "Frontend\n(Angular)" as fe
+participant "Backend API\n(FastAPI)" as api
+database "PostgreSQL" as db
+participant "SMTP" as smtp
+
+user -> fe : Wypełnia formularz rejestracji\n(email, hasło, nazwa firmy)
+fe -> api : POST /api/v1/auth/register\n{email, password, name, tenant_name}
+
+api -> api : Walidacja danych\n(Pydantic schema)
+api -> db : Sprawdzenie unikalności e-mail\nSELECT FROM users WHERE email=?
+
+alt E-mail zajęty
+    api -> fe : 409 Conflict\n{detail: "Email already registered"}
+    fe -> user : Komunikat błędu
+else E-mail wolny
+    api -> api : Haszowanie hasła\n(Argon2id)
+    api -> db : BEGIN TRANSACTION
+    api -> db : INSERT INTO tenants\n(id, name, slug, plan='freemium')
+    api -> db : INSERT INTO users\n(id, email, password_hash, is_active=false)
+    api -> db : INSERT INTO user_tenants\n(user_id, tenant_id, role='owner')
+    api -> db : INSERT INTO subscriptions\n(tenant_id, plan='freemium')
+    api -> db : INSERT INTO audit_logs\n(action='auth.register')
+    api -> db : COMMIT
+
+    api -> api : Generowanie tokenu\nweryfikacyjnego (JWT, 24h)
+    api -> smtp : Wysyłka e-mail weryfikacyjnego\n(link z tokenem)
+    api -> fe : 201 Created\n{message: "Verification email sent"}
+    fe -> user : "Sprawdź skrzynkę e-mail"
+
+    ... Użytkownik klika link w e-mailu ...
+
+    user -> fe : GET /verify-email?token=<jwt>
+    fe -> api : POST /api/v1/auth/verify-email\n{token}
+    api -> api : Weryfikacja tokenu JWT
+    api -> db : UPDATE users\nSET is_active=true,\nemail_verified_at=now()
+    api -> db : INSERT INTO audit_logs\n(action='auth.email_verified')
+    api -> fe : 200 OK
+    fe -> user : "Konto aktywowane,\nmożesz się zalogować"
+end
+
+@enduml

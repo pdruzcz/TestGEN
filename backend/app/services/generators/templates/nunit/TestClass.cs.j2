@@ -1,0 +1,154 @@
+{# ── Makro: render_assertion ── Mapuje comparison_type na asercje NUnit 3 ── #}
+{% macro render_assertion(assertion) -%}
+{%- if assertion.comparison_type == "equals" %}
+        Assert.AreEqual({{ assertion.expected }}, {{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "not_equals" %}
+        Assert.AreNotEqual({{ assertion.expected }}, {{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "contains" %}
+        Assert.That({{ assertion.actual }}, Does.Contain({{ assertion.expected }}){% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "not_contains" %}
+        Assert.That({{ assertion.actual }}, Does.Not.Contain({{ assertion.expected }}){% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "throws" %}
+        Assert.Throws<{{ assertion.expected }}>(() => {
+            {{ assertion.actual }};
+        });
+{%- elif assertion.comparison_type == "approx" %}
+        Assert.AreEqual({{ assertion.expected }}, {{ assertion.actual }}, 0.0001{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "is_none" %}
+        Assert.IsNull({{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "is_not_none" %}
+        Assert.IsNotNull({{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "is_instance" %}
+        Assert.IsInstanceOf<{{ assertion.expected }}>({{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "is_true" %}
+        Assert.IsTrue({{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "is_false" %}
+        Assert.IsFalse({{ assertion.actual }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "greater_than" %}
+        Assert.Greater({{ assertion.actual }}, {{ assertion.expected }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "less_than" %}
+        Assert.Less({{ assertion.actual }}, {{ assertion.expected }}{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- elif assertion.comparison_type == "has_length" %}
+        Assert.AreEqual({{ assertion.expected }}, {{ assertion.actual }}.Length{% if assertion.message %}, "{{ assertion.message }}"{% endif %});
+{%- else %}
+        Assert.AreEqual({{ assertion.expected }}, {{ assertion.actual }}); // nieznany comparison_type: {{ assertion.comparison_type }}
+{%- endif %}
+{%- endmacro %}
+
+
+{# ── Makro: render_mock_field ── Generuje pole Mock<T> ── #}
+{% macro render_mock_field(mock) -%}
+    private Mock<{{ mock.type }}> _{{ mock.name }};
+{%- endmacro %}
+
+
+{# ── Makro: render_test_method ── Generuje kompletna metode testowa ── #}
+{% macro render_test_method(test) -%}
+{% if test.parameterized %}
+{% if test.test_case_attrs %}
+{% for attr in test.test_case_attrs %}
+    [TestCase({{ attr }})]
+{% endfor %}
+{% elif test.test_case_source %}
+    [TestCaseSource(nameof({{ test.test_case_source }}))]
+{% endif %}
+{% else %}
+    [Test]
+{% endif %}
+    public void {{ test.name }}({% if test.parameters %}{% for p in test.parameters %}{{ p.type }} {{ p.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %})
+    {
+{% if test.mock_stubbing %}
+{% for stub in test.mock_stubbing %}
+        {{ stub.code }}
+{% endfor %}
+{% endif %}
+{% if test.steps %}
+{% for step in test.steps %}
+        {{ step.code }}
+{% endfor %}
+{% endif %}
+{% if test.assertions %}
+{% for assertion in test.assertions %}
+{{ render_assertion(assertion) }}
+{% endfor %}
+{% endif %}
+{% if not test.steps and not test.assertions %}
+        // TODO: dodaj kroki testowe i asercje
+{% endif %}
+    }
+
+{%- endmacro %}
+
+
+namespace {{ namespace }};
+
+{% for using in usings %}
+{{ using }}
+{% endfor %}
+
+/// <summary>
+/// Testy klasy {{ tested_class }}.
+///
+/// Wygenerowano automatycznie przez TestGEN - silnik natywny (NUnit 3).
+/// Nie modyfikuj recznie; zmiany zostana nadpisane przy kolejnej generacji.
+/// </summary>
+[TestFixture]
+public class {{ test_class_name }}
+{
+{% if mocks %}
+    // ── Mocki ──
+{% for mock in mocks %}
+    {{ render_mock_field(mock) }}
+{% endfor %}
+
+    private {{ tested_class }} _sut;
+
+{% endif %}
+{% if has_lifecycle %}
+    [SetUp]
+    public void SetUp()
+    {
+{% if mocks %}
+{% for mock in mocks %}
+        _{{ mock.name }} = new Mock<{{ mock.type }}>();
+{% endfor %}
+        _sut = new {{ tested_class }}({% for mock in mocks %}_{{ mock.name }}.Object{% if not loop.last %}, {% endif %}{% endfor %});
+{% endif %}
+{% for step in setup_steps %}
+        {{ step.code }}
+{% endfor %}
+    }
+
+{% if has_teardown %}
+
+    [TearDown]
+    public void TearDown()
+    {
+{% for step in teardown_steps %}
+        {{ step.code }}
+{% endfor %}
+    }
+
+{% endif %}
+{% endif %}
+{% if test_case_sources %}
+{% for tcs in test_case_sources %}
+    private static IEnumerable<TestCaseData> {{ tcs.name }}()
+    {
+{% for item in tcs.data %}
+        yield return new TestCaseData(
+{% for key, val in item.items() %}
+            {{ val }}{% if not loop.last %},{% endif %}
+
+{% endfor %}
+        );
+{% endfor %}
+    }
+
+{% endfor %}
+{% endif %}
+{% for test in test_methods %}
+{{ render_test_method(test) }}
+
+{% endfor %}
+}

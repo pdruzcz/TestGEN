@@ -1,0 +1,36 @@
+{
+  "name": "brd_system_logowania",
+  "doc_category": "brd",
+  "format": "pdf",
+  "language": "pl",
+  "has_intentional_discrepancies": true,
+  "expected_classification": {
+    "doc_type": "specyfikacja_wymagań",
+    "min_confidence": 50.0
+  },
+  "expected_requirements": {
+    "min_count": 7,
+    "expected_texts": [
+      "WYM-001: System musi wspierać logowanie klientów za pomocą poświadczeń.",
+      "WYM-002: System musi integrować się z zewnętrznym dostawcą tożsamości.",
+      "WYM-003: System musi rejestrować wszystkie zdarzenia logowania do audytu.",
+      "WYM-004: System musi umożliwiać zmianę hasła użytkownika poprzez wysłanie jednorazowego\nkodu na adres email.",
+      "WYM-005: System musi umożliwiać zmianę hasła użytkownika poprzez wysłanie jednorazowego\nkodu na adres email.",
+      "WYM-006: System musi synchronizować konta zgodnie z procedurą UC-888.",
+      "WYM-010: System musi zapewniać bezpieczeństwo danych uwierzytelniających."
+    ]
+  },
+  "expected_inconsistencies": {
+    "detectable_types": [
+      "duplicate",
+      "missing_reference"
+    ],
+    "min_detectable_count": 2
+  },
+  "expected_glossary": {
+    "min_terms": 1,
+    "expected_terms": [
+      "Audyt"
+    ]
+  }
+}

@@ -1,0 +1,106 @@
+.usage-card {
+  height: 100%;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.card-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+// Próg koloru (AC1) — kolor + etykieta procentowa obok (AC6).
+.pct {
+  font-size: 14px;
+  font-weight: 700;
+
+  &.ok {
+    color: #2e7d32;
+  }
+
+  &.warn {
+    color: #b26a00;
+  }
+
+  &.danger {
+    color: #d32f2f;
+  }
+}
+
+.value {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+// Pasek postępu — kolor wypełnienia wg progu (nadpisanie motywu Material).
+mat-progress-bar {
+  &.bar-ok {
+    ::ng-deep .mat-mdc-progress-bar-active-track {
+      --mdc-linear-progress-active-track-color: #2e7d32;
+    }
+  }
+
+  &.bar-warn {
+    ::ng-deep .mat-mdc-progress-bar-active-track {
+      --mdc-linear-progress-active-track-color: #f9a825;
+    }
+  }
+
+  &.bar-danger {
+    ::ng-deep .mat-mdc-progress-bar-active-track {
+      --mdc-linear-progress-active-track-color: #d32f2f;
+    }
+  }
+}
+
+.details-toggle {
+  align-self: flex-start;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.history-state {
+  margin: 0;
+  font-size: 13px;
+  color: #5a6270;
+
+  &.error {
+    color: #d32f2f;
+  }
+}
+
+// Tryb wysokiego kontrastu (6-10) — barwy czarno-białe + etykieta tekstowa.
+:host-context(.high-contrast) {
+  .pct.ok,
+  .pct.warn,
+  .pct.danger {
+    color: #000;
+  }
+
+  mat-progress-bar {
+    ::ng-deep .mat-mdc-progress-bar-active-track {
+      --mdc-linear-progress-active-track-color: #000;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+@startuml
+interface Repository {
+  +find(id): Entity
+  +save(e: Entity)
+}
+class DatabaseRepository {
+  +find(id): Entity
+  +save(e: Entity)
+}
+class Entity {
+  +id: int
+}
+DatabaseRepository ..|> Repository
+DatabaseRepository --> Entity
+@enduml

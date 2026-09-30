@@ -1,0 +1,9 @@
+{
+  "diagram_type": "use_case",
+  "description": "Wielu aktorow Customer/Admin z przypadkami ManageProfile/DeleteAccount.",
+  "expected_participants_count": 2,
+  "expected_elements_count": 2,
+  "expected_relationships_count": 2,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 2
+}

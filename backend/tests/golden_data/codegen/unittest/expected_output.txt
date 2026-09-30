@@ -1,0 +1,18 @@
+import unittest
+
+"""Sprawdza czy Calculator::add poprawnie dodaje liczby. — wygenerowano automatycznie przez TestGEN (unittest)."""
+
+
+class CalculatorTest(unittest.TestCase):
+
+    def setUp(self):
+        self.calculator = Calculator()
+
+    def test_dodawanie_dwoch_liczb_dodatnich(self):
+        """Dodawanie dwóch liczb dodatnich"""
+        result = self.calculator.add(1, 2)
+        self.assertEqual(result, 3)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,295 @@
+<div class="cls-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="cls-content" id="main-content" tabindex="-1">
+    <a
+      mat-button
+      [routerLink]="['/projects', projectId(), 'uml']"
+      class="back-link"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Wróć do diagramów
+    </a>
+
+    <h1 class="page-title">Diagram klas</h1>
+
+    @if (isLoading()) {
+      <div class="loading" role="status" aria-live="polite">
+        <mat-spinner diameter="20" aria-label="Ładowanie" />
+        <span>Ładowanie…</span>
+      </div>
+    } @else if (!detail()?.parsedModel) {
+      <p class="empty">
+        Diagram nie został jeszcze sparsowany lub parsowanie nie powiodło się.
+      </p>
+    } @else {
+      <section class="card">
+        <h2 class="section-title">Klasy ({{ classes().length }})</h2>
+        <div class="boxes">
+          @for (c of classes(); track c.name) {
+            <div class="box" [class.abstract]="c.isAbstract">
+              <div class="box-header">
+                @if (c.isAbstract) {
+                  <span class="stereotype">«abstract»</span>
+                }
+                <span class="box-name">{{ c.name }}</span>
+                @if (c.package) {
+                  <span class="box-pkg">{{ c.package }}</span>
+                }
+              </div>
+              <div class="box-section">
+                @for (a of c.attributes ?? []; track $index) {
+                  <div class="member">
+                    <span class="vis">{{ a.visibility }}</span>
+                    <span class="m-name">{{ a.name }}</span>
+                    @if (a.type) {
+                      <span class="m-type">: {{ a.type }}</span>
+                    }
+                    @if (a.isStatic) {
+                      <span class="flag">static</span>
+                    }
+                  </div>
+                } @empty {
+                  <div class="member empty-member">—</div>
+                }
+              </div>
+              <div class="box-section">
+                @for (m of c.methods ?? []; track $index) {
+                  <div class="member" [class.italic]="m.isAbstract">
+                    <span class="vis">{{ m.visibility }}</span>
+                    <span class="m-name">{{ m.name }}()</span>
+                    @if (m.returnType) {
+                      <span class="m-type">: {{ m.returnType }}</span>
+                    }
+                    @if (m.isStatic) {
+                      <span class="flag">static</span>
+                    }
+                  </div>
+                } @empty {
+                  <div class="member empty-member">—</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+      @if (interfaces().length > 0) {
+        <section class="card">
+          <h2 class="section-title">Interfejsy ({{ interfaces().length }})</h2>
+          <div class="boxes">
+            @for (i of interfaces(); track i.name) {
+              <div class="box interface">
+                <div class="box-header">
+                  <span class="stereotype">«interface»</span>
+                  <span class="box-name">{{ i.name }}</span>
+                  @if (i.package) {
+                    <span class="box-pkg">{{ i.package }}</span>
+                  }
+                </div>
+                <div class="box-section">
+                  @for (m of i.methods ?? []; track $index) {
+                    <div class="member italic">
+                      <span class="vis">{{ m.visibility }}</span>
+                      <span class="m-name">{{ m.name }}()</span>
+                      @if (m.returnType) {
+                        <span class="m-type">: {{ m.returnType }}</span>
+                      }
+                    </div>
+                  } @empty {
+                    <div class="member empty-member">—</div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      @if (enumerations().length > 0) {
+        <section class="card">
+          <h2 class="section-title">
+            Enumeracje ({{ enumerations().length }})
+          </h2>
+          <div class="boxes">
+            @for (e of enumerations(); track e.name) {
+              <div class="box enum">
+                <div class="box-header">
+                  <span class="stereotype">«enum»</span>
+                  <span class="box-name">{{ e.name }}</span>
+                </div>
+                <div class="box-section">
+                  @for (v of e.values ?? []; track $index) {
+                    <div class="member">
+                      <span class="m-name">{{ v }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <section class="card">
+        <h2 class="section-title">Relacje ({{ relationships().length }})</h2>
+        <ul class="relationships">
+          @for (r of relationships(); track $index) {
+            <li class="relationship" [class]="'rt-' + r.relationshipType">
+              <span class="r-source">{{ r.source }}</span>
+              @if (r.multiplicity?.sourceEnd) {
+                <span class="mult">{{ r.multiplicity!.sourceEnd }}</span>
+              }
+              <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+              @if (r.multiplicity?.targetEnd) {
+                <span class="mult">{{ r.multiplicity!.targetEnd }}</span>
+              }
+              <span class="r-target">{{ r.target }}</span>
+              <span class="r-type">{{
+                relationshipLabel(r.relationshipType)
+              }}</span>
+              @if (r.label) {
+                <span class="r-label">{{ r.label }}</span>
+              }
+            </li>
+          }
+        </ul>
+      </section>
+
+      @if (packages().length > 0) {
+        <section class="card">
+          <h2 class="section-title">Pakiety ({{ packages().length }})</h2>
+          <div class="packages">
+            @for (p of packages(); track p.name) {
+              <div class="package">
+                <span class="package-name">{{ p.name }}</span>
+                <ul class="package-list">
+                  @for (n of p.classNames; track $index) {
+                    <li>{{ n }}</li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <section class="card">
+        <div class="compare-header">
+          <h2 class="section-title">Porównanie z kodem</h2>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="runComparison()"
+            [disabled]="isComparing()"
+          >
+            @if (isComparing()) {
+              <mat-spinner diameter="18" aria-label="Porównywanie" />
+            } @else {
+              <mat-icon>compare_arrows</mat-icon>
+            }
+            Porównaj z kodem
+          </button>
+        </div>
+
+        @if (comparison(); as cmp) {
+          <div class="compare-result">
+            @if (cmp.matchingClasses.length > 0) {
+              <h3 class="compare-sub">
+                Dopasowane klasy ({{ cmp.matchingClasses.length }})
+              </h3>
+              <table class="match-table">
+                <caption class="visually-hidden">Dopasowane klasy diagramu UML do kodu</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Diagram</th>
+                    <th scope="col">Kod</th>
+                    <th scope="col">Atrybuty</th>
+                    <th scope="col">Metody</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (m of cmp.matchingClasses; track $index) {
+                    <tr>
+                      <td>{{ m.diagramClass }}</td>
+                      <td>{{ m.codeClass }}</td>
+                      <td
+                        title="{{
+                          m.attributeMatchPct == null
+                            ? 'Brak ekstrahowanych成员 (diagram wizualny/OCR)'
+                            : 'Pokrycie atrybutów'
+                        }}"
+                      >
+                        {{
+                          m.attributeMatchPct == null
+                            ? "—"
+                            : m.attributeMatchPct + "%"
+                        }}
+                      </td>
+                      <td
+                        title="{{
+                          m.methodMatchPct == null
+                            ? 'Brak ekstrahowanych成员 (diagram wizualny/OCR)'
+                            : 'Pokrycie metod'
+                        }}"
+                      >
+                        {{
+                          m.methodMatchPct == null
+                            ? "—"
+                            : m.methodMatchPct + "%"
+                        }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+
+            @if (cmp.diagramOnlyClasses.length > 0) {
+              <h3 class="compare-sub">
+                Brakujące w kodzie ({{ cmp.diagramOnlyClasses.length }})
+              </h3>
+              <ul class="chip-list">
+                @for (n of cmp.diagramOnlyClasses; track $index) {
+                  <li class="chip chip-error">{{ n }}</li>
+                }
+              </ul>
+            }
+
+            @if (cmp.codeOnlyClasses.length > 0) {
+              <h3 class="compare-sub">
+                Brakujące na diagramie ({{ cmp.codeOnlyClasses.length }})
+              </h3>
+              <ul class="chip-list">
+                @for (n of cmp.codeOnlyClasses; track $index) {
+                  <li class="chip chip-info">{{ n }}</li>
+                }
+              </ul>
+            }
+
+            @if (cmp.discrepancies.length > 0) {
+              <h3 class="compare-sub">
+                Rozbieżności ({{ cmp.discrepancies.length }})
+              </h3>
+              <ul class="discrepancies">
+                @for (d of cmp.discrepancies; track $index) {
+                  <li class="discrepancy" [class]="'sev-' + d.severity">
+                    <span class="sev-badge">{{
+                      severityLabel(d.severity)
+                    }}</span>
+                    <span class="d-class">{{ d.className }}</span>
+                    <span class="d-details">{{ d.details }}</span>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="no-discrepancies">Brak rozbieżności.</p>
+            }
+          </div>
+        }
+      </section>
+    }
+
+    <app-footer />
+  </main>
+</div>

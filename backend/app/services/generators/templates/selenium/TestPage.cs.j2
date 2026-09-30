@@ -1,0 +1,101 @@
+{# ── Szablon Selenium WebDriver — C# ── Story 1.40 ── #}
+{# ── Makro: render_locator_csharp ── Generuje lokator elementu ── #}
+{% macro render_locator_csharp(locator) -%}
+private By {{ locator.name }} = {{ locator.code }};
+{%- endmacro %}
+
+
+{# ── Makro: render_wait_csharp ── Generuje explicit wait ── #}
+{% macro render_wait_csharp(wait_spec) -%}
+{{ wait_spec.code }}
+{%- endmacro %}
+
+
+{# ── Makro: render_assertion_csharp ── Generuje asercje ── #}
+{% macro render_assertion_csharp(assertion) -%}
+{{ assertion.code }}
+{%- endmacro %}
+
+
+{# ── Importy Selenium ── #}
+{% for imp in imports %}
+{{ imp }}
+{% endfor %}
+using System;
+using NUnit.Framework;
+
+/// <summary>
+/// Testy Selenium WebDriver — {{ module_name }}.
+///
+/// Wygenerowano automatycznie przez TestGEN - silnik natywny (Selenium).
+/// Nie modyfikuj recznie; zmiany zostana nadpisane przy kolejnej generacji.
+/// </summary>
+
+
+{% for pom in page_objects %}
+public class {{ pom.class_name }} {
+    private IWebDriver driver;
+    private WebDriverWait wait;
+
+    {% for locator in pom.locators %}
+    {{ render_locator_csharp(locator) }}
+    {% endfor %}
+
+    public {{ pom.class_name }}(IWebDriver driver) {
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+    }
+
+    {% for method in pom.methods %}
+    public {{ method.returns }} {{ method.name }}({{ method.params | replace("^, ", "") }}) {
+        {% for action in method.actions %}
+        {{ action.code }}
+        {% endfor %}
+    }
+
+    {% endfor %}
+}
+{% endfor %}
+
+[TestFixture]
+public class {{ test_class_name }} {
+    private IWebDriver driver;
+    private WebDriverWait wait;
+
+    [SetUp]
+    public void SetUp() {
+        var options = new ChromeOptions();
+        {% for opt_line in driver_setup.options_lines %}
+        {{ opt_line }};
+        {% endfor %}
+        {{ driver_setup.driver_init }};
+        {{ driver_setup.wait_init }};
+    }
+
+    [TearDown]
+    public void TearDown() {
+        {{ teardown.quit }};
+    }
+
+    {% for test in test_methods %}
+    [Test]
+    public void {{ test.name }}() {
+        {% if test.url %}
+        driver.Url = "{{ test.url }}";
+        {% endif %}
+        {% for wait in test.waits %}
+        {{ render_wait_csharp(wait) }}
+        {% endfor %}
+        {% for pom_call in test.pom_calls %}
+        {{ pom_call.call }}
+        {% endfor %}
+        {% for assertion in test.assertions %}
+        {{ render_assertion_csharp(assertion) }}
+        {% endfor %}
+        {% if not test.pom_calls and not test.assertions %}
+        // TODO: dodaj kroki testowe i asercje
+        {% endif %}
+    }
+
+    {% endfor %}
+}

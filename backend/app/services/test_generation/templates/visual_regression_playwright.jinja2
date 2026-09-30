@@ -1,0 +1,11 @@
+import { test, expect } from '@playwright/test';
+
+{% for case in cases %}
+// {{ case.description }}
+test('{{ case.test_name }}', async ({ page }) => {
+  await page.goto('{{ url }}');
+  await expect(page).toHaveScreenshot('{{ case.baseline_filename }}', {
+    maxDiffPixelRatio: {{ threshold }}
+  });
+});
+{% endfor %}

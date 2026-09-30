@@ -1,0 +1,53 @@
+// Story 6.14, Task 3 — pole wprowadzania. Cel dotykowy min. 44x44px (Story 6.9 AC4).
+@use "../../../styles/colors" as colors;
+
+.chat-input {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px;
+  border-top: 1px solid colors.$wcag-text-muted;
+  background: colors.$wcag-background;
+}
+
+.chat-input__field {
+  flex: 1 1 auto;
+  min-height: 44px;
+  max-height: 160px;
+  padding: 10px 12px;
+  border: 1px solid colors.$wcag-text-secondary;
+  border-radius: 8px;
+  background: colors.$wcag-background;
+  color: colors.$wcag-text-primary;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+  overflow-y: auto;
+
+  &:disabled {
+    background: colors.$wcag-surface;
+    color: colors.$wcag-text-muted;
+  }
+}
+
+.chat-input__send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border: 2px solid colors.$wcag-action-primary;
+  border-radius: 8px;
+  background: colors.$wcag-action-primary;
+  color: colors.$wcag-background;
+  cursor: pointer;
+
+  &:disabled {
+    border-color: colors.$wcag-text-muted;
+    background: colors.$wcag-surface;
+    color: colors.$wcag-text-muted;
+    cursor: not-allowed;
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "category": "real",
+  "description": "the-internet (Sauce Labs, MIT) — /add_remove_elements. Przycisk Add Element + 3 dynamicznie dodane przyciski Delete (stan po 3 kliknięciach Add).",
+  "expected_component_count": 6,
+  "expected_components": [
+    {
+      "component_type": "link",
+      "label": "The Internet",
+      "bbox": {
+        "x": 30,
+        "y": 26,
+        "width": 120,
+        "height": 24
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Elemental Selenium",
+      "bbox": {
+        "x": 1010,
+        "y": 26,
+        "width": 240,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Add Element",
+      "bbox": {
+        "x": 570,
+        "y": 248,
+        "width": 160,
+        "height": 42
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "button",
+      "label": "Delete (1)",
+      "bbox": {
+        "x": 600,
+        "y": 308,
+        "width": 110,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Delete (2)",
+      "bbox": {
+        "x": 600,
+        "y": 354,
+        "width": 110,
+        "height": 40
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "button",
+      "label": "Delete (3)",
+      "bbox": {
+        "x": 600,
+        "y": 400,
+        "width": 110,
+        "height": 40
+      },
+      "confidence": 0.85
+    }
+  ]
+}

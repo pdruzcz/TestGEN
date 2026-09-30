@@ -1,0 +1,11 @@
+{
+  "category": "docker",
+  "config_type": "docker",
+  "description": "Docker misconfiguration golden samples (Story 4.14).",
+  "samples": [
+    { "file": "Dockerfile.root", "expected_rules": ["ROOT_USER"] },
+    { "file": "Dockerfile.latest", "expected_rules": ["LATEST_TAG"] },
+    { "file": "Dockerfile.exposed", "expected_rules": ["EXPOSED_PORT"] },
+    { "file": "Dockerfile.nohealthcheck", "expected_rules": ["NO_HEALTHCHECK"] }
+  ]
+}

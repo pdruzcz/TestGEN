@@ -1,0 +1,9 @@
+{
+  "diagram_type": "use_case",
+  "description": "Checkout z <<include>> PayOnline i <<extend>> ApplyCoupon.",
+  "expected_participants_count": 1,
+  "expected_elements_count": 3,
+  "expected_relationships_count": 3,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 4
+}

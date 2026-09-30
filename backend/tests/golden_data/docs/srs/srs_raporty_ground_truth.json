@@ -1,0 +1,33 @@
+{
+  "name": "srs_raporty",
+  "doc_category": "srs",
+  "format": "md",
+  "language": "pl",
+  "has_intentional_discrepancies": false,
+  "expected_classification": {
+    "doc_type": "specyfikacja_wymagań",
+    "min_confidence": 50.0
+  },
+  "expected_requirements": {
+    "min_count": 6,
+    "expected_texts": [
+      "WYM-001: System musi generować raporty w formacie PDF oraz Excel.",
+      "WYM-002: Użytkownik może eksportować raport do pliku CSV.",
+      "WYM-003: System musi harmonogramować generowanie raportów okresowych.",
+      "WYM-004: System musi filtrować dane raportu według zakresu dat.",
+      "WYM-005: System musi zapisywać raporty w repozytorium plików.",
+      "WYM-010: Generowanie raportu musi trwać nie dłużej niż trzydzieści sekund."
+    ]
+  },
+  "expected_inconsistencies": {
+    "detectable_types": [],
+    "min_detectable_count": 0
+  },
+  "expected_glossary": {
+    "min_terms": 2,
+    "expected_terms": [
+      "Raport",
+      "Eksport"
+    ]
+  }
+}

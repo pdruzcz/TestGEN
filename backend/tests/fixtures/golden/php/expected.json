@@ -1,0 +1,117 @@
+{
+  "Enum.php": {
+    "classes": [
+      {
+        "name": "Status",
+        "type": "enum",
+        "bases": [],
+        "methods": [
+          "label",
+          "fromValue"
+        ]
+      }
+    ],
+    "functions": [],
+    "imports": []
+  },
+  "InterfaceWithTrait.php": {
+    "classes": [
+      {
+        "name": "UserRepository",
+        "type": "interface",
+        "bases": [],
+        "methods": [
+          "find",
+          "save"
+        ]
+      },
+      {
+        "name": "LoggingTrait",
+        "type": "trait",
+        "bases": [],
+        "methods": [
+          "debug",
+          "log"
+        ]
+      },
+      {
+        "name": "DatabaseUserRepository",
+        "type": "class",
+        "bases": [
+          "UserRepository"
+        ],
+        "methods": [
+          "find",
+          "save"
+        ]
+      }
+    ],
+    "functions": [],
+    "imports": [
+      "App\\Contracts\\Cacheable"
+    ]
+  },
+  "LaravelController.php": {
+    "classes": [
+      {
+        "name": "UserController",
+        "type": "class",
+        "bases": [
+          "Controller"
+        ],
+        "methods": [
+          "__construct",
+          "index",
+          "show",
+          "store"
+        ]
+      }
+    ],
+    "functions": [],
+    "imports": [
+      "App\\Http\\Requests\\StoreUserRequest",
+      "App\\Http\\Resources\\UserResource",
+      "App\\Services\\UserService",
+      "Illuminate\\Http\\JsonResponse",
+      "Illuminate\\Http\\Request"
+    ]
+  },
+  "PHPUnitTest.php": {
+    "classes": [
+      {
+        "name": "UserTest",
+        "type": "class",
+        "bases": [
+          "TestCase"
+        ],
+        "methods": [
+          "setUp",
+          "it_returns_the_name",
+          "it_detects_adults",
+          "generatorValues"
+        ]
+      }
+    ],
+    "functions": [],
+    "imports": [
+      "PHPUnit\\Framework\\TestCase"
+    ]
+  },
+  "POPO.php": {
+    "classes": [
+      {
+        "name": "User",
+        "type": "class",
+        "bases": [],
+        "methods": [
+          "__construct",
+          "getName",
+          "getAge",
+          "isAdult"
+        ]
+      }
+    ],
+    "functions": [],
+    "imports": []
+  }
+}

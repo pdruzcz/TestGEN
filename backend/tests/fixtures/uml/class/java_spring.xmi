@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1" xmlns:xmi="http://schema.omg.org/spec/XMI">
+  <uml:Model xmi:type="uml:Model" name="SpringApp">
+    <packagedElement xmi:type="uml:Class" xmi:id="c_base" name="BaseEntity">
+      <ownedAttribute xmi:type="uml:Property" xmi:id="a_base_id" name="id" visibility="protected" type="t_long"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="c_user" name="User">
+      <generalization xmi:type="uml:Generalization" xmi:id="g_user" general="c_base"/>
+      <ownedAttribute xmi:type="uml:Property" xmi:id="a_user_name" name="name" visibility="private" type="t_string"/>
+      <ownedAttribute xmi:type="uml:Property" xmi:id="a_user_role" name="role" visibility="private" type="e_role"/>
+      <ownedOperation xmi:type="uml:Operation" xmi:id="o_user_getname" name="getName" visibility="public">
+        <ownedParameter xmi:type="uml:Parameter" xmi:id="p1" direction="return" type="t_string"/>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Interface" xmi:id="i_repo" name="UserRepository">
+      <ownedOperation xmi:type="uml:Operation" xmi:id="o_findbyid" name="findById" visibility="public">
+        <ownedParameter xmi:type="uml:Parameter" xmi:id="p2" name="id" direction="in" type="t_long"/>
+        <ownedParameter xmi:type="uml:Parameter" xmi:id="p3" direction="return" type="c_user"/>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="c_jpa" name="JpaUserRepository">
+      <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="r_jpa" contract="i_repo"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="c_svc" name="UserService">
+      <ownedAttribute xmi:type="uml:Property" xmi:id="a_svc_repo" name="repository" visibility="private" type="i_repo"/>
+      <ownedOperation xmi:type="uml:Operation" xmi:id="o_svc_find" name="findUser" visibility="public">
+        <ownedParameter xmi:type="uml:Parameter" xmi:id="p4" name="id" direction="in" type="t_long"/>
+        <ownedParameter xmi:type="uml:Parameter" xmi:id="p5" direction="return" type="c_user"/>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Enumeration" xmi:id="e_role" name="Role">
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="l_admin" name="ADMIN"/>
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="l_user" name="USER"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="assoc_svc_repo" name="">
+      <ownedEnd xmi:id="ae1" type="c_svc" aggregation="shared" association="assoc_svc_repo">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="lv1" value="1"/>
+        <upperValue xmi:type="uml:LiteralInteger" xmi:id="uv1" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="ae2" type="i_repo" association="assoc_svc_repo">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="lv2" value="0"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="uv2" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="t_long" name="Long"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="t_string" name="String"/>
+  </uml:Model>
+</xmi:XMI>

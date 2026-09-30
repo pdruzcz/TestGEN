@@ -1,0 +1,163 @@
+.poc-viewer {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  background: #fafafa;
+  margin-top: 0.75rem;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+  }
+
+  &__engine {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__mode {
+    border: 1px solid #b0bec5;
+    background: #fff;
+    border-radius: 16px;
+    padding: 0.2rem 0.85rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: #455a64;
+
+    &--active {
+      background: #1976d2;
+      border-color: #1976d2;
+      color: #fff;
+    }
+  }
+
+  &__error {
+    margin: 0.75rem 0;
+    color: #c62828;
+  }
+
+  &__section {
+    margin-top: 1rem;
+
+    h4 {
+      margin: 0 0 0.35rem;
+      font-size: 0.9rem;
+      color: #37474f;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  &__code-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  &__payload {
+    margin: 0.4rem 0 0;
+    padding: 0.75rem;
+    background: #1e1e1e;
+    color: #ffd54f;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+  }
+
+  &__steps {
+    margin: 0.4rem 0 0;
+    padding-left: 1.25rem;
+    line-height: 1.6;
+  }
+
+  &__meta {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.1rem 0.55rem;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    text-transform: capitalize;
+    background: #eceff1;
+
+    mat-icon {
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+    }
+
+    &--sev-critical {
+      background: #b71c1c;
+      color: #fff;
+    }
+
+    &--sev-high {
+      background: #e64a19;
+      color: #fff;
+    }
+
+    &--sev-medium {
+      background: #f9a825;
+      color: #212121;
+    }
+
+    &--sev-low {
+      background: #cfd8dc;
+      color: #263238;
+    }
+
+    &--safe {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+  }
+
+  &__source {
+    font-size: 0.78rem;
+    color: #607d8b;
+  }
+
+  &__disclaimer {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 6px;
+    color: #7a5c00;
+    font-size: 0.85rem;
+
+    mat-icon {
+      color: #f9a825;
+    }
+  }
+
+  &__hint {
+    margin-top: 1rem;
+    color: #78909c;
+    font-style: italic;
+  }
+}

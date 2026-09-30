@@ -1,0 +1,46 @@
+{
+  "description": "Search flow z gestami na Android",
+  "platform": "android",
+  "test_cases": [
+    {
+      "scenario_name": "Search with swipe gesture",
+      "test_type": "e2e",
+      "ui_elements": [
+        {
+          "name": "search_bar",
+          "locator_type": "id",
+          "locator_value": "com.app:id/search_bar",
+          "element_type": "input",
+          "page_name": "HomeScreen"
+        },
+        {
+          "name": "search_button",
+          "locator_type": "accessibility_id",
+          "locator_value": "search-button",
+          "element_type": "button",
+          "page_name": "HomeScreen"
+        },
+        {
+          "name": "result_list",
+          "locator_type": "id",
+          "locator_value": "com.app:id/results",
+          "element_type": "generic",
+          "page_name": "ResultsScreen"
+        }
+      ],
+      "user_flow": {
+        "name": "Search with swipe",
+        "steps": [
+          {"action": "fill", "element": {"name": "search_bar"}, "value": "laptop"},
+          {"action": "click", "element": {"name": "search_button"}},
+          {"action": "swipe", "gesture": "swipe", "start_x": 500, "start_y": 1200, "end_x": 500, "end_y": 400, "duration": 300}
+        ]
+      },
+      "expected_result": "laptop",
+      "comparison_type": "text_contains",
+      "assertions": [
+        {"type": "element_present", "element": "result_list", "expected": "result list"}
+      ]
+    }
+  ]
+}

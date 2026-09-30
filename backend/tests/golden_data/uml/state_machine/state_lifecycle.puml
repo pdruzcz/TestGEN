@@ -1,0 +1,8 @@
+@startuml
+[*] --> Created
+Created --> Processing : start
+Processing --> Done : complete
+Processing --> Failed : error
+Done --> [*]
+Failed --> [*]
+@enduml

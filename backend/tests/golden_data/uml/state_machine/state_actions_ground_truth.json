@@ -1,0 +1,9 @@
+{
+  "diagram_type": "state_machine",
+  "description": "Stan z akcjami entry/exit (Active/Paused).",
+  "expected_participants_count": 0,
+  "expected_elements_count": 4,
+  "expected_relationships_count": 4,
+  "expected_fragments_count": 1,
+  "expected_flows_count": 11
+}

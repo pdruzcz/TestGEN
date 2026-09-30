@@ -1,0 +1,154 @@
+<div class="cicd-page">
+  <app-navbar activeLink="projects" />
+  <main class="cicd-content" id="main-content" tabindex="-1">
+    <div class="page-header">
+      <div>
+        <a mat-button [routerLink]="['/projects', projectId()]" class="back-link">
+          <mat-icon aria-hidden="true">arrow_back</mat-icon>
+          Wróć do projektu
+        </a>
+        <h1 class="page-title">Konfiguracja CI/CD</h1>
+        <p class="page-subtitle">
+          Wklej wygenerowany plik do repozytorium, a analiza TestGEN będzie uruchamiać się przy każdym buildzie i
+          przerywać go, gdy znajdzie problem powyżej wybranego progu.
+        </p>
+      </div>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="banner banner-error" role="alert">{{ errorMessage() }}</p>
+    }
+
+    @if (isLoading()) {
+      <div class="loading">
+        <mat-spinner diameter="24" aria-label="Ładowanie"></mat-spinner>
+        Ładowanie...
+      </div>
+    } @else {
+      <div class="layout">
+        <section class="panel form-panel">
+          <h2 class="panel-title">Parametry</h2>
+
+          <fieldset class="field">
+            <legend class="field-label">Platforma</legend>
+            @for (option of platforms(); track option.platform) {
+              <label class="radio">
+                <input
+                  type="radio"
+                  name="platform"
+                  [value]="option.platform"
+                  [checked]="platform() === option.platform"
+                  (change)="selectPlatform(option.platform)"
+                />
+                <span>
+                  <strong>{{ option.label }}</strong>
+                  <span class="radio-hint">{{ option.description }}</span>
+                </span>
+              </label>
+            }
+          </fieldset>
+
+          <fieldset class="field">
+            <legend class="field-label">Próg blokowania builda</legend>
+            <p class="field-hint">
+              Build zakończy się niepowodzeniem, gdy analiza znajdzie problem co najmniej tak poważny.
+            </p>
+            @for (option of availableThresholds(); track option) {
+              <label class="radio">
+                <input
+                  type="radio"
+                  name="threshold"
+                  [value]="option"
+                  [checked]="threshold() === option"
+                  (change)="setThreshold(option)"
+                />
+                <span>{{ thresholdLabel(option) }}</span>
+              </label>
+            }
+          </fieldset>
+
+          <fieldset class="field">
+            <legend class="field-label">Moduły analizy</legend>
+            @for (module of availableModules(); track module) {
+              <label class="checkbox">
+                <input type="checkbox" [checked]="isModuleSelected(module)" (change)="toggleModule(module)" />
+                <span>{{ moduleLabel(module) }}</span>
+              </label>
+            }
+          </fieldset>
+
+          <label class="field">
+            <span class="field-label">Tryb silnika</span>
+            <select name="engineMode" [ngModel]="engineMode()" (ngModelChange)="setEngineMode($event)">
+              @for (mode of availableEngineModes(); track mode) {
+                <option [value]="mode">{{ engineLabel(mode) }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Limit czasu (minuty)</span>
+            <input
+              type="number"
+              name="timeout"
+              min="1"
+              max="180"
+              [ngModel]="timeoutMinutes()"
+              (ngModelChange)="setTimeout($event)"
+            />
+            <span class="field-hint">Od 1 do 180 minut. Domyślnie 30.</span>
+          </label>
+        </section>
+
+        <section class="panel preview-panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Podgląd</h2>
+              @if (config()) {
+                <p class="filename">
+                  Zapisz jako <code>{{ config()!.filename }}</code>
+                </p>
+              }
+            </div>
+            <div class="preview-actions">
+              <button mat-stroked-button type="button" [disabled]="!config()" (click)="copy()">
+                <mat-icon aria-hidden="true">content_copy</mat-icon>
+                Kopiuj
+              </button>
+              <button mat-raised-button color="primary" type="button" [disabled]="!config()" (click)="download()">
+                <mat-icon aria-hidden="true">download</mat-icon>
+                Pobierz plik
+              </button>
+            </div>
+          </div>
+
+          @if (copyMessage()) {
+            <p class="banner banner-info" role="status">{{ copyMessage() }}</p>
+          }
+
+          @if (platformInfo(); as info) {
+            <p class="secret-hint">
+              <mat-icon aria-hidden="true">key</mat-icon>
+              {{ info.secretHint }}
+            </p>
+          }
+
+          @if (isGenerating()) {
+            <div class="loading">
+              <mat-spinner diameter="24" aria-label="Generowanie"></mat-spinner>
+              Generuję konfigurację...
+            </div>
+          } @else if (config()) {
+            <pre
+              class="code-preview"
+              [attr.data-language]="config()!.language"
+            ><code>{{ config()!.content }}</code></pre>
+          } @else {
+            <p class="empty-state">Wybierz parametry, aby wygenerować konfigurację.</p>
+          }
+        </section>
+      </div>
+    }
+  </main>
+  <app-footer />
+</div>

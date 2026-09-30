@@ -1,0 +1,196 @@
+<div class="upload-page">
+  <app-navbar activeLink="projects" />
+
+  <main class="upload-content" id="main-content" tabindex="-1">
+    <div class="upload-header">
+      <a mat-button [routerLink]="['/projects', projectId()]" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Wróć do projektu
+      </a>
+      <h1 class="page-title">Zrzuty ekranu GUI</h1>
+      <p class="page-subtitle">
+        Prześlij zrzuty ekranu interfejsu graficznego, aby system rozpoznał
+        teksty (OCR), komponenty UI i strukturę układu.
+      </p>
+      <a
+        mat-stroked-button
+        [routerLink]="['/projects', projectId(), 'gui', 'flows']"
+        class="flows-link"
+      >
+        <mat-icon>account_tree</mat-icon>
+        Przepływy użytkownika
+      </a>
+      <a
+        mat-stroked-button
+        [routerLink]="['/projects', projectId(), 'gui', 'compare']"
+        class="flows-link"
+      >
+        <mat-icon>compare</mat-icon>
+        Regresja wizualna
+      </a>
+    </div>
+
+    <!-- Upload Zone -->
+    <section
+      class="drop-zone"
+      [class.drag-active]="isDragActive()"
+      role="button"
+      tabindex="0"
+      aria-label="Strefa drag-and-drop dla zrzutów ekranu GUI"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      (click)="fileInput.click()"
+      (keydown.enter)="fileInput.click()"
+      (keydown.space)="fileInput.click(); $event.preventDefault()"
+    >
+      <mat-icon aria-hidden="true">image</mat-icon>
+      <p class="drop-main">Przeciągnij pliki tutaj lub kliknij aby wybrać</p>
+      <p class="drop-hint">Akceptowane formaty: {{ allowedExtensionsLabel }}</p>
+      <p class="drop-hint">Maksymalny rozmiar: {{ maxFileSizeLabel }}</p>
+      <input
+        #fileInput
+        hidden
+        type="file"
+        multiple
+        accept=".png,.jpg,.jpeg,.bmp,.tif,.tiff,.webp"
+        (change)="onFilesSelected($event)"
+      />
+    </section>
+
+    @if (uploadError()) {
+      <div class="error-banner" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        {{ uploadError() }}
+      </div>
+    }
+
+    @if (uploadSummary()) {
+      <div class="success-banner" role="status" aria-live="polite">
+        <mat-icon aria-hidden="true">check_circle</mat-icon>
+        {{ uploadSummary() }}
+      </div>
+    }
+
+    <!-- Screenshot List -->
+    <div class="screenshots-section">
+      <h3 class="section-title">
+        Zrzuty ekranu
+        @if (screenshots().length > 0) {
+          <span class="total-count">({{ screenshots().length }})</span>
+        }
+      </h3>
+
+      @if (isLoadingList()) {
+        <div class="loading" role="status" aria-live="polite">
+          <mat-spinner diameter="20" aria-label="Ładowanie zrzutów" />
+          <span>Ładowanie zrzutów…</span>
+        </div>
+      } @else if (screenshots().length === 0) {
+        <p class="empty">Brak zrzutów. Prześlij pierwszy zrzut powyżej.</p>
+      } @else {
+        <div class="screenshots-list">
+          @for (s of screenshots(); track s.id) {
+            <div class="screenshot-card" [class]="s.status">
+              <div class="screenshot-info">
+                <mat-icon aria-hidden="true">image</mat-icon>
+                <div class="screenshot-details">
+                  <span class="screenshot-filename">{{ s.filename }}</span>
+                  <span class="screenshot-meta">
+                    {{ formatSize(s.fileSize) }} &bull; Ekran #{{
+                      s.screenSequence
+                    }}
+                  </span>
+                </div>
+              </div>
+              <div class="screenshot-status">
+                @switch (s.status) {
+                  @case ("pending") {
+                    <mat-spinner diameter="16" aria-label="Oczekuje" />
+                    <span>Oczekuje…</span>
+                  }
+                  @case ("processing") {
+                    <mat-spinner diameter="16" aria-label="Przetwarzanie" />
+                    <span>Przetwarzanie…</span>
+                  }
+                  @case ("completed") {
+                    <mat-icon class="status-icon ok">check_circle</mat-icon>
+                    <span>Ukończono</span>
+                    <a mat-button color="primary" [routerLink]="resultLink(s)">
+                      Zobacz wynik
+                    </a>
+                  }
+                  @case ("failed") {
+                    <mat-icon class="status-icon error">error</mat-icon>
+                    <span>Błąd</span>
+                    <button mat-button (click)="reanalyze(s)">Ponów</button>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Story 1.51-zakańczenie (Part A2): HTML/DOM GUI source upload -->
+    <div class="dom-section">
+      <h3 class="section-title">Źródło GUI — HTML/DOM</h3>
+      <p class="dom-hint">
+        Wgraj pliki HTML widoków/szablonów aplikacji. Służą jako źródło
+        struktury GUI — karmią self-healing realnymi lokatorami (data-testid,
+        aria-label, role).
+      </p>
+
+      <div class="dom-controls">
+        <input
+          #domInput
+          hidden
+          type="file"
+          multiple
+          accept=".html,.htm"
+          (change)="onDomFilesSelected($event)"
+        />
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="domInput.click()"
+          [disabled]="domUploading()"
+        >
+          <mat-icon aria-hidden="true">code</mat-icon>
+          Wybierz pliki HTML
+        </button>
+        <mat-form-field appearance="outline" class="version-field">
+          <mat-label>Tag wersji (opcjonalnie)</mat-label>
+          <input
+            matInput
+            [ngModel]="domVersionLabel()"
+            (ngModelChange)="domVersionLabel.set($event)"
+            placeholder="np. przed refaktoryzacją"
+          />
+        </mat-form-field>
+      </div>
+
+      @if (domUploading()) {
+        <div class="loading" role="status" aria-live="polite">
+          <mat-spinner diameter="16" aria-label="Wysyłanie" />
+          <span>Wysyłanie źródeł HTML/DOM…</span>
+        </div>
+      }
+      @if (domError()) {
+        <div class="error-banner" role="alert" aria-live="assertive">
+          <mat-icon aria-hidden="true">error</mat-icon>
+          {{ domError() }}
+        </div>
+      }
+      @if (domSummary()) {
+        <div class="success-banner" role="status" aria-live="polite">
+          <mat-icon aria-hidden="true">check_circle</mat-icon>
+          {{ domSummary() }}
+        </div>
+      }
+    </div>
+
+    <app-footer />
+  </main>
+</div>

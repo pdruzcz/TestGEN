@@ -1,0 +1,12 @@
+{
+  "category": "dashboards",
+  "description": "Przeglad projektu: zakladki, karta statusu, lista testow, przycisk generowania.",
+  "expected_component_count": 5,
+  "expected_components": [
+    {"component_type": "tab", "label": "Przeglad", "bbox": {"x": 40, "y": 60, "width": 120, "height": 40}, "confidence": 0.88},
+    {"component_type": "tab", "label": "Testy", "bbox": {"x": 170, "y": 60, "width": 120, "height": 40}, "confidence": 0.88},
+    {"component_type": "table", "label": "Przypadki testowe", "bbox": {"x": 40, "y": 140, "width": 1100, "height": 520}, "confidence": 0.9},
+    {"component_type": "button", "label": "Generuj testy", "bbox": {"x": 980, "y": 60, "width": 160, "height": 40}, "confidence": 0.95},
+    {"component_type": "link", "label": "Ustawienia projektu", "bbox": {"x": 320, "y": 70, "width": 160, "height": 24}, "confidence": 0.82}
+  ]
+}

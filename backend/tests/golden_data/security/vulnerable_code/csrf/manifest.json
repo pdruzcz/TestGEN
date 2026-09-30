@@ -1,0 +1,27 @@
+{
+  "category": "csrf",
+  "description": "CSRF golden samples: Django csrf_exempt, Spring csrf disable, Express csrf:false (Story 4.14).",
+  "samples": [
+    {
+      "file": "csrf_django_python.py",
+      "language": "python",
+      "vulnerability_type": "csrf",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "csrf", "cwe_id": "CWE-352", "severity": "high" }]
+    },
+    {
+      "file": "csrf_spring_java.java",
+      "language": "java",
+      "vulnerability_type": "csrf",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "csrf", "cwe_id": "CWE-352", "severity": "high" }]
+    },
+    {
+      "file": "csrf_express_javascript.js",
+      "language": "javascript",
+      "vulnerability_type": "csrf",
+      "expected_findings": 1,
+      "ground_truth": [{ "vulnerability_type": "csrf", "cwe_id": "CWE-352", "severity": "medium" }]
+    }
+  ]
+}

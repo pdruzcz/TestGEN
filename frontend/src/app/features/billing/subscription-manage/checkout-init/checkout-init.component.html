@@ -1,0 +1,32 @@
+<section class="checkout-init">
+  <header class="page-title">
+    <h1>Przekierowanie do płatności</h1>
+    <p>
+      Inicjujemy transakcję w serwisie tpay (BLIK, przelew bankowy lub karta z
+      3D Secure).
+    </p>
+  </header>
+
+  @if (loading()) {
+    <mat-card class="card">
+      <mat-progress-spinner mode="indeterminate" [diameter]="48" />
+      <p class="status">Przekierowujemy Cię do Panelu Transakcyjnego tpay…</p>
+      <ol class="steps">
+        <li>Utworzenie zamówienia</li>
+        <li>Przekierowanie na stronę tpay</li>
+        <li>Opłacenie: BLIK / przelew / karta (3DS)</li>
+        <li>Powrót do TestGEN i potwierdzenie</li>
+      </ol>
+      <p class="hint">
+        Nie zamykaj tego okna — wrócisz tu automatycznie po płatności.
+      </p>
+    </mat-card>
+  } @else if (error()) {
+    <mat-card class="card">
+      <p class="error">{{ error() }}</p>
+      <a mat-flat-button color="primary" routerLink="/billing/plans">
+        Wróć do planów
+      </a>
+    </mat-card>
+  }
+</section>

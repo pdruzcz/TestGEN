@@ -1,0 +1,99 @@
+<h2 class="audit-log__title">Log audytu</h2>
+
+<form class="audit-log__filters" [formGroup]="filters" (ngSubmit)="applyFilters()">
+  <mat-form-field appearance="outline">
+    <mat-label>Data od</mat-label>
+    <input matInput [matDatepicker]="fromPicker" formControlName="dateFrom" />
+    <mat-datepicker-toggle matIconSuffix [for]="fromPicker" />
+    <mat-datepicker #fromPicker />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Data do</mat-label>
+    <input matInput [matDatepicker]="toPicker" formControlName="dateTo" />
+    <mat-datepicker-toggle matIconSuffix [for]="toPicker" />
+    <mat-datepicker #toPicker />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Identyfikator użytkownika</mat-label>
+    <input matInput type="text" formControlName="userId" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Typ akcji</mat-label>
+    <mat-select formControlName="action">
+      <mat-option value="">Wszystkie</mat-option>
+      @for (action of actions(); track action) {
+        <mat-option [value]="action">{{ action }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="audit-log__filter-actions">
+    <button type="submit" mat-stroked-button>
+      <mat-icon aria-hidden="true">filter_alt</mat-icon>
+      Filtruj
+    </button>
+    <button type="button" mat-button (click)="clearFilters()">Wyczyść</button>
+  </div>
+</form>
+
+@if (errorMessage()) {
+  <p class="audit-log__error" role="alert">{{ errorMessage() }}</p>
+}
+
+@if (isLoading()) {
+  <mat-spinner diameter="32" aria-label="Ładowanie logu audytu" />
+}
+
+<table mat-table [dataSource]="logs()" class="audit-log__table">
+  <ng-container matColumnDef="createdAt">
+    <th mat-header-cell *matHeaderCellDef>Znacznik czasu</th>
+    <td mat-cell *matCellDef="let entry">{{ entry.createdAt | date: "medium" }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="userId">
+    <th mat-header-cell *matHeaderCellDef>Użytkownik</th>
+    <td mat-cell *matCellDef="let entry">{{ entry.userId || "system" }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef>Akcja</th>
+    <td mat-cell *matCellDef="let entry">{{ entry.action }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="resource">
+    <th mat-header-cell *matHeaderCellDef>Zasób</th>
+    <td mat-cell *matCellDef="let entry">
+      {{ entry.resourceType }} / {{ entry.resourceId }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="details">
+    <th mat-header-cell *matHeaderCellDef>Szczegóły</th>
+    <td mat-cell *matCellDef="let entry" class="audit-log__details">
+      {{ formatDetails(entry.details) }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ipAddress">
+    <th mat-header-cell *matHeaderCellDef>Adres IP</th>
+    <td mat-cell *matCellDef="let entry">{{ entry.ipAddress || "—" }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+@if (!isLoading() && logs().length === 0) {
+  <p class="audit-log__empty">Brak wpisów spełniających kryteria.</p>
+}
+
+<mat-paginator
+  [length]="total()"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex()"
+  [pageSizeOptions]="[25, 50, 100, 200]"
+  (page)="onPageChange($event)"
+/>

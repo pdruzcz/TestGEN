@@ -1,0 +1,27 @@
+namespace Tests;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+/// <summary>
+/// Sprawdza czy Calculator::add poprawnie dodaje liczby. — wygenerowano automatycznie przez TestGEN (MSTest).
+/// Nie modyfikuj ręcznie; zmiany zostaną nadpisane przy kolejnej generacji.
+/// </summary>
+[TestClass]
+public class CalculatorTest
+{
+
+    private readonly Calculator _sut;
+
+    [TestInitialize]
+    public void SetUp()
+    {
+        _sut = new Calculator();
+    }
+
+    [TestMethod]
+    public void DodawanieDwochLiczbDodatnichTest()
+    {
+        var result = _sut.Add(1, 2);
+        Assert.AreEqual(3, result);
+    }
+}

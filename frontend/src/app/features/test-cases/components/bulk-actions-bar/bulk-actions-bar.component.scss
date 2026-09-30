@@ -1,0 +1,24 @@
+.bulk-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin-bottom: 16px;
+}
+
+.bulk-count {
+  font-weight: 600;
+  color: #0d47a1;
+  margin-right: 8px;
+}
+
+.delete-btn {
+  color: #c62828;
+}
+
+.spacer {
+  flex: 1;
+}

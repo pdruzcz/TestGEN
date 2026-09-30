@@ -1,0 +1,155 @@
+<section class="invoice-list">
+  <header class="page-title">
+    <h1>Faktury</h1>
+    <p>
+      Faktury VAT za subskrypcje TestGEN — pobierz PDF lub zweryfikuj dane
+      księgowe.
+    </p>
+  </header>
+
+  <div class="banner banner-info" role="status">
+    <mat-icon aria-hidden="true">info</mat-icon>
+    <p>
+      Faktury VAT generują się automatycznie po każdej udanej płatności — PDF
+      pojawia się na liście w ciągu kilku minut od zapłaty.
+    </p>
+  </div>
+
+  @if (error()) {
+    <mat-card class="card">
+      <p class="error">{{ error() }}</p>
+      <a mat-flat-button color="primary" routerLink="/billing/plans">
+        Wróć do planów
+      </a>
+    </mat-card>
+  } @else {
+    <mat-card class="card table-card">
+      @if (loading()) {
+        <p class="status">Pobieranie faktur…</p>
+      } @else if (invoices().length === 0) {
+        <p class="status">
+          Brak faktur — pojawią się automatycznie po pierwszej opłaconej
+          subskrypcji.
+        </p>
+      } @else {
+        <div class="table-wrap">
+          <table class="invoices-table" aria-label="Lista faktur VAT">
+            <caption class="visually-hidden">
+              Lista faktur VAT posortowana malejąco po dacie wystawienia
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Numer</th>
+                <th scope="col">Metoda</th>
+                <th scope="col">Status</th>
+                <th scope="col">PDF</th>
+                <th scope="col">Data wystawienia</th>
+                <th scope="col" class="amount-col">Kwota brutto</th>
+                <th scope="col">Akcje</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (invoice of invoices(); track invoice.id) {
+                <tr>
+                  <th scope="row" class="invoice-number">
+                    {{ invoice.invoiceNumber }}
+                  </th>
+                  <td>{{ methodLabel(invoice.paymentMethod) }}</td>
+                  <td>
+                    <span
+                      class="chip"
+                      [class.chip-issued]="invoice.status === 'issued'"
+                      [class.chip-canceled]="invoice.status === 'canceled'"
+                      [class.chip-corrected]="invoice.status === 'corrected'"
+                    >
+                      {{ statusLabel(invoice.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    @if (invoice.pdfAvailable) {
+                      <span class="chip chip-pdf">Gotowy</span>
+                    } @else {
+                      <span class="chip chip-pending">W toku</span>
+                    }
+                  </td>
+                  <td>{{ invoice.issueDate }}</td>
+                  <td class="amount-col">{{ amountLabel(invoice) }}</td>
+                  <td>
+                    @if (invoice.pdfAvailable) {
+                      <button
+                        mat-icon-button
+                        type="button"
+                        [attr.aria-label]="
+                          'Pobierz PDF faktury ' + invoice.invoiceNumber
+                        "
+                        [disabled]="downloadingId() === invoice.id"
+                        (click)="downloadPdf(invoice)"
+                      >
+                        <mat-icon>download</mat-icon>
+                      </button>
+                    } @else {
+                      <mat-icon
+                        class="pending-icon"
+                        aria-label="PDF w przygotowaniu"
+                      >
+                        schedule
+                      </mat-icon>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <nav class="pagination" aria-label="Stronicowanie faktur">
+          <p class="counter">
+            Strona {{ page() }} z {{ totalPages() }} — {{ total() }}
+            {{ total() === 1 ? "faktura" : "faktur" }}
+          </p>
+          <div class="pager-nav">
+            <button
+              mat-icon-button
+              type="button"
+              aria-label="Poprzednia strona"
+              [disabled]="page() <= 1"
+              (click)="prevPage()"
+            >
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              type="button"
+              aria-label="Następna strona"
+              [disabled]="!hasNextPage()"
+              (click)="nextPage()"
+            >
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </nav>
+      }
+    </mat-card>
+
+    @if (actionError()) {
+      <p class="action-error" role="alert">{{ actionError() }}</p>
+    }
+
+    <div class="actions">
+      <a
+        mat-flat-button
+        color="primary"
+        routerLink="/billing/invoice-data"
+        class="invoice-data-link"
+      >
+        <mat-icon aria-hidden="true">receipt_long</mat-icon>
+        Dane fakturowe
+      </a>
+      <p class="note">
+        Faktury wystawiane są na dane fakturowe tenanta z chwili płatności —
+        zaktualizuj je przed kolejnym odnowieniem, aby wpłynęły na nowe
+        dokumenty.
+      </p>
+    </div>
+  }
+</section>

@@ -1,0 +1,132 @@
+.risk-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  &__error {
+    color: #c62828;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  &__panel {
+    padding: 1rem 1.25rem;
+
+    h3 {
+      margin-top: 0;
+      font-size: 1rem;
+    }
+  }
+
+  &__hist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__bar-label {
+    flex: 0 0 80px;
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  &__bar-track {
+    flex: 1;
+    height: 14px;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+
+  &__bar {
+    height: 100%;
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.4);
+    transition: width 0.3s ease;
+
+    &--critical {
+      background: #b71c1c;
+    }
+    &--high {
+      background: #e53935;
+    }
+    &--medium {
+      background: #fb8c00;
+    }
+    &--low {
+      background: #fbc02d;
+    }
+    &--info {
+      background: #90a4ae;
+    }
+  }
+
+  &__bar-value {
+    flex: 0 0 28px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  &__top {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  &__top-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  &__cvss {
+    color: rgba(0, 0, 0, 0.55);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__escalation {
+    color: #e53935;
+    font-weight: 700;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.5rem 0.6rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    th {
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.7);
+    }
+  }
+}

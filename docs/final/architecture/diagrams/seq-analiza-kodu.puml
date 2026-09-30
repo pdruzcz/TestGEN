@@ -1,0 +1,54 @@
+@startuml seq-analiza-kodu
+title Diagram sekwencji — Analiza kodu
+
+actor "Użytkownik" as user
+participant "Frontend\n(Angular)" as fe
+participant "Backend API\n(FastAPI)" as api
+queue "RabbitMQ" as rmq
+participant "Celery Worker" as worker
+database "PostgreSQL" as db
+database "MinIO" as minio
+participant "API LLM" as llm
+
+user -> fe : Przesyła pliki kodu\ndo projektu
+fe -> api : POST /api/v1/projects/{id}/uploads\n(multipart/form-data)
+
+api -> api : Walidacja (rozmiar, format,\nlimit plików per plan)
+api -> api : QuotaService.enforce_quota()\n(sprawdzenie limitu analiz)
+api -> minio : Zapis plików (S3 PUT)
+api -> db : INSERT INTO source_files\n(status='processing')
+api -> rmq : Kolejkowanie: analyze_code_task.delay()\n(kolejka: analysis)
+api -> fe : 202 Accepted\n{task_id, status: "queued"}
+
+fe -> user : "Analiza w toku..."
+
+rmq -> worker : Dostarczenie zadania
+
+worker -> db : Pobranie metadanych\nSELECT FROM source_files
+worker -> minio : Pobranie plików (S3 GET)
+worker -> worker : Wykrywanie języka\ni frameworka
+
+alt engine_mode = native
+    worker -> worker : tree-sitter: parsowanie AST
+    worker -> worker : NativeAnalysis:\n- złożoność, zależności,\n- logika, przepływ danych
+else engine_mode = llm
+    worker -> llm : POST (prompt + kod)\nmodel: claude/gpt
+    llm -> worker : Odpowiedź LLM\n(analiza semantyczna)
+else engine_mode = hybrid
+    worker -> worker : tree-sitter: parsowanie AST
+    worker -> worker : NativeAnalysis
+    worker -> llm : POST (prompt + kod + native results)
+    llm -> worker : Odpowiedź LLM
+    worker -> worker : ResultMerger:\nscalenie + deduplikacja
+end
+
+worker -> db : INSERT INTO analysis_results\n(result_data=JSONB)
+worker -> db : UPDATE source_files\nSET status='completed'
+worker -> db : INSERT INTO audit_logs\n(action='analysis.complete')
+
+fe -> api : GET /api/v1/tasks/{task_id}\n(polling co 3s)
+api -> fe : 200 OK {status: "completed"}
+
+fe -> user : Wyświetlenie wyników analizy
+
+@enduml

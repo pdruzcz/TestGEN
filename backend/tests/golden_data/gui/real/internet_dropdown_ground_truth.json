@@ -1,0 +1,40 @@
+{
+  "category": "real",
+  "description": "the-internet (Sauce Labs, MIT) — /dropdown. Natywny select w stanie spoczynkowym (natywne popupy nie renderują się w zrzucie headless; otwarty dropdown w stanie realnym zapewniają material_select_open / bootstrap_dropdown_open / kc_admin_user_menu_open).",
+  "expected_component_count": 3,
+  "expected_components": [
+    {
+      "component_type": "link",
+      "label": "The Internet",
+      "bbox": {
+        "x": 30,
+        "y": 26,
+        "width": 120,
+        "height": 24
+      },
+      "confidence": 0.85
+    },
+    {
+      "component_type": "link",
+      "label": "Elemental Selenium",
+      "bbox": {
+        "x": 1010,
+        "y": 26,
+        "width": 240,
+        "height": 24
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Please select an option (select, stan spoczynkowy)",
+      "bbox": {
+        "x": 600,
+        "y": 268,
+        "width": 300,
+        "height": 36
+      },
+      "confidence": 0.85
+    }
+  ]
+}

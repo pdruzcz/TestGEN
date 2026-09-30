@@ -1,0 +1,47 @@
+<section class="checkout-success">
+  <header class="page-title">
+    <h1>Płatność zakończona</h1>
+    <p>Dziękujemy! Twoja subskrypcja została aktywowana.</p>
+  </header>
+
+  @if (noOrder()) {
+    <mat-card class="card">
+      <p>
+        Nie znaleziono informacji o rozpoczętej płatności w tej przeglądarce.
+      </p>
+      <a mat-flat-button color="primary" routerLink="/billing/plans">
+        Wróć do planów
+      </a>
+    </mat-card>
+  } @else if (view() === "checking") {
+    <mat-card class="card">
+      <mat-progress-spinner mode="indeterminate" [diameter]="48" />
+      <p class="status">Czekamy na potwierdzenie płatności…</p>
+      <p class="hint">
+        Potwierdzenie z tpay może dotrzeć w ciągu kilkudziesięciu sekund — ta
+        strona odświeży się automatycznie.
+      </p>
+    </mat-card>
+  } @else if (view() === "paid") {
+    <mat-card class="card">
+      <div class="ok-circle" aria-hidden="true">✓</div>
+      <p class="plan">{{ planLabel() }} — aktywny</p>
+      <p class="amount">{{ amountLabel() }}</p>
+      <p class="hint">Faktura VAT zostanie wysłana e-mailem.</p>
+      <a mat-flat-button color="primary" routerLink="/projects">
+        Przejdź do aplikacji
+      </a>
+    </mat-card>
+  } @else {
+    <mat-card class="card">
+      <p class="status">
+        Płatność została przyjęta, ale jej potwierdzenie jeszcze nie dotarło.
+      </p>
+      <p class="hint">
+        Jeśli opłaciłeś transakcję, plan aktywuje się automatycznie po
+        otrzymaniu potwierdzenia z tpay — sprawdź swój plan za chwilę.
+      </p>
+      <a mat-stroked-button routerLink="/billing/plans">Sprawdź mój plan</a>
+    </mat-card>
+  }
+</section>

@@ -1,0 +1,26 @@
+{
+  "name": "instrukcja_instalacji",
+  "doc_category": "instruction",
+  "format": "pdf",
+  "language": "pl",
+  "has_intentional_discrepancies": false,
+  "expected_classification": {
+    "doc_type": "instrukcja_techniczna",
+    "min_confidence": 40.0
+  },
+  "expected_requirements": {
+    "min_count": 0,
+    "expected_texts": []
+  },
+  "expected_inconsistencies": {
+    "detectable_types": [],
+    "min_detectable_count": 0
+  },
+  "expected_glossary": {
+    "min_terms": 2,
+    "expected_terms": [
+      "Wdrożenie",
+      "Infrastruktura"
+    ]
+  }
+}

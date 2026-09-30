@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1"
+         xmlns:xmi="http://schema.omg.org/spec/XMI/2.1"
+         xmlns:uml="http://schema.omg.org/spec/UML/2.1">
+  <uml:Model xmi:type="uml:Model" name="GoldenModel">
+    <packagedElement xmi:type="uml:Class" xmi:id="cls_account" name="Account">
+      <ownedAttribute name="balance" type="Integer" visibility="private"/>
+      <ownedAttribute name="owner" type="String" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="cls_savings" name="SavingsAccount">
+      <ownedAttribute name="interestRate" type="Float" visibility="private"/>
+      <generalization xmi:id="gen_1">
+        <general xmi:idref="cls_account"/>
+      </generalization>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Interface" xmi:id="iface_payable" name="Payable"/>
+  </uml:Model>
+</xmi:XMI>

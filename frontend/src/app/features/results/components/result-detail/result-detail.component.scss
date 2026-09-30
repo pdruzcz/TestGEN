@@ -1,0 +1,111 @@
+.result-detail {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+// AC7 — kolor + ikona + tekst
+.severity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &.sev-critical {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  &.sev-high {
+    background: #ffedd5;
+    color: #9a3412;
+  }
+
+  &.sev-medium {
+    background: #fef9c3;
+    color: #854d0e;
+  }
+
+  &.sev-low {
+    background: #e0f2fe;
+    color: #075985;
+  }
+}
+
+.status-chip,
+.type-chip {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.detail-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.detail-description {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.detail-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #64748b;
+  font-family: Consolas, monospace;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.diff-error {
+  font-size: 13px;
+  color: #b91c1c;
+  margin: 4px 0 0;
+}

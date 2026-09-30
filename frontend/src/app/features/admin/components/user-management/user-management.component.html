@@ -1,0 +1,123 @@
+<header class="user-management__header">
+  <h2>Użytkownicy</h2>
+  <button
+    type="button"
+    mat-raised-button
+    color="primary"
+    (click)="openCreateDialog()"
+  >
+    <mat-icon aria-hidden="true">person_add</mat-icon>
+    Dodaj użytkownika
+  </button>
+</header>
+
+<form class="user-management__filters">
+  <mat-form-field appearance="outline">
+    <mat-label>Szukaj (email lub nazwa)</mat-label>
+    <input matInput type="search" [formControl]="searchControl" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Rola</mat-label>
+    <mat-select [formControl]="roleControl">
+      <mat-option value="">Wszystkie</mat-option>
+      @for (role of roles; track role.value) {
+        <mat-option [value]="role.value">{{ role.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select [formControl]="statusControl">
+      <mat-option value="">Wszystkie</mat-option>
+      <mat-option value="active">Aktywny</mat-option>
+      <mat-option value="blocked">Zablokowany</mat-option>
+      <mat-option value="inactive">Nieaktywny</mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>
+
+@if (errorMessage()) {
+  <p class="user-management__error" role="alert">{{ errorMessage() }}</p>
+}
+
+@if (isLoading()) {
+  <mat-spinner diameter="32" aria-label="Ładowanie użytkowników" />
+}
+
+<table
+  mat-table
+  [dataSource]="filteredUsers()"
+  matSort
+  (matSortChange)="onSortChange($event)"
+  class="user-management__table"
+>
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+    <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Imię i nazwisko</th>
+    <td mat-cell *matCellDef="let user">{{ user.name || "—" }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="role">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Rola</th>
+    <td mat-cell *matCellDef="let user">{{ roleLabel(user.role) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="tenant">
+    <th mat-header-cell *matHeaderCellDef>Tenant</th>
+    <td mat-cell *matCellDef="let user">{{ tenantLabel(user.tenantId) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef>Status</th>
+    <td mat-cell *matCellDef="let user">{{ statusLabel(user) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdAt">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Data rejestracji</th>
+    <td mat-cell *matCellDef="let user">
+      {{ user.createdAt ? (user.createdAt | date: "short") : "—" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="lastLoginAt">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Ostatnie logowanie</th>
+    <td mat-cell *matCellDef="let user">
+      {{ user.lastLoginAt ? (user.lastLoginAt | date: "short") : "Nigdy" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Akcje</th>
+    <td mat-cell *matCellDef="let user">
+      <button
+        type="button"
+        mat-icon-button
+        [attr.aria-label]="'Edytuj użytkownika ' + user.email"
+        (click)="openEditDialog(user)"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+@if (!isLoading() && filteredUsers().length === 0) {
+  <p class="user-management__empty">Brak użytkowników spełniających kryteria.</p>
+}
+
+<mat-paginator
+  [length]="total()"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex()"
+  [pageSizeOptions]="[10, 25, 50, 100]"
+  (page)="onPageChange($event)"
+/>

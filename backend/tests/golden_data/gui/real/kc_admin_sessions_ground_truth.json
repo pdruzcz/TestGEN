@@ -1,0 +1,62 @@
+{
+  "category": "real_dense",
+  "description": "Keycloak 26.7.1 admin console (Apache-2.0) — Sessions: tabela ~9 sesji admina (liczba sesji z przechwytu), przycisk Logout all. Gęsty OCR z komórek tabeli — kategoria real_dense. Viewport 1280x800.",
+  "expected_component_count": 5,
+  "expected_components": [
+    {
+      "component_type": "menu",
+      "label": "Sidebar (Clients/Users/Sessions/...)",
+      "bbox": {
+        "x": 0,
+        "y": 80,
+        "width": 256,
+        "height": 720
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "dropdown",
+      "label": "Masthead: user toggle (golden-admin)",
+      "bbox": {
+        "x": 1150,
+        "y": 22,
+        "width": 122,
+        "height": 36
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "tab",
+      "label": "Current sessions",
+      "bbox": {
+        "x": 276,
+        "y": 188,
+        "width": 150,
+        "height": 32
+      },
+      "confidence": 0.8
+    },
+    {
+      "component_type": "button",
+      "label": "Logout all",
+      "bbox": {
+        "x": 1058,
+        "y": 186,
+        "width": 112,
+        "height": 38
+      },
+      "confidence": 0.9
+    },
+    {
+      "component_type": "table",
+      "label": "Sessions (~9 wierszy, golden-admin)",
+      "bbox": {
+        "x": 276,
+        "y": 246,
+        "width": 992,
+        "height": 340
+      },
+      "confidence": 0.9
+    }
+  ]
+}

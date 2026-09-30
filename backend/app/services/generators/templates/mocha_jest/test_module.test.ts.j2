@@ -1,0 +1,174 @@
+{# ── Makro: render_assertion_ts ── Mapuje comparison_type na asercje Jest lub Mocha+Chai (TypeScript) ── #}
+{% macro render_assertion(assertion, variant) -%}
+{%- if variant == "jest" %}
+{%- if assertion.comparison_type == "equals" %}
+        expect({{ assertion.actual }}).toBe({{ assertion.expected }});
+{%- elif assertion.comparison_type == "not_equals" %}
+        expect({{ assertion.actual }}).not.toBe({{ assertion.expected }});
+{%- elif assertion.comparison_type == "contains" %}
+        expect({{ assertion.actual }}).toContain({{ assertion.expected }});
+{%- elif assertion.comparison_type == "not_contains" %}
+        expect({{ assertion.actual }}).not.toContain({{ assertion.expected }});
+{%- elif assertion.comparison_type == "throws" %}
+        expect(() => {
+            {{ assertion.actual }};
+        }).toThrow({{ assertion.expected }});
+{%- elif assertion.comparison_type == "approx" %}
+        expect({{ assertion.actual }}).toBeCloseTo({{ assertion.expected }}, 2);
+{%- elif assertion.comparison_type == "is_none" %}
+        expect({{ assertion.actual }}).toBeNull();
+{%- elif assertion.comparison_type == "is_not_none" %}
+        expect({{ assertion.actual }}).toBeDefined();
+{%- elif assertion.comparison_type == "is_true" %}
+        expect({{ assertion.actual }}).toBeTruthy();
+{%- elif assertion.comparison_type == "is_false" %}
+        expect({{ assertion.actual }}).toBeFalsy();
+{%- elif assertion.comparison_type == "greater_than" %}
+        expect({{ assertion.actual }}).toBeGreaterThan({{ assertion.expected }});
+{%- elif assertion.comparison_type == "less_than" %}
+        expect({{ assertion.actual }}).toBeLessThan({{ assertion.expected }});
+{%- elif assertion.comparison_type == "has_length" %}
+        expect({{ assertion.actual }}).toHaveLength({{ assertion.expected }});
+{%- elif assertion.comparison_type == "is_instance" %}
+        expect({{ assertion.actual }}).toBeInstanceOf({{ assertion.expected }});
+{%- else %}
+        expect({{ assertion.actual }}).toBe({{ assertion.expected }}); // nieznany comparison_type: {{ assertion.comparison_type }}
+{%- endif %}
+{%- else %}
+{%- if assertion.comparison_type == "equals" %}
+        expect({{ assertion.actual }}).to.equal({{ assertion.expected }});
+{%- elif assertion.comparison_type == "not_equals" %}
+        expect({{ assertion.actual }}).to.not.equal({{ assertion.expected }});
+{%- elif assertion.comparison_type == "contains" %}
+        expect({{ assertion.actual }}).to.include({{ assertion.expected }});
+{%- elif assertion.comparison_type == "not_contains" %}
+        expect({{ assertion.actual }}).to.not.include({{ assertion.expected }});
+{%- elif assertion.comparison_type == "throws" %}
+        expect(() => {
+            {{ assertion.actual }};
+        }).to.throw({{ assertion.expected }});
+{%- elif assertion.comparison_type == "approx" %}
+        expect({{ assertion.actual }}).to.be.closeTo({{ assertion.expected }}, 2);
+{%- elif assertion.comparison_type == "is_none" %}
+        expect({{ assertion.actual }}).to.be.null;
+{%- elif assertion.comparison_type == "is_not_none" %}
+        expect({{ assertion.actual }}).to.exist;
+{%- elif assertion.comparison_type == "is_true" %}
+        expect({{ assertion.actual }}).to.be.true;
+{%- elif assertion.comparison_type == "is_false" %}
+        expect({{ assertion.actual }}).to.be.false;
+{%- elif assertion.comparison_type == "greater_than" %}
+        expect({{ assertion.actual }}).to.be.above({{ assertion.expected }});
+{%- elif assertion.comparison_type == "less_than" %}
+        expect({{ assertion.actual }}).to.be.below({{ assertion.expected }});
+{%- elif assertion.comparison_type == "has_length" %}
+        expect({{ assertion.actual }}).to.have.lengthOf({{ assertion.expected }});
+{%- elif assertion.comparison_type == "is_instance" %}
+        expect({{ assertion.actual }}).to.be.instanceOf({{ assertion.expected }});
+{%- else %}
+        expect({{ assertion.actual }}).to.equal({{ assertion.expected }}); // nieznany comparison_type: {{ assertion.comparison_type }}
+{%- endif %}
+{%- endif %}
+{%- endmacro %}
+
+
+{# ── Makro: render_mock_field ── Generuje deklaracje mocka (TS) ── #}
+{% macro render_mock_field(mock, variant) -%}
+{%- if variant == "jest" %}
+jest.mock('{{ mock.type }}');
+{%- else %}
+import * as sinon from 'sinon';
+{%- endif %}
+{%- endmacro %}
+
+
+{# ── Makro: render_test_method ── Generuje kompletny test it() (TS) ── #}
+{% macro render_test_method(test, variant) -%}
+  {% if test.parameterized and test.test_each_data %}
+    {% if variant == "jest" %}
+  describe.each({{ test.test_each_data }})(
+    '{{ test.description }}',
+    ({% for p in test.parameters %}{{ p.name }}: {{ p.type }}{% if not loop.last %}, {% endif %}{% endfor %}) => {
+    it('should pass', {% if test.is_async %}async {% endif %}() => {
+    {% else %}
+  describe.each({{ test.test_each_data }})(
+    '{{ test.description }}',
+    ({% for p in test.parameters %}{{ p.name }}: {{ p.type }}{% if not loop.last %}, {% endif %}{% endfor %}) => {
+    it('should pass', {% if test.is_async %}async {% endif %}() => {
+    {% endif %}
+  {% else %}
+  it('{{ test.description }}', {% if test.is_async %}async {% endif %}() => {
+  {% endif %}
+{% if test.mock_stubbing %}
+{% for stub in test.mock_stubbing %}
+      {{ stub.code }}
+{% endfor %}
+{% endif %}
+{% if test.steps %}
+{% for step in test.steps %}
+      {{ step.code }}
+{% endfor %}
+{% endif %}
+{% if test.assertions %}
+{% for assertion in test.assertions %}
+{{ render_assertion(assertion, variant) }}
+{% endfor %}
+{% endif %}
+{% if not test.steps and not test.assertions %}
+      // TODO: dodaj kroki testowe i asercje
+{% endif %}
+  {% if test.parameterized and test.test_each_data %}
+    });
+  });
+  {% else %}
+  });
+  {% endif %}
+{%- endmacro %}
+
+
+{# ── Plik testowy TypeScript ── #}
+{% for imp in imports %}
+{{ imp }}
+{% endfor %}
+
+/**
+ * Testy modulu {{ test_module_name }}.
+ *
+ * Wygenerowano automatycznie przez TestGEN - silnik natywny ({% if is_jest %}Jest{% else %}Mocha+Chai{% endif %}, TypeScript).
+ * Nie modyfikuj recznie; zmiany zostana nadpisane przy kolejnej generacji.
+ */
+describe('{{ test_module_name }}', () => {
+{% if has_lifecycle %}
+  beforeEach(() => {
+{% if is_mocha and mocks %}
+    const sandbox: sinon.SinonSandbox = sinon.createSandbox();
+{% endif %}
+{% for step in setup_steps %}
+    {{ step.code }}
+{% endfor %}
+  });
+
+{% if has_teardown %}
+
+  afterEach(() => {
+{% if is_jest and mocks %}
+    jest.restoreAllMocks();
+{% elif is_mocha and mocks %}
+    sandbox.restore();
+{% endif %}
+{% for step in teardown_steps %}
+    {{ step.code }}
+{% endfor %}
+  });
+
+{% endif %}
+{% endif %}
+{% for mock in mocks %}
+  {{ render_mock_field(mock, variant) }}
+{% endfor %}
+
+{% for test in test_cases %}
+{{ render_test_method(test, variant) }}
+
+{% endfor %}
+});

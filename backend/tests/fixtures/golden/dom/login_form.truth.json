@@ -1,0 +1,11 @@
+{
+  "_comment": "Ground truth for login_form.html — interactive elements that MUST be detected with a stable locator attribute (Story 1.51-zakańczenie, Story 3.14 golden). Coverage threshold >= 90%.",
+  "elements": [
+    { "tag": "form", "attr": "aria-label", "value": "Formularz logowania" },
+    { "tag": "input", "attr": "data-testid", "value": "email-input" },
+    { "tag": "input", "attr": "data-testid", "value": "password-input" },
+    { "tag": "input", "attr": "data-testid", "value": "remember-me" },
+    { "tag": "button", "label": "Zaloguj" },
+    { "tag": "a", "attr": "data-testid", "value": "reset-password" }
+  ]
+}

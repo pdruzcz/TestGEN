@@ -1,0 +1,11 @@
+@startuml
+|Użytkownik|
+start
+:Wprowadź dane logowania;
+if (Dane poprawne?) then (tak)
+  :Zaloguj użytkownika;
+else (nie)
+  :Pokaż błąd;
+endif
+stop
+@enduml

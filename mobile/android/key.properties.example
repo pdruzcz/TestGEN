@@ -1,0 +1,14 @@
+# Szablon produkcyjnego podpisu APK — skopiuj jako android/key.properties
+# i uzupełnij. key.properties oraz *.jks są gitignored (nigdy do repo!).
+#
+# PROBLEM NA POTEM (decyzja 2026-09-30): dopóki plik nie istnieje, release
+# buduje się kluczem DEBUG — wystarcza do sideloadu; na Google Play będzie
+# wymagany własny keystore (patrz mobile/BUILD-APK.md §Podpis).
+#
+# Generowanie keystore'a:
+#   keytool -genkey -v -keystore testgen-release.jks -keyalg RSA \
+#     -keysize 2048 -validity 10000 -alias testgen
+storeFile=../../testgen-release.jks
+storePassword=HASLO_KEYSTORE
+keyAlias=testgen
+keyPassword=HASLO_KLUCZA

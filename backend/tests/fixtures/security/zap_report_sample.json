@@ -1,0 +1,98 @@
+{
+  "@version": "2.14.0",
+  "@generated": "Thu, 12 Jun 2026 10:00:00",
+  "site": [
+    {
+      "@name": "https://demo.example.com",
+      "@host": "demo.example.com",
+      "@port": "443",
+      "@ssl": "true"
+    }
+  ],
+  "alerts": [
+    {
+      "pluginId": "40018",
+      "alert": "SQL Injection",
+      "name": "SQL Injection",
+      "riskcode": "3",
+      "confidence": "2",
+      "risk": "High",
+      "url": "https://demo.example.com/login",
+      "method": "POST",
+      "param": "username",
+      "attack": "' OR '1'='1",
+      "evidence": "syntax error near 'OR'",
+      "cweid": "89",
+      "wascid": "19",
+      "description": "SQL injection may be possible.",
+      "solution": "Use parameterized queries.",
+      "request": "POST /login HTTP/1.1\nHost: demo.example.com\nAuthorization: Bearer eyJsupersecret\nCookie: session=abc123\nContent-Type: application/x-www-form-urlencoded\n\nusername=admin' OR '1'='1&password=secretpass",
+      "response": "HTTP/1.1 500 Internal Server Error\nSet-Cookie: session=def456\n\nSQL syntax error"
+    },
+    {
+      "pluginId": "40012",
+      "alert": "Cross Site Scripting (Reflected)",
+      "name": "Cross Site Scripting (Reflected)",
+      "risk": "Medium",
+      "confidence": "2",
+      "url": "https://demo.example.com/search",
+      "method": "GET",
+      "param": "q",
+      "attack": "<script>alert(1)</script>",
+      "evidence": "<script>alert(1)</script>",
+      "cweid": "79",
+      "description": "Reflected XSS in the search parameter.",
+      "solution": "Encode output.",
+      "request": "GET /search?q=<script>alert(1)</script> HTTP/1.1\nHost: demo.example.com",
+      "response": "HTTP/1.1 200 OK\n\n<html><script>alert(1)</script></html>"
+    },
+    {
+      "pluginId": "90020",
+      "alert": "Remote OS Command Injection",
+      "name": "Remote OS Command Injection",
+      "risk": "High",
+      "confidence": "1",
+      "url": "https://demo.example.com/ping",
+      "method": "POST",
+      "param": "host",
+      "attack": "127.0.0.1; cat /etc/passwd",
+      "evidence": "root:x:0:0",
+      "cweid": "78",
+      "description": "OS command injection.",
+      "solution": "Avoid shelling out with user input.",
+      "request": "POST /ping HTTP/1.1\nHost: demo.example.com\nX-Api-Key: topsecretkey",
+      "response": "HTTP/1.1 200 OK\n\nroot:x:0:0"
+    },
+    {
+      "pluginId": "10202",
+      "alert": "Absence of Anti-CSRF Tokens",
+      "name": "Absence of Anti-CSRF Tokens",
+      "risk": "Low",
+      "confidence": "2",
+      "url": "https://demo.example.com/profile",
+      "method": "POST",
+      "param": "",
+      "attack": "",
+      "evidence": "",
+      "cweid": "-1",
+      "description": "No anti-CSRF tokens found in the form.",
+      "solution": "Add anti-CSRF tokens.",
+      "request": "POST /profile HTTP/1.1\nHost: demo.example.com",
+      "response": "HTTP/1.1 200 OK\n\n<form></form>"
+    },
+    {
+      "pluginId": "10096",
+      "alert": "Timestamp Disclosure",
+      "name": "Timestamp Disclosure",
+      "risk": "Informational",
+      "confidence": "1",
+      "url": "https://demo.example.com/",
+      "method": "GET",
+      "cweid": "200",
+      "description": "Timestamps disclosed.",
+      "solution": "Remove timestamps.",
+      "request": "GET / HTTP/1.1\nHost: demo.example.com",
+      "response": "HTTP/1.1 200 OK\n\n1718183000"
+    }
+  ]
+}

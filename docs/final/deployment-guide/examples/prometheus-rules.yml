@@ -1,0 +1,176 @@
+# =============================================================================
+# TestGEN — reguły alertów Prometheus
+# =============================================================================
+# Umieść w: /etc/prometheus/rules/testgen.yml
+# =============================================================================
+
+groups:
+  # --- Alerty systemowe ---
+  - name: testgen-system
+    rules:
+      - alert: DiskSpaceWarning
+        expr: (1 - node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes) > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Wykorzystanie dysku > 85% na {{ $labels.instance }}"
+          description: "Partycja {{ $labels.mountpoint }}: {{ $value | humanizePercentage }} zajęte"
+
+      - alert: DiskSpaceCritical
+        expr: (1 - node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes) > 0.95
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "KRYTYCZNE: dysk > 95% na {{ $labels.instance }}"
+          description: "Partycja {{ $labels.mountpoint }}: {{ $value | humanizePercentage }} zajęte. Natychmiast zwolnij miejsce."
+
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Wysokie zużycie CPU (> 80%) na {{ $labels.instance }}"
+          description: "CPU: {{ $value | printf \"%.1f\" }}%"
+
+      - alert: CriticalCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "KRYTYCZNE: CPU > 95% na {{ $labels.instance }}"
+
+      - alert: HighMemoryUsage
+        expr: (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Wysokie zużycie pamięci (> 85%) na {{ $labels.instance }}"
+          description: "Pamięć: {{ $value | humanizePercentage }} zajęte"
+
+  # --- Alerty aplikacji ---
+  - name: testgen-application
+    rules:
+      - alert: BackendDown
+        expr: up{job="testgen-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend TestGEN jest niedostępny"
+          description: "Brak odpowiedzi z {{ $labels.instance }} od > 1 min"
+
+      - alert: PostgresDown
+        expr: up{job="testgen-postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL jest niedostępny"
+
+      - alert: RedisDown
+        expr: up{job="testgen-redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis jest niedostępny"
+
+      - alert: RabbitMQDown
+        expr: up{job="testgen-rabbitmq"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "RabbitMQ jest niedostępny"
+
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+          / sum(rate(http_requests_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Wskaźnik błędów HTTP 5xx > 5%"
+          description: "Aktualny wskaźnik: {{ $value | humanizePercentage }}"
+
+      - alert: CriticalErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+          / sum(rate(http_requests_total[5m])) > 0.10
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "KRYTYCZNE: wskaźnik błędów HTTP 5xx > 10%"
+
+      - alert: HighResponseLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Percentyl 95. czasu odpowiedzi > 2 s"
+          description: "P95: {{ $value | printf \"%.2f\" }} s"
+
+  # --- Alerty Celery / RabbitMQ ---
+  - name: testgen-celery
+    rules:
+      - alert: QueueDepthWarning
+        expr: rabbitmq_queue_messages > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Kolejka {{ $labels.queue }} ma > 1000 wiadomości"
+          description: "Głębokość: {{ $value }} wiadomości. Rozważ dodanie workerów."
+
+      - alert: QueueDepthCritical
+        expr: rabbitmq_queue_messages > 5000
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "KRYTYCZNE: kolejka {{ $labels.queue }} ma > 5000 wiadomości"
+
+      - alert: NoCeleryWorkers
+        expr: flower_active_workers == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Brak aktywnych workerów Celery"
+          description: "Żaden worker nie przetwarza zadań. Sprawdź kontenery celery-worker."
+
+  # --- Alerty bazy danych ---
+  - name: testgen-database
+    rules:
+      - alert: PostgresHighConnections
+        expr: pg_stat_activity_count > 180
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PostgreSQL: > 180 aktywnych połączeń (limit: 200)"
+
+      - alert: PostgresSlowQueries
+        expr: rate(pg_stat_activity_max_tx_duration{datname="testgen"}[5m]) > 300
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PostgreSQL: transakcje trwające > 5 min"
+
+      - alert: PostgresReplicationLag
+        expr: pg_replication_lag > 60
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Opóźnienie replikacji PostgreSQL > 60 s"
+          description: "Opóźnienie: {{ $value | printf \"%.0f\" }} s"

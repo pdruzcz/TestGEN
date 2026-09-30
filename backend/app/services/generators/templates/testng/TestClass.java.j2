@@ -1,0 +1,39 @@
+package {{ package_name }};
+
+{% for imp in imports %}
+{{ imp }}
+{% endfor %}
+
+/**
+ * {{ description }}
+ *
+ * Wygenerowano automatycznie przez TestGEN - silnik natywny (TestNG).
+ * Nie modyfikuj recznie; zmiany zostana nadpisane przy kolejnej generacji.
+ */
+public class {{ class_name }} {
+{% for field in fields %}
+
+    {{ field }}
+{% endfor %}
+{% if setup_body %}
+
+    @BeforeMethod
+    public void setUp() {
+{{ setup_body }}
+    }
+{% endif %}
+{% if teardown_body %}
+
+    @AfterMethod
+    public void tearDown() {
+{{ teardown_body }}
+    }
+{% endif %}
+{% for method in methods %}
+
+    @Test
+    public void {{ method.name }}() {
+{{ method.body }}
+    }
+{% endfor %}
+}

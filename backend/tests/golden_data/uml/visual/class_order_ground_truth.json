@@ -1,0 +1,12 @@
+{
+  "diagram_type": "class",
+  "format": "svg",
+  "description": "Diagram klas (SVG): Order-Customer-Product z dwiema asocjacjami. Ścieżka wizualna parse_svg (Tier 2, source=ocr).",
+  "expected_participants_count": 0,
+  "expected_elements_count": 3,
+  "expected_relationships_count": 2,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 0,
+  "expected_source": "ocr",
+  "expected_element_names": ["Order", "Customer", "Product"]
+}

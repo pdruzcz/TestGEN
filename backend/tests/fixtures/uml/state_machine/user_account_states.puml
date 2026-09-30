@@ -1,0 +1,11 @@
+@startuml
+[*] --> Niezweryfikowane
+state Niezweryfikowane : entry / wyslij_email
+Niezweryfikowane --> Aktywne : zweryfikuj [token_wazny] / aktywuj
+Aktywne --> Zablokowane : zablokuj / powiadom
+state Aktywne : do / monitoruj_sesje
+Zablokowane --> Aktywne : odblokuj
+Aktywne --> Usuniete : usun / anonimizuj
+state Usuniete : entry / wyczysc_dane
+Usuniete --> [*]
+@enduml

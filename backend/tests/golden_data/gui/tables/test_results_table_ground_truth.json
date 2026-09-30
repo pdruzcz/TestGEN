@@ -1,0 +1,11 @@
+{
+  "category": "tables",
+  "description": "Tabela wynikow testow ze statusami i linkiem do szczegolow uruchomienia.",
+  "expected_component_count": 4,
+  "expected_components": [
+    {"component_type": "table", "label": "Wyniki testow", "bbox": {"x": 40, "y": 110, "width": 1100, "height": 580}, "confidence": 0.92},
+    {"component_type": "dropdown", "label": "Filtr wyniku", "bbox": {"x": 40, "y": 60, "width": 200, "height": 38}, "confidence": 0.87},
+    {"component_type": "link", "label": "Szczegoly uruchomienia", "bbox": {"x": 900, "y": 150, "width": 200, "height": 24}, "confidence": 0.83},
+    {"component_type": "button", "label": "Uruchom ponownie", "bbox": {"x": 960, "y": 60, "width": 180, "height": 40}, "confidence": 0.93}
+  ]
+}

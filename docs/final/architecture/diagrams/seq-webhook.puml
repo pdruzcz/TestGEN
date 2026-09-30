@@ -1,0 +1,44 @@
+@startuml seq-webhook
+title Diagram sekwencji — Przetwarzanie webhooków (ogólny)
+
+participant "System zewnętrzny\n(tpay / GitHub)" as ext
+participant "Backend API\n(FastAPI)" as api
+database "PostgreSQL" as db
+queue "RabbitMQ" as rmq
+participant "Celery Worker" as worker
+
+ext -> api : POST /api/v1/webhooks/{provider}\n(signed payload)
+
+api -> api : Weryfikacja podpisu\n(JWS / HMAC-SHA256)
+
+alt Podpis nieprawidłowy
+    api -> ext : 401 Unauthorized
+else Podpis prawidłowy
+    api -> db : Zapis surowego zdarzenia\nINSERT INTO webhook_events\n(provider, event_type, payload,\nidempotency_key)
+
+    api -> api : Sprawdzenie idempotentności\n(czy event_uid już przetworzony?)
+
+    alt Już przetworzony
+        api -> ext : 200 OK (idempotent)
+    else Nowy
+        api -> api : Klasyfikacja zdarzenia\n(WebhookProcessor.classify)
+
+        alt Przetwarzanie synchroniczne
+            api -> api : Obsługa zdarzenia\n(np. aktualizacja statusu)
+            api -> db : UPDATE ... SET status=...
+            api -> db : INSERT INTO audit_logs
+        else Przetwarzanie asynchroniczne
+            api -> rmq : process_webhook_task.delay(event_id)
+            rmq -> worker : Dostarczenie zadania
+            worker -> db : Pobranie zdarzenia
+            worker -> worker : Przetwarzanie logiki
+            worker -> db : Aktualizacja stanu
+            worker -> db : INSERT INTO audit_logs
+        end
+
+        api -> db : UPDATE webhook_events\nSET status='processed'
+        api -> ext : 200 OK
+    end
+end
+
+@enduml

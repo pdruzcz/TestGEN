@@ -1,0 +1,17 @@
+<?php
+{# PHPUnit test class — Story 1.55 (FR24/FR12). Wygenerowane przez TestGEN. #}
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use PHPUnit\Framework\TestCase;
+
+final class {{ class_name }} extends TestCase
+{
+{% for method in methods %}
+    public function {{ method.name }}(): void
+    {
+        {{ method.body }}
+    }
+
+{% endfor %}}

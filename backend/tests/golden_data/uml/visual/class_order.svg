@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="black"/>
+    </marker>
+  </defs>
+  <rect x="50" y="50" width="150" height="80" fill="none" stroke="black"/>
+  <text x="125" y="90" text-anchor="middle">Order</text>
+  <rect x="350" y="50" width="150" height="80" fill="none" stroke="black"/>
+  <text x="425" y="90" text-anchor="middle">Customer</text>
+  <rect x="200" y="280" width="150" height="80" fill="none" stroke="black"/>
+  <text x="275" y="320" text-anchor="middle">Product</text>
+  <line x1="200" y1="90" x2="350" y2="90" stroke="black" marker-end="url(#arrow)"/>
+  <line x1="275" y1="280" x2="125" y2="130" stroke="black" marker-end="url(#arrow)"/>
+</svg>

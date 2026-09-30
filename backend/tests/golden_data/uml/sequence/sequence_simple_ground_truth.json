@@ -1,0 +1,14 @@
+{
+  "diagram_type": "sequence",
+  "description": "Prosty przepływ logowania: aktor + 2 uczestników, 4 komunikaty.",
+  "expected_participants_count": 3,
+  "expected_elements_count": 0,
+  "expected_relationships_count": 4,
+  "expected_fragments_count": 0,
+  "expected_flows_count": 1,
+  "expected_participants": [
+    {"name": "Uzytkownik"},
+    {"name": "LoginForm"},
+    {"name": "AuthService"}
+  ]
+}

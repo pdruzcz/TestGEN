@@ -1,0 +1,10 @@
+<?php
+{# Pest tests (DSL nad PHPUnit) — Story 1.55 (FR24/FR12). Wygenerowane przez TestGEN. #}
+declare(strict_types=1);
+
+{% for test in tests %}
+it('{{ test.title }}', function () {
+    {{ test.body }}
+});
+
+{% endfor %}

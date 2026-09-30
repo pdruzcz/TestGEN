@@ -1,0 +1,14 @@
+{
+  "description": "Expected cross-diagram analysis results for the login golden dataset.",
+  "mappings": {
+    "participant_to_class": {
+      "User": "User",
+      "System": "System"
+    },
+    "class_to_state_machine_keys": ["User"]
+  },
+  "use_case_to_sequences_min": 1,
+  "use_case_to_activity_min": 1,
+  "min_user_flows": 3,
+  "expected_flow_sources": ["activity", "state_machine"]
+}

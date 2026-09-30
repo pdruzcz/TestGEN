@@ -1,0 +1,86 @@
+{
+  "name": "Login flow",
+  "description": "User login flow z elementami GUI — username, password, submit button, welcome message",
+  "url": "https://example.com/login",
+  "test_cases": [
+    {
+      "scenario_name": "Successful login",
+      "test_type": "e2e",
+      "url": "https://example.com/login",
+      "ui_elements": [
+        {
+          "name": "username_input",
+          "locator_type": "id",
+          "locator_value": "username",
+          "element_type": "input",
+          "page_name": "LoginPage"
+        },
+        {
+          "name": "password_input",
+          "locator_type": "id",
+          "locator_value": "password",
+          "element_type": "input",
+          "page_name": "LoginPage"
+        },
+        {
+          "name": "login_button",
+          "locator_type": "css",
+          "locator_value": "button[type='submit']",
+          "element_type": "button",
+          "page_name": "LoginPage"
+        },
+        {
+          "name": "welcome_message",
+          "locator_type": "css",
+          "locator_value": ".welcome-msg",
+          "element_type": "text",
+          "page_name": "DashboardPage"
+        }
+      ],
+      "user_flow": {
+        "name": "Login flow",
+        "url": "https://example.com/login",
+        "steps": [
+          {"action": "fill", "element": {"name": "username_input"}, "value": "testuser"},
+          {"action": "fill", "element": {"name": "password_input"}, "value": "password123"},
+          {"action": "click", "element": {"name": "login_button"}}
+        ]
+      },
+      "expected_result": "Welcome",
+      "comparison_type": "text_contains",
+      "assertions": [
+        {"type": "text_contains", "element": "welcome_message", "expected": "Welcome"}
+      ]
+    },
+    {
+      "scenario_name": "Login with empty fields shows error",
+      "test_type": "e2e",
+      "url": "https://example.com/login",
+      "ui_elements": [
+        {
+          "name": "username_input",
+          "locator_type": "id",
+          "locator_value": "username",
+          "element_type": "input",
+          "page_name": "LoginPage"
+        },
+        {
+          "name": "error_message",
+          "locator_type": "css",
+          "locator_value": ".error",
+          "element_type": "text",
+          "page_name": "LoginPage"
+        }
+      ],
+      "user_flow": {
+        "name": "Empty login",
+        "url": "https://example.com/login",
+        "steps": [
+          {"action": "click", "element": {"name": "username_input"}}
+        ]
+      },
+      "expected_result": "required",
+      "comparison_type": "text_contains"
+    }
+  ]
+}

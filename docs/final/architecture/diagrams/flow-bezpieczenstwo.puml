@@ -1,0 +1,54 @@
+@startuml flow-bezpieczenstwo
+title Przepływ danych — Analiza bezpieczeństwa
+
+skinparam activityFontSize 12
+skinparam arrowFontSize 11
+
+|Użytkownik|
+start
+:Uruchamia skanowanie\nbezpieczeństwa projektu;
+
+|Backend API|
+:Sprawdzenie bramki funkcji\n(plan Premium wymagany);
+:Kolejkowanie zadania\n(kolejka: security);
+
+|Celery Worker|
+:Pobranie plików\nz MinIO;
+
+fork
+    |Celery Worker|
+    :SAST Scanner\n(reguły Semgrep/Bandit);
+    :Wykryte wzorce\npodatności;
+fork again
+    :Taint Analysis\n(śledzenie przepływu danych);
+    :SQL injection, XSS,\npath traversal;
+fork again
+    :Dependency Scanner\n(sprawdzenie CVE);
+    :Znane podatności\nw zależnościach;
+fork again
+    :Config Scanner\n(analiza konfiguracji);
+    :Sekrety w kodzie,\nbrakujący hardening;
+end fork
+
+:Obliczenie CVSS\nper podatność;
+:Klasyfikacja ważności:\nCritical / High / Medium / Low;
+
+if (engine_mode LLM?) then (tak)
+    :LLM SAST Analysis\n(semantyczna weryfikacja);
+    :Wzbogacenie wyników\no kontekst biznesowy;
+else (nie)
+endif
+
+:Generowanie raportu\npodatności;
+:Generowanie SBOM\n(CycloneDX / SPDX);
+:Zapis wyników\nw **PostgreSQL**;
+
+|Backend API|
+:Powiadomienie użytkownika;
+
+|Użytkownik|
+:Podgląd raportu\nbezpieczeństwa;
+:Eksport SBOM;
+stop
+
+@enduml

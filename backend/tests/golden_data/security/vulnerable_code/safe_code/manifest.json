@@ -1,0 +1,9 @@
+{
+  "category": "safe_code",
+  "description": "Safe-by-construction samples that resemble vulnerable code — false-positive guard (Story 4.14).",
+  "samples": [
+    { "file": "safe_sql_python.py", "language": "python", "expected_findings": 0 },
+    { "file": "safe_xss_javascript.js", "language": "javascript", "expected_findings": 0 },
+    { "file": "safe_auth_python.py", "language": "python", "expected_findings": 0 }
+  ]
+}

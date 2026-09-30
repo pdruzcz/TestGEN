@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    { "role": "form", "name": "Formularz logowania" },
+    { "role": "textbox", "name": "Adres e-mail", "data-testid": "email-input" },
+    { "role": "textbox", "name": "Hasło", "data-testid": "password-input" },
+    { "role": "checkbox", "name": "Zapamiętaj mnie", "data-testid": "remember-me" },
+    { "role": "button", "name": "Zaloguj" },
+    { "role": "link", "name": "Nie pamiętam hasła", "data-testid": "reset-password" }
+  ]
+}

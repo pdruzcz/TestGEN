@@ -1,0 +1,24 @@
+{# ── Szablon conftest.py dla Appium ── Story 1.42 ── #}
+import pytest
+from appium import webdriver
+
+
+def pytest_addoption(parser):
+    parser.addoption("--platform", default="{{ platform_default }}")
+    parser.addoption("--app-path", default="{{ app_path_default }}")
+
+
+@pytest.fixture
+def driver(request):
+    platform = request.config.getoption("--platform")
+    app_path = request.config.getoption("--app-path")
+
+    caps = {
+        "platformName": platform,
+        "deviceName": "{{ device_name }}",
+        "automationName": "UiAutomator2" if platform == "Android" else "XCUITest",
+        "app": app_path,
+    }
+    driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
+    yield driver
+    driver.quit()

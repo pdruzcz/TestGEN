@@ -1,0 +1,37 @@
+{
+  "name": "srs_platnosci",
+  "doc_category": "srs",
+  "format": "docx",
+  "language": "pl",
+  "has_intentional_discrepancies": true,
+  "expected_classification": {
+    "doc_type": "specyfikacja_wymagań",
+    "min_confidence": 50.0
+  },
+  "expected_requirements": {
+    "min_count": 7,
+    "expected_texts": [
+      "WYM-001: System musi akceptować płatności kartami Visa oraz Mastercard.",
+      "WYM-002: System musi przetwarzać zwroty środków w ciągu czternastu dni.",
+      "WYM-003: System musi importować dane użytkowników zgodnie ze standardem UC-999.",
+      "WYM-004: System musi generować potwierdzenie płatności w formacie PDF.",
+      "WYM-005: System musi umożliwiać resetowanie hasła użytkownika poprzez wysłanie linku resetującego na adres email.",
+      "WYM-006: System musi umożliwiać resetowanie hasła użytkownika poprzez wysłanie linku resetującego na adres email.",
+      "WYM-010: System musi zapewniać bezpieczeństwo danych kartowych przez szyfrowanie."
+    ]
+  },
+  "expected_inconsistencies": {
+    "detectable_types": [
+      "duplicate",
+      "missing_reference"
+    ],
+    "min_detectable_count": 2
+  },
+  "expected_glossary": {
+    "min_terms": 2,
+    "expected_terms": [
+      "Płatność",
+      "Zwrot"
+    ]
+  }
+}

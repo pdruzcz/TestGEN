@@ -1,0 +1,59 @@
+@startuml flow-end-to-end
+title Przepływ danych — End-to-end: Upload → Analiza → Testy → Eksport
+
+skinparam activityFontSize 12
+
+|Użytkownik|
+start
+:Tworzy projekt;
+:Przesyła pliki:\n- kod źródłowy\n- dokumentacja\n- diagramy UML\n- zrzuty GUI;
+
+|Backend API|
+:Walidacja i zapis\nplików w MinIO;
+:Rejestracja w DB\n(source_files);
+
+|Celery Worker|
+partition "Analiza (M1-M4)" {
+    :M1: Analiza kodu\n(AST + native/LLM);
+    :M2: Analiza dokumentacji\n(NLP + ekstrakcja wymagań);
+    :M3: Analiza UML\n(parsowanie diagramów);
+    :M4: Analiza GUI\n(OCR + rozpoznawanie UI);
+}
+
+:Scalenie wyników\nwszystkich modułów;
+
+partition "Generowanie testów (M5)" {
+    :Generowanie przypadków\ntestowych (native/LLM);
+    :Priorytetyzacja testów;
+    :Generowanie kodu testowego\n(per framework);
+}
+
+partition "Bezpieczeństwo (M6)" {
+    :Skanowanie SAST;
+    :Analiza zależności (CVE);
+    :Raport podatności;
+}
+
+partition "Gap Analysis" {
+    :Porównanie: wymagania\nvs implementacja vs testy;
+    :Raport luk funkcjonalnych;
+    :Rekomendacje uzupełnienia;
+}
+
+:Zapis wszystkich wyników\nw PostgreSQL;
+
+|Backend API|
+:Powiadomienie\no zakończeniu;
+
+|Użytkownik|
+:Przegląd wyników;
+:Zatwierdzenie testów\n(draft → review → approved);
+
+partition "Eksport" {
+    :Wybór formatu:\nPDF / HTML / Excel / CSV / JSON;
+    :Konfiguracja raportu\n(sekcje, filtry, szablon);
+    :Pobranie raportu;
+}
+stop
+
+@enduml

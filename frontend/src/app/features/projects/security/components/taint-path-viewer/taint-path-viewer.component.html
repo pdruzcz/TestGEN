@@ -1,0 +1,37 @@
+<div class="taint">
+  <div class="taint__summary">
+    <span class="taint__flow">
+      {{ taintPath().source }} → {{ taintPath().sink }}
+    </span>
+    @if (taintPath().sanitizer && !taintPath().sanitizerAdequate) {
+      <span class="taint__warn">
+        <mat-icon>warning</mat-icon>
+        Sanitizer „{{ taintPath().sanitizer }}” nieadekwatny dla ujścia typu
+        {{ taintPath().sinkType }}
+      </span>
+    } @else if (!taintPath().sanitizer) {
+      <span class="taint__warn taint__warn--none">
+        <mat-icon>block</mat-icon>
+        Brak sanitizera
+      </span>
+    }
+  </div>
+
+  <ol class="taint__path">
+    @for (node of taintPath().path; track $index) {
+      <li class="taint__node taint__node--{{ node.nodeType }}">
+        <mat-icon class="taint__node-icon">{{ nodeIcon(node.nodeType) }}</mat-icon>
+        <div class="taint__node-body">
+          <span class="taint__node-type">{{ nodeLabel(node.nodeType) }}</span>
+          <code class="taint__node-op">{{ node.operation }}</code>
+          <span class="taint__node-loc">
+            @if (node.variable) {
+              <span class="taint__node-var">{{ node.variable }}</span>
+            }
+            {{ node.file || "—" }}:{{ node.line }}
+          </span>
+        </div>
+      </li>
+    }
+  </ol>
+</div>
